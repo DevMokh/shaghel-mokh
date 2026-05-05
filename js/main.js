@@ -165,17 +165,14 @@ window.toggleSidebar = () => {
 
 window.toggleSettings = () => {
   const panel = document.getElementById('settings-panel');
-  const icon  = document.getElementById('settings-gear-icon');
-  const open  = panel?.classList.toggle('open');
-  if (icon) { icon.style.transform=open?'rotate(90deg)':''; icon.style.color=open?'#f97316':''; }
-  const nm = document.getElementById('sb-current-name');
-  if (nm && window.gameData?.username) nm.innerText = window.gameData.username;
+  const arrow = document.getElementById('settings-arrow');
+  const dot = document.getElementById('settings-dot');
+  const open = panel.classList.toggle('open');
+  if (arrow) arrow.style.transform = open ? 'rotate(90deg)' : '';
+  if (dot) dot.style.opacity = open ? '1' : '0';
 };
 
-window.toggleTheme = () => {
-  window.gameData.theme = 'dark';
-  saveData();
-};
+window.toggleTheme = () => { window.gameData.theme = 'dark'; saveData(); };
 
 window.toggleSound = () => {
   window.gameData.soundEnabled = !(window.gameData.soundEnabled !== false);
