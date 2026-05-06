@@ -13,8 +13,19 @@
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         :root {
-            --bg:#0a0a0a; --card:#141414; --border:rgba(255,255,255,0.07);
-            --accent:#fbbf24; --text:#fff; --text2:rgba(255,255,255,0.45);
+            --bg:#050508;
+            --bg2:#0d0d12;
+            --card:#12121a;
+            --card2:#1a1a24;
+            --border:rgba(255,255,255,0.07);
+            --accent:#f97316;
+            --accent2:#ea580c;
+            --gold:#fbbf24;
+            --text:#fff;
+            --text2:rgba(255,255,255,0.45);
+            --green:#22c55e;
+            --red:#ef4444;
+            --blue:#38bdf8;
         }
         body { font-family:'Tajawal',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; direction:rtl; }
 
@@ -25,8 +36,8 @@
         .login-title { font-size:22px; font-weight:900; margin-bottom:6px; }
         .login-sub   { font-size:13px; color:var(--text2); margin-bottom:30px; }
         .pass-input  { width:100%; background:#0f0f0f; border:1px solid var(--border); border-radius:16px; padding:16px 18px; color:#fff; font-family:'Tajawal',sans-serif; font-size:16px; font-weight:700; outline:none; text-align:center; letter-spacing:.1em; margin-bottom:16px; transition:border-color .2s; }
-        .pass-input:focus { border-color:var(--accent); }
-        .login-btn   { width:100%; background:var(--accent); color:#000; border:none; border-radius:16px; padding:16px; font-family:'Tajawal',sans-serif; font-size:17px; font-weight:900; cursor:pointer; transition:.2s; }
+        .pass-input:focus { border-color:#f97316; box-shadow:0 0 0 3px rgba(249,115,22,.1); }
+        .login-btn   { width:100%; background:linear-gradient(135deg,#f97316,#ea580c); color:#fff; border:none; border-radius:16px; padding:16px; font-family:'Tajawal',sans-serif; font-size:17px; font-weight:900; cursor:pointer; transition:.2s; }
         .login-btn:active { transform:scale(.97); }
         .pass-error  { color:#ef4444; font-size:13px; font-weight:700; margin-top:12px; display:none; }
 
@@ -38,14 +49,14 @@
 
         /* MAIN */
         #main-content { display:none; min-height:100vh; }
-        .topbar { background:var(--card); border-bottom:1px solid var(--border); padding:0 28px; height:70px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:100; }
+        .topbar { background:rgba(5,5,8,.95); border-bottom:1px solid rgba(249,115,22,.1); padding:0 28px; height:66px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:100; backdrop-filter:blur(20px); }
         .topbar-brand { display:flex; align-items:center; gap:12px; }
         .topbar-logo  { font-size:26px; }
         .topbar-title { font-size:18px; font-weight:900; }
-        .topbar-badge { background:rgba(251,191,36,.12); color:var(--accent); font-size:11px; font-weight:900; padding:4px 12px; border-radius:20px; letter-spacing:.05em; }
+        .topbar-badge { background:rgba(249,115,22,.12); color:#f97316; border:1px solid rgba(249,115,22,.2); font-size:11px; font-weight:900; padding:4px 12px; border-radius:20px; letter-spacing:.05em; }
         .topbar-actions { display:flex; gap:10px; }
 
-        .btn-primary   { background:var(--accent); color:#000; border:none; border-radius:14px; padding:10px 20px; font-family:'Tajawal',sans-serif; font-size:14px; font-weight:900; cursor:pointer; transition:.2s; display:flex; align-items:center; gap:6px; }
+        .btn-primary   { background:linear-gradient(135deg,#f97316,#ea580c); color:#fff; border:none; border-radius:14px; padding:10px 20px; font-family:'Tajawal',sans-serif; font-size:14px; font-weight:900; cursor:pointer; transition:.2s; display:flex; align-items:center; gap:6px; }
         .btn-primary:active { transform:scale(.96); }
         .btn-secondary { background:#1e1e1e; color:#fff; border:1px solid var(--border); border-radius:14px; padding:10px 18px; font-family:'Tajawal',sans-serif; font-size:14px; font-weight:700; cursor:pointer; transition:.2s; display:flex; align-items:center; gap:6px; }
         .btn-secondary:active { transform:scale(.96); background:#252525; }
@@ -56,9 +67,9 @@
 
         /* STATS */
         .stats-row { display:flex; gap:16px; margin-bottom:28px; flex-wrap:wrap; }
-        .stat-big-card { background:var(--card); border:1px solid var(--border); border-radius:22px; padding:22px 28px; flex:1; min-width:160px; }
+        .stat-big-card { border:1px solid rgba(249,115,22,.1); position:relative; overflow:hidden; background:var(--card); border:1px solid var(--border); border-radius:22px; padding:22px 28px; flex:1; min-width:160px; }
         .stat-big-label { font-size:11px; font-weight:900; color:var(--text2); text-transform:uppercase; letter-spacing:.1em; margin-bottom:8px; }
-        .stat-big-value { font-size:36px; font-weight:900; color:var(--accent); }
+        .stat-big-value { color:#f97316; font-size:36px; font-weight:900; color:var(--accent); }
 
         .cat-stats-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:12px; margin-bottom:28px; }
         .stat-cat-card  { background:var(--card); border:1px solid var(--border); border-radius:18px; padding:16px 14px; text-align:center; cursor:pointer; transition:.2s; }
@@ -171,6 +182,82 @@
             .ai-config,.options-grid{grid-template-columns:1fr}
             .topbar-actions .btn-secondary span:last-child{display:none}
         }
+
+        /* ── GAMING THEME ADDITIONS ── */
+        body { background:var(--bg); }
+
+        /* Stars bg */
+        body::before {
+            content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
+            background:
+                radial-gradient(ellipse 60% 40% at 20% 0%, rgba(249,115,22,.06) 0%, transparent 60%),
+                radial-gradient(ellipse 50% 35% at 80% 100%, rgba(56,189,248,.04) 0%, transparent 60%);
+        }
+        .page-content { position:relative; z-index:1; }
+
+        /* Better cards */
+        .stat-big-card {
+            background:linear-gradient(135deg,rgba(249,115,22,.08),rgba(234,88,12,.04));
+        }
+        .stat-big-card::before {
+            content:''; position:absolute; top:0; left:0; right:0; height:2px;
+            background:linear-gradient(90deg,transparent,rgba(249,115,22,.5),transparent);
+        }
+
+        /* Better table */
+        .questions-table th { background:rgba(249,115,22,.08); color:#f97316; font-weight:900; }
+        .questions-table tr:hover td { background:rgba(249,115,22,.04); }
+
+        /* Better modal */
+        .modal-box {
+            border-top:2px solid rgba(249,115,22,.3);
+            box-shadow:0 -10px 60px rgba(249,115,22,.08);
+        }
+
+        /* Better filters */
+        .filter-select, .search-input {
+            background:var(--card2);
+            border:1px solid rgba(249,115,22,.1);
+            border-radius:12px;
+        }
+        .filter-select:focus, .search-input:focus {
+            border-color:#f97316;
+            outline:none;
+            box-shadow:0 0 0 3px rgba(249,115,22,.1);
+        }
+
+        /* Section head */
+        .section-head { border-bottom:1px solid rgba(249,115,22,.1); }
+        .section-title { color:#fff; font-weight:900; font-size:16px; }
+        .section-title::before {
+            content:''; display:inline-block; width:3px; height:16px;
+            background:#f97316; border-radius:2px; margin-left:8px; vertical-align:middle;
+        }
+
+        /* Category cards */
+        .cat-card { border-radius:16px; padding:16px; transition:.2s; }
+        .cat-card:hover { border-color:rgba(249,115,22,.2); transform:translateY(-2px); }
+        .cat-name { font-weight:900; font-size:14px; }
+        .cat-count { font-size:24px; font-weight:900; color:#f97316; }
+
+        /* AI panel */
+        .ai-panel { background:linear-gradient(135deg,rgba(249,115,22,.06),rgba(56,189,248,.04)); }
+
+        /* Pagination */
+        .page-btn.active { background:#f97316; color:#fff; border-color:#f97316; }
+        .page-btn { border-radius:10px; border:1px solid var(--border); }
+
+        /* Badges */
+        .badge-easy   { background:rgba(34,197,94,.15);  color:#22c55e;  border-radius:8px; padding:2px 8px; font-size:11px; font-weight:900; }
+        .badge-medium { background:rgba(249,115,22,.15); color:#f97316;  border-radius:8px; padding:2px 8px; font-size:11px; font-weight:900; }
+        .badge-hard   { background:rgba(239,68,68,.15);  color:#ef4444;  border-radius:8px; padding:2px 8px; font-size:11px; font-weight:900; }
+
+        /* Action buttons in table */
+        .action-btn { border-radius:8px; padding:5px 10px; font-size:12px; border:none; cursor:pointer; transition:.18s; }
+        .action-btn.edit   { background:rgba(56,189,248,.12); color:#38bdf8; }
+        .action-btn.delete { background:rgba(239,68,68,.12);  color:#ef4444; }
+        .action-btn:active { transform:scale(.92); }
+
     </style>
 </head>
 <body>
@@ -178,7 +265,7 @@
 <!-- LOGIN -->
 <div id="login-screen">
     <div class="login-card">
-        <div class="login-logo">🧠</div>
+        <div class="login-logo"><i class="fas fa-brain" style="color:var(--accent);font-size:44px"></i></div>
         <h1 class="login-title">لوحة تحكم المسؤول</h1>
         <p class="login-sub">شغل مخك — Ultra Edition</p>
         <input type="password" id="pass-input" class="pass-input" placeholder="كلمة المرور"
@@ -192,13 +279,13 @@
 <div id="main-content">
     <div class="topbar">
         <div class="topbar-brand">
-            <span class="topbar-logo">🧠</span>
+            <span class="topbar-logo"><i class="fas fa-brain" style="color:var(--accent)"></i></span>
             <span class="topbar-title">لوحة التحكم</span>
-            <span class="topbar-badge">Admin</span>
+            <span class="topbar-badge">Admin v4.0</span>
         </div>
         <div class="topbar-actions">
-            <button class="btn-secondary" onclick="openAIPanel()"><span>🤖</span><span>توليد بالذكاء الاصطناعي</span></button>
-            <button class="btn-primary"   onclick="openAddForm()"><span>＋</span><span>إضافة سؤال</span></button>
+            <button class="btn-secondary" onclick="openAIPanel()"><i class="fas fa-wand-magic-sparkles"></i><span>توليد AI</span></button>
+            <button class="btn-primary"   onclick="openAddForm()"><i class="fas fa-plus"></i><span>إضافة سؤال</span></button>
         </div>
     </div>
 
@@ -229,7 +316,7 @@
                 <select id="filter-sub" class="filter-select" onchange="onFilterSubChange()">
                     <option value="all">كل الأقسام</option>
                 </select>
-                <input id="search-input" class="search-input" placeholder="🔍 ابحث في الأسئلة..." oninput="onSearch(this.value)">
+                <input id="search-input" class="search-input" placeholder="ابحث في الأسئلة..." oninput="onSearch(this.value)">
                 <button class="btn-danger" onclick="deleteByCat()">🗑️ حذف الظاهرين</button>
             </div>
             <div class="table-wrapper">
@@ -255,7 +342,7 @@
     <div class="modal-box md">
         <div class="modal-topbar">
             <span class="modal-box-title" id="form-title">إضافة سؤال</span>
-            <button class="modal-x" onclick="closeQuestionModal()">✕</button>
+            <button class="modal-x" onclick="closeQuestionModal()"><i class="fas fa-times"></i></button>
         </div>
         <div class="modal-scroll">
             <div class="form-group">
@@ -307,7 +394,7 @@
     <div class="modal-box lg">
         <div class="modal-topbar">
             <span class="modal-box-title">🤖 توليد بالذكاء الاصطناعي</span>
-            <button class="modal-x" onclick="closeAIModal()">✕</button>
+            <button class="modal-x" onclick="closeAIModal()"><i class="fas fa-times"></i></button>
         </div>
         <div class="modal-scroll">
             <div class="form-group">
