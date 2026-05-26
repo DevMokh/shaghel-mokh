@@ -165,17 +165,16 @@ window.toggleSidebar = () => {
 
 window.toggleSettings = () => {
   const panel = document.getElementById('settings-panel');
-  const icon  = document.getElementById('settings-gear-icon');
-  const open  = panel?.classList.toggle('open');
-  if (icon) {
-    icon.style.transform  = open ? 'rotate(90deg)' : '';
-    icon.style.color      = open ? '#f97316' : '';
-    icon.style.transition = 'all .3s';
-  }
+  const arrow = document.getElementById('settings-arrow');
+  const dot = document.getElementById('settings-dot');
+  const open = panel.classList.toggle('open');
+  if (arrow) arrow.style.transform = open ? 'rotate(90deg)' : '';
+  if (dot) dot.style.opacity = open ? '1' : '0';
 };
 
 window.toggleTheme = () => {
-  window.gameData.theme = 'dark';
+  window.gameData.theme = window.gameData.theme === 'dark' ? 'light' : 'dark';
+  updateUI();
   saveData();
 };
 
@@ -833,148 +832,3 @@ window.launchSelectedMode = () => {
 
   window.startQuiz(_gmCat, _gmSub, false);
 };
-
-// ══════════════════════════════════════════════════════
-//  🎊 MINI CONFETTI — بدون library
-// ══════════════════════════════════════════════════════
-window._miniConfetti = () => {
-  const canvas = document.getElementById('confetti-canvas');
-  if (!canvas) return;
-  canvas.style.display = 'block';
-  const ctx    = canvas.getContext('2d');
-  canvas.width  = window.innerWidth;
-  canvas.height = window.innerHeight;
-  const colors  = ['#f97316','#fbbf24','#22c55e','#38bdf8','#a78bfa','#f43f5e'];
-  const particles = Array.from({ length: 80 }, () => ({
-    x         : Math.random() * canvas.width,
-    y         : -10,
-    r         : Math.random() * 6 + 3,
-    color     : colors[Math.floor(Math.random() * colors.length)],
-    vx        : Math.random() * 4 - 2,
-    vy        : Math.random() * 3 + 2,
-    tilt      : 0,
-    tiltSpeed : Math.random() * .1 + .05,
-    tiltAngle : 0,
-  }));
-  let frame = 0;
-  const animate = () => {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    particles.forEach(p => {
-      p.tiltAngle += p.tiltSpeed;
-      p.x += p.vx + Math.sin(p.tiltAngle) * .5;
-      p.y += p.vy;
-      p.tilt = Math.sin(p.tiltAngle) * 12;
-      ctx.beginPath();
-      ctx.ellipse(p.x, p.y, p.r, p.r * .4, p.tilt * Math.PI / 180, 0, 2 * Math.PI);
-      ctx.fillStyle   = p.color;
-      ctx.globalAlpha = Math.max(0, 1 - frame / 120);
-      ctx.fill();
-    });
-    ctx.globalAlpha = 1;
-    frame++;
-    if (frame < 130) requestAnimationFrame(animate);
-    else canvas.style.display = 'none';
-  };
-  requestAnimationFrame(animate);
-};
-
-// ══════════════════════════════════════════════════════
-//  ✨ FLOATING STARS
-// ══════════════════════════════════════════════════════
-function addFloatingStars() {
-  const home = document.getElementById('screen-home');
-  if (!home) return;
-  home.querySelectorAll('.floating-star').forEach(s => s.remove());
-  const chars = ['✦','✧','⭑','⭒','★','✶'];
-  for (let i = 0; i < 8; i++) {
-    const s    = document.createElement('div');
-    s.className = 'floating-star';
-    s.innerText = chars[Math.floor(Math.random() * chars.length)];
-    s.style.cssText = `left:${Math.random()*90}%;top:${Math.random()*80}%;animation-delay:${Math.random()*3}s;animation-duration:${2.5+Math.random()*2}s;font-size:${8+Math.random()*8}px;color:rgba(249,115,22,${0.12+Math.random()*.22});z-index:0;`;
-    home.style.position = 'relative';
-    home.insertBefore(s, home.firstChild);
-  }
-}
-
-// ══════════════════════════════════════════════════════
-//  📱 SWIPE NAVIGATION
-// ══════════════════════════════════════════════════════
-function initSwipeNavigation() {
-  const navScreens = ['home','map','stats','daily','weekly'];
-  let tX = 0;
-  let tY = 0;
-  document.addEventListener('touchstart', e => { tX = e.touches[0].clientX; tY = e.touches[0].clientY; }, { passive:true });
-  document.addEventListener('touchend', e => {
-    const dx = e.changedTouches[0].clientX - tX;
-    const dy = Math.abs(e.changedTouches[0].clientY - tY);
-    if (Math.abs(dx) < 80 || dy > 60) return;
-    if (document.querySelector('.m-overlay.open, .sidebar.open, [id*="modal"][style*="flex"]')) return;
-    const activeId = document.querySelector('.screen.active')?.id?.replace('screen-','');
-    const idx      = navScreens.indexOf(activeId);
-    if (idx === -1) return;
-    if (dx < 0 && idx < navScreens.length - 1) window.navTo(navScreens[idx + 1]);
-    if (dx > 0 && idx > 0)                      window.navTo(navScreens[idx - 1]);
-  }, { passive:true });
-}
-
-// ══════════════════════════════════════════════════════
-//  💥 RIPPLE EFFECT
-// ══════════════════════════════════════════════════════
-function initRippleEffect() {
-  document.addEventListener('click', e => {
-    const target = e.target.closest('.btn-option,.btn-primary,.btn-secondary,.nav-link,.sb-nav-item,.sb-item,.helper-btn');
-    if (!target) return;
-    const ripple  = document.createElement('div');
-    ripple.className = 'tap-ripple';
-    const rect    = target.getBoundingClientRect();
-    ripple.style.cssText = `left:${e.clientX-rect.left-20}px;top:${e.clientY-rect.top-20}px;`;
-    target.style.position = target.style.position || 'relative';
-    target.style.overflow  = 'hidden';
-    target.appendChild(ripple);
-    setTimeout(() => ripple.remove(), 420);
-  });
-}
-
-// ══════════════════════════════════════════════════════
-//  🏆 RANK BADGES
-// ══════════════════════════════════════════════════════
-window.getRankBadgeHTML = (rank) => {
-  const rankMap = {
-    'باحث عن المعرفة':{ cls:'rank-bronze',  icon:'🥉' },
-    'متعلم نشيط':     { cls:'rank-bronze',  icon:'🥉' },
-    'مثقف':           { cls:'rank-silver',  icon:'🥈' },
-    'خبير':           { cls:'rank-gold',    icon:'🥇' },
-    'أستاذ':          { cls:'rank-gold',    icon:'🏆' },
-    'عبقري':          { cls:'rank-plat',    icon:'💎' },
-    'أسطورة':         { cls:'rank-diamond', icon:'👑' },
-  };
-  const r = rankMap[rank] || { cls:'rank-bronze', icon:'🎯' };
-  return `<span class="rank-badge-pill ${r.cls}">${r.icon} ${rank || 'باحث'}</span>`;
-};
-
-// ══════════════════════════════════════════════════════
-//  📤 SHARE RESULT
-// ══════════════════════════════════════════════════════
-window.shareResult = async () => {
-  const correct  = document.getElementById('res-correct')?.innerText || '0';
-  const titleEl  = document.getElementById('result-title')?.innerText  || 'أحسنت!';
-  const shareText = `🧠 شغل مخك!
-أجبت ${correct} سؤال صح!
-${titleEl}
-العب معي: https://devmokh.github.io/shaghel-mokh/`;
-  try {
-    if (navigator.share) { await navigator.share({ title:'شغل مخك 🧠', text:shareText }); }
-    else { await navigator.clipboard.writeText(shareText); showToast('✅ تم نسخ النتيجة!', 2000); }
-  } catch(e) {}
-};
-
-// ══════════════════════════════════════════════════════
-//  Init on load
-// ══════════════════════════════════════════════════════
-window.addEventListener('load', () => {
-  setTimeout(() => {
-    addFloatingStars();
-    initSwipeNavigation();
-    initRippleEffect();
-  }, 1800);
-});
