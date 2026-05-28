@@ -173,8 +173,8 @@ window.toggleSettings = () => {
 };
 
 window.toggleTheme = () => {
-  window.gameData.theme = window.gameData.theme === 'dark' ? 'light' : 'dark';
-  updateUI();
+  // دايماً داكن - لا يتغير
+  window.gameData.theme = 'dark';
   saveData();
 };
 
