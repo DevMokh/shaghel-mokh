@@ -179,7 +179,7 @@ export async function renderDailyChallenge() {
     }
   }
 }
-window.renderDailyChallenge = renderDailyChallenge;
+// window.renderDailyChallenge moved to main.js (ui.js version is canonical)
 
 // ══════════════════════════════════════════════════════════════════
 // التحدي الأسبوعي
