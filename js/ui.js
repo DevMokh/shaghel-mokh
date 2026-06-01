@@ -266,12 +266,28 @@ export function renderMap() {
     };
     const [c1, c2] = catColors[key] || ['#fbbf24', '#f59e0b'];
     node.innerHTML = `
-      <div style="position:absolute;inset:0;border-radius:22px;background:linear-gradient(135deg,${c1}18,${c2}08);pointer-events:none"></div>
+      <div style="position:absolute;inset:0;border-radius:inherit;background:linear-gradient(145deg,${c1}14,${c2}07);pointer-events:none"></div>
       ${isDone ? '<div class="map-check">✓</div>' : ''}
-      <div style="width:52px;height:52px;border-radius:18px;background:linear-gradient(135deg,${c1},${c2});display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 10px;box-shadow:0 6px 20px ${c1}44">${cat.icon}</div>
+      <div class="map-icon-wrap" style="
+        width:48px;height:48px;
+        border-radius:16px;
+        background:linear-gradient(135deg,${c1},${c2});
+        display:flex;align-items:center;justify-content:center;
+        margin:0 auto 9px;
+        box-shadow:0 6px 18px ${c1}50;
+        flex-shrink:0;
+      ">
+        <i class="fas ${cat.fa}" style="
+          font-size:20px;
+          color:#fff;
+          filter:drop-shadow(0 1px 3px rgba(0,0,0,.3));
+        "></i>
+      </div>
       <div class="map-name" style="color:#fff">${cat.name}</div>
       <div class="map-subs">${cat.subs.length} أقسام</div>
-      <div class="map-progress-bar" style="margin-top:10px"><div class="map-progress-fill" style="width:${pct}%;background:linear-gradient(90deg,${c1},${c2})"></div></div>`;
+      <div class="map-progress-bar" style="margin-top:8px">
+        <div class="map-progress-fill" style="width:${pct}%;background:linear-gradient(90deg,${c1},${c2})"></div>
+      </div>`;
     if (isUnlocked && !isDone) node.onclick = () => { window.selectedCategory = key; showSubsForMap(key); };
     grid.appendChild(node);
   });
