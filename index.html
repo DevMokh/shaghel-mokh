@@ -5,170 +5,24 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>شغل مخك - الإصدار الألترا 4.0</title>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link rel="stylesheet" href="styles.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/canvas-confetti/1.6.0/confetti.browser.min.js"></script>
-
-<!-- ══ Firebase Init ══ -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken }
-  from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-import { getFirestore, doc, setDoc, onSnapshot, collection, getDocs,
-         addDoc, updateDoc, query, orderBy, limit, where }
-  from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey:"AIzaSyBKQFpuzt92Uk_mJrSWuIYaVgqpc2g8stA",
-  authDomain:"shaghel-mokh-ultra.firebaseapp.com",
-  projectId:"shaghel-mokh-ultra",
-  storageBucket:"shaghel-mokh-ultra.firebasestorage.app",
-  messagingSenderId:"167435076773",
-  appId:"1:167435076773:web:ce058e3d064707bb7cf94c",
-  measurementId:"G-EPJ1MGWBQW"
-};
-
-const app  = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db   = getFirestore(app);
-const APP  = typeof __app_id !== 'undefined' ? __app_id : 'shaghel-mokh-ultra-full';
-
-window.db = db; window.auth = auth; window.appId = APP; window.firebaseReady = false;
-
-const ALL_CATS = ["islamic","egypt","tech","science","geo","sports","puzzles","food"];
-
-function getCurrentSeason(){
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
-}
-window.getCurrentSeason = getCurrentSeason;
-
-const DEFAULT_DATA = () => ({
-  coins:500, xp:0, level:1,
-  username:"العبقري المجهول",
-  avatar:"https://i.postimg.cc/qqTBP312/1000061201.png",
-  avatarFrame:"none", accentColor:"#fbbf24", message:"",
-  inventory:{ delete:5, skip:5, hint:5 },
-  stats:{ gamesPlayed:0, completedSections:0, correctAnswers:0,
-          currentStreak:0, maxStreak:0, totalCoinsEarned:0, dailyChallengesWon:0 },
-  unlockedCategories: ALL_CATS,
-  rank:"باحث عن المعرفة", theme:"dark", soundEnabled:true,
-  lastDailyUpdate: new Date().toDateString(),
-  lastLoginDate:"", dailyChallengeDate:"", dailyChallengeScore:0,
-  currentSeason: getCurrentSeason(), seasonScores:{},
-  ownedFrames:[], _mapProgress:[], _subProgress:{},
-  dailyTasks:[
-    {id:"win_5",      text:"أجب على 5 أسئلة صحيحة",   goal:5,   current:0, reward:100,  claimed:false},
-    {id:"use_helper", text:"استخدم وسيلة مساعدة",      goal:1,   current:0, reward:50,   claimed:false},
-    {id:"earn_500",   text:"اجمع 500 عملة إضافية",     goal:500, current:0, reward:200,  claimed:false},
-    {id:"daily_ch",   text:"أكمل تحدي اليوم",          goal:1,   current:0, reward:300,  claimed:false}
-  ],
-  achievements:[
-    {id:"lvl_5",     text:"الوصول للمستوى 5",       earned:false, icon:"🏆"},
-    {id:"streak_10", text:"سلسلة 10 إجابات",         earned:false, icon:"🔥"},
-    {id:"rich",      text:"جمع 2000 عملة",           earned:false, icon:"💰"},
-    {id:"veteran",   text:"10 جولات كاملة",           earned:false, icon:"🎖️"},
-    {id:"master_50", text:"50 إجابة صحيحة",          earned:false, icon:"🧠"},
-    {id:"lvl_10",    text:"الوصول للمستوى 10",       earned:false, icon:"👑"},
-    {id:"explorer",  text:"إكمال 5 أقسام",           earned:false, icon:"🗺️"},
-    {id:"perfect",   text:"10/10 في جولة",           earned:false, icon:"⭐"},
-    {id:"streak_5",  text:"سلسلة 5 إجابات",          earned:false, icon:"⚡"},
-    {id:"daily_3",   text:"3 تحديات يومية",           earned:false, icon:"📅"},
-    {id:"social",    text:"لعب في غرفة جماعية",      earned:false, icon:"👥"}
-  ]
-});
-window.DEFAULT_DATA = DEFAULT_DATA;
-
-const initAuth = async () => {
-  try {
-    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token)
-      await signInWithCustomToken(auth, __initial_auth_token);
-    else await signInAnonymously(auth);
-  } catch(e) {
-    console.error("Auth:", e);
-    window.firebaseReady = false;
-    window.gameData = DEFAULT_DATA();
-    if (typeof window.updateUI === 'function') window.updateUI();
-  }
-};
-initAuth();
-
-onAuthStateChanged(auth, user => {
-  if (!user) return;
-  window.currentUser = user;
-  window.firebaseReady = true;
-  const ref = doc(db,'artifacts',APP,'users',user.uid,'profile','data');
-  onSnapshot(ref, snap => {
-    const today = new Date().toDateString();
-    const defaults = DEFAULT_DATA();
-    if (snap.exists()) {
-      let data = snap.data();
-      if (data.lastDailyUpdate !== today) {
-        (data.dailyTasks||[]).forEach(t => { t.current=0; t.claimed=false; });
-        data.lastDailyUpdate = today;
-      }
-      const season = getCurrentSeason();
-      if (data.currentSeason !== season) data.currentSeason = season;
-      window.gameData = {
-        ...defaults, ...data,
-        inventory:    { ...defaults.inventory,    ...(data.inventory||{}) },
-        stats:        { ...defaults.stats,        ...(data.stats||{}) },
-        dailyTasks:   (data.dailyTasks?.length)   ? data.dailyTasks   : defaults.dailyTasks,
-        achievements: (data.achievements?.length) ? data.achievements : defaults.achievements,
-        unlockedCategories: ALL_CATS   // كل التصنيفات مفتوحة دائماً
-      };
-    } else {
-      window.gameData = DEFAULT_DATA();
-      setDoc(ref, window.gameData);
-    }
-    if (window.gameData.lastLoginDate !== today) {
-      window.gameData.lastLoginDate = today;
-      window.gameData.coins += 50;
-      setTimeout(() => window.showToast?.('🎁 مكافأة الدخول: +50 عملة!', 3500), 2000);
-      window.saveData();
-    }
-    if (typeof window.updateUI === 'function') window.updateUI();
-  }, err => {
-    console.error("Firestore:", err);
-    window.gameData = DEFAULT_DATA();
-    if (typeof window.updateUI === 'function') window.updateUI();
-  });
-});
-
-let _saveT = null;
-window.saveData = async () => {
-  if (!window.currentUser || !window.db || !window.firebaseReady) return;
-  clearTimeout(_saveT);
-  _saveT = setTimeout(async () => {
-    const uid = window.currentUser.uid;
-    const d   = window.gameData;
-    try {
-      await setDoc(doc(db,'artifacts',APP,'users',uid,'profile','data'), d, {merge:true});
-      const season = getCurrentSeason();
-      await setDoc(doc(db,'artifacts',APP,'public','data','rankings',uid), {
-        username:d.username, xp:d.xp, level:d.level, avatar:d.avatar,
-        avatarFrame:d.avatarFrame||"none", accentColor:d.accentColor||"#fbbf24",
-        message:d.message||"", rank:d.rank, uid, updatedAt:Date.now(),
-        [`season_${season}`]: d.xp
-      }, {merge:true});
-    } catch(e) { console.error("Save:", e); }
-  }, 800);
-};
-
-// Firestore helpers
-window.db_getDocs  = p => getDocs(collection(db,...p.split('/')));
-window.db_addDoc   = (p,d) => addDoc(collection(db,...p.split('/')), d);
-window.db_setDoc   = (p,d,m=true) => setDoc(doc(db,...p.split('/')), d, {merge:m});
-window.db_updateDoc= (p,d) => updateDoc(doc(db,...p.split('/')), d);
-window.db_onSnap   = (p,cb,er) => onSnapshot(doc(db,...p.split('/')), cb, er);
-window.db_colSnap  = (p,cb,er) => onSnapshot(collection(db,...p.split('/')), cb, er);
-window.db_query    = (p,...c) => getDocs(query(collection(db,...p.split('/')), ...c));
-window.dbOrderBy   = orderBy;
-window.dbLimit     = limit;
-window.dbWhere     = where;
-</script>
 </head>
 <body id="main-body">
+
+<!-- LOADING SCREEN -->
+<div id="loading-screen" style="position:fixed;inset:0;background:#0d0d0d;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;transition:opacity .5s">
+  <div style="animation:loadingPop .6s cubic-bezier(.34,1.56,.64,1) both">
+    <img src="https://i.postimg.cc/qqTBP312/1000061201.png" style="width:88px;height:88px;border-radius:28px;border:3px solid rgba(251,191,36,.4);box-shadow:0 0 40px rgba(251,191,36,.3)">
+  </div>
+  <div style="animation:fadeUp .6s .2s both;font-size:22px;font-weight:900;color:#fff">شغل <span style="color:#fbbf24">مخك</span></div>
+  <div style="display:flex;gap:7px;animation:fadeUp .6s .35s both">
+    <div class="loading-dot" style="animation-delay:0s"></div>
+    <div class="loading-dot" style="animation-delay:.2s"></div>
+    <div class="loading-dot" style="animation-delay:.4s"></div>
+  </div>
+</div>
 
 <!-- SOUNDS -->
 <audio id="snd-correct" src="https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3" preload="auto"></audio>
@@ -185,11 +39,16 @@ window.dbWhere     = where;
   <div class="topbar">
     <div class="topbar-left">
       <div class="icon-btn lvl-btn" id="top-lvl" onclick="window.navTo('stats')">1</div>
-      <div class="coin-pill"><span class="coin-num" id="coin-count">500</span><span style="font-size:18px">💰</span></div>
+      <div class="coin-pill"><span class="coin-num" id="coin-count">500</span><i class="fas fa-coins" style="color:#fbbf24;font-size:16px"></i></div>
     </div>
     <div class="topbar-right">
       <div class="icon-btn" onclick="window.navTo('daily')" style="position:relative" title="تحدي اليوم">
-        📅<div class="nav-dot" id="daily-notif-dot"></div>
+        <i class="fas fa-bolt" style="color:#f97316;font-size:17px"></i>
+        <div class="nav-dot" id="daily-notif-dot"></div>
+      </div>
+      <div class="icon-btn" onclick="window.navTo('weekly')" style="position:relative" title="أسبوعي">
+        <i class="fas fa-calendar-week" style="color:#fbbf24;font-size:17px"></i>
+        <div class="nav-dot" id="weekly-notif-dot"></div>
       </div>
       <div class="icon-btn" onclick="window.toggleSidebar()">
         <i class="fas fa-bars" style="color:var(--accent);font-size:18px"></i>
@@ -210,29 +69,46 @@ window.dbWhere     = where;
         <div id="home-lvl-badge" style="position:absolute;bottom:-13px;left:50%;transform:translateX(-50%);background:var(--grad);color:#000;font-weight:900;font-size:12px;padding:5px 18px;border-radius:20px;z-index:20;border:3px solid var(--bg);white-space:nowrap;box-shadow:0 4px 15px rgba(251,191,36,.4)">المستوى 1</div>
       </div>
       <h1 style="font-size:50px;font-weight:900;color:#fff;letter-spacing:-.03em;margin-bottom:6px;margin-top:8px">شغل <span style="color:var(--accent)">مخك</span></h1>
-      <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:22px">
+      <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:14px">
         <span style="height:2px;width:24px;background:var(--accent);border-radius:10px;opacity:.5"></span>
         <p style="color:var(--text2);font-weight:700;font-size:12px">الإصدار الألترا 4.0</p>
         <span style="height:2px;width:24px;background:var(--accent);border-radius:10px;opacity:.5"></span>
       </div>
+
+      <!-- بادج السلسلة اليومية -->
+      <div id="home-streak-badge" style="display:none;align-items:center;gap:8px;background:rgba(251,191,36,.09);border:1px solid rgba(251,191,36,.22);border-radius:18px;padding:8px 18px;margin-bottom:12px;transition:.3s">
+        <i class="fas fa-fire-flame-curved" style="color:#f97316;font-size:16px"></i>
+        <span id="home-streak-num" style="font-size:22px;font-weight:900;color:#fff">0</span>
+        <span id="home-streak-lbl" style="font-size:12px;font-weight:700;color:var(--text2)">يوم متتالي</span>
+      </div>
+      <div id="home-streak-warn" style="display:none;color:#fbbf24;font-size:12px;font-weight:700;margin-bottom:10px;padding:6px 14px;background:rgba(251,191,36,.08);border-radius:12px;border:1px solid rgba(251,191,36,.15)"></div>
+
+      <!-- بانر منافسة الأصدقاء -->
+      <div id="home-rival-banner" style="display:none;align-items:center;gap:10px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:18px;padding:10px 16px;margin-bottom:12px;cursor:pointer;width:100%;max-width:300px" onclick="window.navTo('leaderboard')">
+        <i class="fas fa-bolt" style="color:#ef4444;font-size:15px"></i>
+        <span style="font-size:12px;font-weight:700;color:var(--text2)">صاحبك</span>
+        <span id="rival-name" style="font-size:13px;font-weight:900;color:#fff;flex:1;text-align:right">—</span>
+        <span id="rival-diff" style="font-size:12px;font-weight:900;color:#ef4444">+0 XP</span>
+      </div>
+
       <div id="home-daily-teaser" onclick="window.navTo('daily')"
         style="width:100%;max-width:300px;background:rgba(251,191,36,.07);border:1px solid rgba(251,191,36,.18);border-radius:20px;padding:12px 18px;margin-bottom:22px;cursor:pointer;transition:.2s"
         onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform=''">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
           <span id="daily-teaser-status" style="font-size:11px;font-weight:900;color:var(--accent)">👆 العب الآن!</span>
-          <span style="font-size:12px;font-weight:900;color:rgba(255,255,255,.4)">📅 تحدي اليوم</span>
+          <span style="font-size:12px;font-weight:900;color:rgba(255,255,255,.4);display:flex;align-items:center;gap:5px"><i class="fas fa-bolt" style="color:#f97316"></i> تحدي اليوم</span>
         </div>
         <div style="height:5px;background:rgba(255,255,255,.07);border-radius:10px;overflow:hidden">
           <div id="home-daily-prog" style="height:100%;background:var(--grad);border-radius:10px;width:0%;transition:width .8s"></div>
         </div>
       </div>
       <button onclick="window.navTo('map')"
-        style="width:290px;background:var(--grad);color:#000;padding:20px 0;border-radius:32px;font-weight:900;font-size:21px;border:none;border-bottom:5px solid rgba(0,0,0,.2);cursor:pointer;box-shadow:0 15px 40px rgba(245,158,11,.3);font-family:'Tajawal',sans-serif;transition:.12s"
+        style="width:290px;background:var(--grad);color:#000;padding:20px 0;border-radius:32px;font-weight:900;font-size:21px;border:none;border-bottom:5px solid rgba(0,0,0,.2);cursor:pointer;box-shadow:0 15px 40px rgba(245,158,11,.3);font-family:'Tajawal',sans-serif;transition:.12s;display:flex;align-items:center;justify-content:center;gap:10px"
         onmousedown="this.style.transform='scale(.96) translateY(3px)';this.style.borderBottomWidth='2px'"
         onmouseup="this.style.transform='';this.style.borderBottomWidth='5px'"
         ontouchstart="this.style.transform='scale(.96) translateY(3px)';this.style.borderBottomWidth='2px'"
         ontouchend="this.style.transform='';this.style.borderBottomWidth='5px'">
-        ابدأ التحدي 🎮
+        <i class="fas fa-gamepad"></i> ابدأ التحدي
       </button>
     </div>
 
@@ -254,28 +130,61 @@ window.dbWhere     = where;
     <!-- QUIZ -->
     <div id="screen-quiz" class="screen" style="padding:0">
       <div style="padding:16px;display:flex;flex-direction:column;height:100%;overflow:hidden">
+        <!-- Header bar -->
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-shrink:0">
           <button onclick="window.confirmExit()" style="width:46px;height:46px;background:rgba(239,68,68,.1);color:#ef4444;border-radius:18px;font-size:18px;border:1px solid rgba(239,68,68,.2);cursor:pointer;display:flex;align-items:center;justify-content:center" onmousedown="this.style.transform='scale(.88)'" onmouseup="this.style.transform=''">✕</button>
           <div style="flex:1;padding:0 14px">
             <div style="display:flex;justify-content:space-between;font-size:11px;font-weight:900;margin-bottom:7px;color:var(--text2);text-transform:uppercase;letter-spacing:.08em">
-              <span id="q-counter">السؤال 1/10</span><span id="q-percent">0%</span>
+              <span id="q-counter">السؤال 1/10</span>
+              <span id="q-mode-badge" style="display:none;background:rgba(251,191,36,.12);color:var(--accent);padding:2px 10px;border-radius:10px;font-size:10px"></span>
+              <span id="q-percent">0%</span>
             </div>
             <div style="height:8px;background:rgba(255,255,255,.06);border-radius:20px;overflow:hidden">
               <div id="q-progress" style="height:100%;background:var(--grad);transition:.4s;width:0%;border-radius:20px"></div>
             </div>
           </div>
-          <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
-            <div id="timer-box" style="width:46px;height:46px;background:rgba(96,165,250,.1);color:#60a5fa;border-radius:18px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:19px;border:1px solid rgba(96,165,250,.2)">15</div>
-            <div id="quiz-streak-badge" class="streak-badge" style="display:none;font-size:9px;padding:2px 7px">🔥 <span id="quiz-streak-num">0</span></div>
+          <!-- Timer Ring SVG -->
+          <div style="position:relative;width:50px;height:50px;flex-shrink:0">
+            <svg width="50" height="50" style="position:absolute;top:0;left:0;transform:rotate(-90deg)">
+              <circle cx="25" cy="25" r="22" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="3.5"/>
+              <circle id="timer-ring-fill" cx="25" cy="25" r="22" fill="none"
+                stroke="#f97316" stroke-width="3.5"
+                stroke-dasharray="138" stroke-dashoffset="0"
+                stroke-linecap="round"
+                style="transition:stroke-dashoffset .9s linear,stroke .3s"/>
+            </svg>
+            <div id="timer-box" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:17px;color:#60a5fa">15</div>
           </div>
         </div>
+
+        <!-- Hearts bar (for hearts mode) -->
+        <div id="hearts-bar" style="display:none;justify-content:center;gap:6px;margin-bottom:8px;flex-shrink:0"></div>
+
+        <!-- Streak badge -->
+        <div id="quiz-streak-badge" class="streak-badge" style="display:none;font-size:9px;padding:2px 7px;text-align:center;margin-bottom:6px;flex-shrink:0">🔥 <span id="quiz-streak-num">0</span> متتالية</div>
+
+        <!-- Timer bar -->
         <div class="timer-bar" style="margin-bottom:14px;flex-shrink:0"><div id="timer-bar-fill"></div></div>
+
+        <!-- Question card -->
         <div style="background:var(--card);padding:22px;border-radius:32px;border:1px solid rgba(255,255,255,.05);margin-bottom:14px;text-align:center;min-height:140px;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;position:relative">
           <div id="q-cat-badge" style="background:rgba(251,191,36,.1);color:var(--accent);font-size:10px;font-weight:900;padding:3px 12px;border-radius:20px;margin-bottom:10px;letter-spacing:.05em">فئة</div>
           <h3 id="q-text" style="font-size:21px;font-weight:700;line-height:1.5">جاري التحضير...</h3>
           <button id="btn-analyze" onclick="window.askAIAnalysis()" style="position:absolute;bottom:-14px;left:50%;transform:translateX(-50%);background:#2563eb;color:#fff;padding:7px 18px;border-radius:18px;font-size:11px;font-weight:900;border:none;cursor:pointer;z-index:10;display:none;white-space:nowrap;font-family:'Tajawal',sans-serif">تحليل ذكي 🤖</button>
         </div>
+
+        <!-- Skeleton Loading -->
+        <div id="skeleton-loading" style="display:none;flex-direction:column;gap:10px;flex-shrink:0">
+          <div class="skeleton-opt"></div>
+          <div class="skeleton-opt"></div>
+          <div class="skeleton-opt"></div>
+          <div class="skeleton-opt"></div>
+        </div>
+
+        <!-- Options box -->
         <div id="options-box" style="flex:1;overflow-y:auto;padding-right:2px"></div>
+
+        <!-- Analysis / next -->
         <div id="analysis-container" style="display:none;flex-shrink:0;margin-top:10px">
           <div style="background:rgba(251,191,36,.07);border:1px solid rgba(251,191,36,.2);border-radius:22px;padding:16px;margin-bottom:12px;text-align:right">
             <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px"><span style="font-size:16px">💡</span><span style="color:var(--accent);font-weight:900;font-size:12px;text-transform:uppercase">هل تعلم؟</span></div>
@@ -283,10 +192,12 @@ window.dbWhere     = where;
           </div>
           <button id="btn-next" onclick="window.nextQuestion()" style="width:100%;padding:17px;background:var(--grad);color:#000;font-weight:900;border-radius:26px;font-size:17px;border:none;border-bottom:4px solid rgba(0,0,0,.2);cursor:pointer;font-family:'Tajawal',sans-serif">السؤال التالي ➜</button>
         </div>
+
+        <!-- Helpers -->
         <div style="display:flex;gap:10px;padding-top:12px;flex-shrink:0">
-          <button onclick="window.useHelper('skip')" id="btn-skip" class="helper-btn h-skip"><span class="h-cnt" id="h-skip">5</span><span class="h-emoji">⏩</span><span class="h-label">تخطي</span></button>
-          <button onclick="window.useHelper('hint')" id="btn-hint" class="helper-btn h-hint"><span class="h-cnt" id="h-hint">5</span><span class="h-emoji">💡</span><span class="h-label">تلميح</span></button>
-          <button onclick="window.useHelper('delete')" id="btn-del" class="helper-btn h-del"><span class="h-cnt" id="h-del">5</span><span class="h-emoji">✂️</span><span class="h-label">حذف</span></button>
+          <button onclick="window.useHelper('skip')"   id="btn-skip" class="helper-btn h-skip"><span class="h-cnt" id="h-skip">5</span><span class="h-emoji">⏩</span><span class="h-label">تخطي</span></button>
+          <button onclick="window.useHelper('hint')"   id="btn-hint" class="helper-btn h-hint"><span class="h-cnt" id="h-hint">5</span><span class="h-emoji">💡</span><span class="h-label">تلميح</span></button>
+          <button onclick="window.useHelper('delete')" id="btn-del"  class="helper-btn h-del" ><span class="h-cnt" id="h-del">5</span><span class="h-emoji">✂️</span><span class="h-label">حذف</span></button>
         </div>
       </div>
     </div>
@@ -297,27 +208,70 @@ window.dbWhere     = where;
       <h2 style="font-size:34px;font-weight:900;margin-bottom:4px" id="result-title">أحسنت!</h2>
       <p style="color:var(--text2);font-size:13px;font-weight:700;margin-bottom:20px" id="result-subtitle"></p>
       <div style="width:100%;max-width:320px;margin:0 auto 20px">
-        <div class="result-stat"><span class="result-stat-label">✅ صحيحة</span><span class="result-stat-value" id="res-correct">0</span></div>
-        <div class="result-stat"><span class="result-stat-label">❌ خاطئة</span><span class="result-stat-value" id="res-wrong" style="color:#f87171">0</span></div>
-        <div class="result-stat"><span class="result-stat-label">💰 عملات</span><span class="result-stat-value" id="res-coins">0</span></div>
-        <div class="result-stat"><span class="result-stat-label">⭐ XP</span><span class="result-stat-value" id="res-xp">0</span></div>
+        <div class="result-stat"><span class="result-stat-label"><i class="fas fa-circle-check" style="color:#22c55e"></i> صحيحة</span><span class="result-stat-value" id="res-correct">0</span></div>
+        <div class="result-stat"><span class="result-stat-label"><i class="fas fa-circle-xmark" style="color:#ef4444"></i> خاطئة</span><span class="result-stat-value" id="res-wrong" style="color:#f87171">0</span></div>
+        <div class="result-stat"><span class="result-stat-label"><i class="fas fa-coins" style="color:#fbbf24"></i> عملات</span><span class="result-stat-value" id="res-coins">0</span></div>
+        <div class="result-stat"><span class="result-stat-label"><i class="fas fa-star" style="color:#a78bfa"></i> XP</span><span class="result-stat-value" id="res-xp">0</span></div>
       </div>
       <button onclick="window.navTo('map')" style="width:100%;max-width:300px;padding:17px;background:var(--grad);color:#000;font-weight:900;border-radius:28px;font-size:17px;border:none;border-bottom:4px solid rgba(0,0,0,.2);cursor:pointer;font-family:'Tajawal',sans-serif;margin-bottom:10px">العب مجدداً 🔄</button>
       <button onclick="window.navTo('home')" style="width:100%;max-width:300px;padding:13px;background:rgba(255,255,255,.05);color:var(--text2);font-weight:700;border-radius:22px;font-size:14px;border:1px solid rgba(255,255,255,.08);cursor:pointer;font-family:'Tajawal',sans-serif">الرئيسية 🏠</button>
     </div>
 
-    <!-- DAILY -->
+    <!-- DAILY CHALLENGE -->
     <div id="screen-daily" class="screen">
-      <h2 style="font-size:26px;font-weight:900;margin-bottom:16px;flex-shrink:0">تحدي اليوم 📅</h2>
+      <h2 style="font-size:26px;font-weight:900;margin-bottom:16px;flex-shrink:0;display:flex;align-items:center;gap:10px">
+        <i class="fas fa-bolt" style="color:#f97316;font-size:22px"></i> تحدي اليوم
+      </h2>
       <div id="daily-header-card" class="daily-header"></div>
       <h3 style="font-size:13px;font-weight:900;color:var(--text2);text-transform:uppercase;letter-spacing:.08em;margin:14px 0 10px;flex-shrink:0">ترتيب اليوم</h3>
       <div id="daily-leader-list" style="flex:1;overflow-y:auto;padding-bottom:20px"></div>
     </div>
 
+    <!-- WEEKLY / SEASON SCREEN -->
+    <div id="screen-weekly" class="screen">
+      <h2 style="font-size:24px;font-weight:900;margin-bottom:14px;flex-shrink:0;display:flex;align-items:center;gap:10px">
+        <i class="fas fa-ranking-star" style="color:#fbbf24;font-size:20px"></i> التحديات
+      </h2>
+      <!-- Tabs -->
+      <div style="display:flex;gap:7px;margin-bottom:14px;flex-shrink:0;overflow-x:auto;padding-bottom:2px">
+        <button class="ch-tab-btn" data-ctab="weekly"
+          style="padding:8px 18px;border-radius:14px;font-weight:900;font-size:12px;cursor:pointer;font-family:'Tajawal',sans-serif;border:1px solid rgba(251,191,36,.2);white-space:nowrap;background:rgba(251,191,36,.12);color:var(--accent)"
+          onclick="window.switchChallengeTab('weekly')">
+          <i class="fas fa-calendar-week" style="margin-left:4px"></i>أسبوعي
+        </button>
+        <button class="ch-tab-btn" data-ctab="season"
+          style="padding:8px 18px;border-radius:14px;font-weight:900;font-size:12px;cursor:pointer;font-family:'Tajawal',sans-serif;border:1px solid rgba(255,255,255,.07);white-space:nowrap;background:rgba(255,255,255,.05);color:var(--text2)"
+          onclick="window.switchChallengeTab('season')">
+          <i class="fas fa-trophy" style="margin-left:4px"></i>الموسم
+        </button>
+        <button class="ch-tab-btn" data-ctab="wtasks"
+          style="padding:8px 18px;border-radius:14px;font-weight:900;font-size:12px;cursor:pointer;font-family:'Tajawal',sans-serif;border:1px solid rgba(255,255,255,.07);white-space:nowrap;background:rgba(255,255,255,.05);color:var(--text2)"
+          onclick="window.switchChallengeTab('wtasks')">
+          <i class="fas fa-list-check" style="margin-left:4px"></i>مهام
+        </button>
+      </div>
+      <!-- Weekly tab -->
+      <div id="ch-tab-weekly" style="flex:1;display:flex;flex-direction:column;overflow:hidden">
+        <div id="weekly-header-card" style="flex-shrink:0"></div>
+        <h3 style="font-size:13px;font-weight:900;color:var(--text2);text-transform:uppercase;letter-spacing:.08em;margin:12px 0 8px;flex-shrink:0">المتصدرون</h3>
+        <div id="weekly-leader-list" style="flex:1;overflow-y:auto;padding-bottom:20px"></div>
+      </div>
+      <!-- Season tab -->
+      <div id="ch-tab-season" style="flex:1;overflow-y:auto;display:none;padding-bottom:20px">
+        <div id="season-card"></div>
+      </div>
+      <!-- Weekly tasks tab -->
+      <div id="ch-tab-wtasks" style="flex:1;overflow-y:auto;display:none;padding-bottom:20px">
+        <div id="weekly-tasks-list"></div>
+      </div>
+    </div>
+
     <!-- ROOMS -->
     <div id="screen-rooms" class="screen">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-shrink:0">
-        <h2 style="font-size:26px;font-weight:900">غرف اللعب 👥</h2>
+        <h2 style="font-size:26px;font-weight:900;display:flex;align-items:center;gap:10px">
+          <i class="fas fa-users" style="color:#06b6d4;font-size:22px"></i> غرف اللعب
+        </h2>
         <button onclick="window.createRoom()" style="background:var(--grad);color:#000;font-weight:900;font-size:13px;border:none;border-radius:14px;padding:10px 18px;cursor:pointer;font-family:'Tajawal',sans-serif;border-bottom:3px solid rgba(0,0,0,.2)">+ إنشاء غرفة</button>
       </div>
       <div id="rooms-list" style="flex:1;overflow-y:auto"></div>
@@ -342,7 +296,9 @@ window.dbWhere     = where;
 
     <!-- LEADERBOARD -->
     <div id="screen-leaderboard" class="screen">
-      <h2 style="font-size:26px;font-weight:900;margin-bottom:12px">قاعة المشاهير 🏆</h2>
+      <h2 style="font-size:26px;font-weight:900;margin-bottom:12px;display:flex;align-items:center;gap:10px">
+        <i class="fas fa-ranking-star" style="color:#fbbf24;font-size:22px"></i> قاعة المشاهير
+      </h2>
       <div style="display:flex;gap:8px;margin-bottom:14px;overflow-x:auto;padding-bottom:4px;flex-shrink:0">
         <button class="lb-tab" onclick="window.switchLeaderboard('global')" data-tab="global">🌍 عام</button>
         <button class="lb-tab" onclick="window.switchLeaderboard('season')" data-tab="season">🏅 الموسم</button>
@@ -354,7 +310,9 @@ window.dbWhere     = where;
 
     <!-- SHOP -->
     <div id="screen-shop" class="screen">
-      <h2 style="font-size:26px;font-weight:900;margin-bottom:14px;flex-shrink:0">المتجر 🛒</h2>
+      <h2 style="font-size:26px;font-weight:900;margin-bottom:14px;flex-shrink:0;display:flex;align-items:center;gap:10px">
+        <i class="fas fa-bag-shopping" style="color:#22c55e;font-size:22px"></i> المتجر
+      </h2>
       <div style="display:flex;gap:8px;margin-bottom:14px;flex-shrink:0">
         <button class="shop-tab" onclick="window.showShopTab('helpers')" data-stab="helpers">مساعدات</button>
         <button class="shop-tab" onclick="window.showShopTab('frames')"  data-stab="frames">أطر الأفاتار</button>
@@ -365,31 +323,127 @@ window.dbWhere     = where;
 
     <!-- STATS -->
     <div id="screen-stats" class="screen">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-shrink:0">
-        <h2 style="font-size:26px;font-weight:900">إحصائياتي 📊</h2>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-shrink:0">
+        <h2 style="font-size:24px;font-weight:900;display:flex;align-items:center;gap:8px">
+          <i class="fas fa-chart-bar" style="color:#f97316;font-size:20px"></i> إحصائياتي
+        </h2>
         <button onclick="window.showPlayerCard()" style="background:rgba(251,191,36,.1);color:var(--accent);border:1px solid rgba(251,191,36,.2);border-radius:14px;padding:8px 14px;font-weight:900;font-size:12px;cursor:pointer;font-family:'Tajawal',sans-serif">بطاقتي 🪪</button>
       </div>
-      <div class="stats-grid">
-        <div class="stat-card"><span class="stat-card-icon">🎮</span><span class="stat-card-value" id="st-games">0</span><span class="stat-card-label">جولات</span></div>
-        <div class="stat-card"><span class="stat-card-icon">✅</span><span class="stat-card-value" id="st-correct">0</span><span class="stat-card-label">صحيحة</span></div>
-        <div class="stat-card"><span class="stat-card-icon">🔥</span><span class="stat-card-value" id="st-maxstreak">0</span><span class="stat-card-label">أعلى سلسلة</span></div>
-        <div class="stat-card"><span class="stat-card-icon">📅</span><span class="stat-card-value" id="st-daily">0</span><span class="stat-card-label">تحديات يومية</span></div>
-        <div class="stat-card"><span class="stat-card-icon">💰</span><span class="stat-card-value" id="st-coins">0</span><span class="stat-card-label">عملاتي</span></div>
-        <div class="stat-card"><span class="stat-card-icon">⭐</span><span class="stat-card-value" id="st-xp">0</span><span class="stat-card-label">مجموع XP</span></div>
+
+      <!-- Tabs -->
+      <div style="display:flex;gap:7px;margin-bottom:14px;flex-shrink:0">
+        <button data-stab="overview"     onclick="window.switchStatsTab('overview')"     style="padding:7px 14px;border-radius:12px;font-weight:900;font-size:11px;cursor:pointer;font-family:'Tajawal',sans-serif;border:1px solid rgba(251,191,36,.2);background:rgba(251,191,36,.12);color:var(--accent)">نظرة عامة</button>
+        <button data-stab="charts"       onclick="window.switchStatsTab('charts')"       style="padding:7px 14px;border-radius:12px;font-weight:900;font-size:11px;cursor:pointer;font-family:'Tajawal',sans-serif;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.05);color:var(--text2)">تفاصيل</button>
+        <button data-stab="achievements" onclick="window.switchStatsTab('achievements')" style="padding:7px 14px;border-radius:12px;font-weight:900;font-size:11px;cursor:pointer;font-family:'Tajawal',sans-serif;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.05);color:var(--text2)">إنجازات</button>
       </div>
-      <h3 style="font-size:12px;font-weight:900;color:var(--text2);text-transform:uppercase;letter-spacing:.08em;margin:14px 0 12px">الإنجازات</h3>
-      <div id="stats-achv-grid" class="achv-grid" style="padding-bottom:90px"></div>
+
+      <!-- Tab: Overview -->
+      <div id="stats-tab-overview" style="overflow-y:auto;padding-bottom:20px">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <span class="stat-card-icon"><i class="fas fa-gamepad" style="color:#f97316"></i></span>
+            <span class="stat-card-value" id="st-games">0</span>
+            <span class="stat-card-label">جولات</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-card-icon"><i class="fas fa-circle-check" style="color:#22c55e"></i></span>
+            <span class="stat-card-value" id="st-correct">0</span>
+            <span class="stat-card-label">صحيحة</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-card-icon"><i class="fas fa-fire-flame-curved" style="color:#ef4444"></i></span>
+            <span class="stat-card-value" id="st-maxstreak">0</span>
+            <span class="stat-card-label">أعلى سلسلة</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-card-icon"><i class="fas fa-calendar-check" style="color:#f97316"></i></span>
+            <span class="stat-card-value" id="st-daily">0</span>
+            <span class="stat-card-label">تحديات يومية</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-card-icon"><i class="fas fa-coins" style="color:#fbbf24"></i></span>
+            <span class="stat-card-value" id="st-coins">0</span>
+            <span class="stat-card-label">عملاتي</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-card-icon"><i class="fas fa-star" style="color:#a78bfa"></i></span>
+            <span class="stat-card-value" id="st-xp">0</span>
+            <span class="stat-card-label">مجموع XP</span>
+          </div>
+        </div>
+        <!-- Extra stats row -->
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px">
+          <div class="stat-card" style="padding:12px 8px">
+            <span class="stat-card-icon" style="font-size:16px"><i class="fas fa-bolt" style="color:#fbbf24"></i></span>
+            <span class="stat-card-value" id="st-speed" style="font-size:20px">0</span>
+            <span class="stat-card-label">إجابات سريعة</span>
+          </div>
+          <div class="stat-card" style="padding:12px 8px">
+            <span class="stat-card-icon" style="font-size:16px"><i class="fas fa-wand-magic-sparkles" style="color:#ec4899"></i></span>
+            <span class="stat-card-value" id="st-nohint" style="font-size:20px">0</span>
+            <span class="stat-card-label">بدون مساعدات</span>
+          </div>
+          <div class="stat-card" style="padding:12px 8px">
+            <span class="stat-card-icon" style="font-size:16px"><i class="fas fa-stopwatch" style="color:#60a5fa"></i></span>
+            <span class="stat-card-value" id="st-avgtime" style="font-size:16px">0 ث</span>
+            <span class="stat-card-label">متوسط الوقت</span>
+          </div>
+        </div>
+        <!-- Login streak -->
+        <div style="background:var(--card);border-radius:20px;border:1px solid rgba(255,255,255,.05);padding:16px;margin-top:12px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+            <span style="font-size:13px;font-weight:900;color:#fff;display:flex;align-items:center;gap:6px"><i class="fas fa-fire-flame-curved" style="color:#f97316"></i> سلسلة الدخول</span>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px">
+              <span id="st-login-streak" style="font-size:16px;font-weight:900;color:var(--accent)">0 يوم</span>
+              <span id="st-login-max" style="font-size:10px;font-weight:700;color:var(--text2)">أعلى: 0 يوم</span>
+            </div>
+          </div>
+          <div id="login-streak-dots" style="display:flex;gap:6px;justify-content:center"></div>
+        </div>
+      </div>
+
+      <!-- Tab: Charts -->
+      <div id="stats-tab-charts" style="display:none;overflow-y:auto;padding-bottom:20px">
+        <div style="background:var(--card);border-radius:20px;border:1px solid rgba(255,255,255,.05);padding:16px;margin-bottom:12px">
+          <div style="display:flex;justify-content:space-between;margin-bottom:12px">
+            <div style="text-align:center">
+              <div id="chart-accuracy" style="font-size:28px;font-weight:900;color:var(--accent)">0%</div>
+              <div style="font-size:11px;font-weight:700;color:var(--text2)">الدقة</div>
+            </div>
+            <div style="text-align:center">
+              <div id="chart-avg-score" style="font-size:28px;font-weight:900;color:#22c55e">0</div>
+              <div style="font-size:11px;font-weight:700;color:var(--text2)">متوسط الأسئلة الصحيحة</div>
+            </div>
+          </div>
+        </div>
+        <h3 style="font-size:11px;font-weight:900;color:var(--text2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px">المجالات</h3>
+        <div id="chart-categories" style="display:flex;flex-direction:column;gap:10px"></div>
+      </div>
+
+      <!-- Tab: Achievements -->
+      <div id="stats-tab-achievements" style="display:none;overflow-y:auto;padding-bottom:90px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <span style="font-size:13px;font-weight:700;color:var(--text2)">المكتسبة</span>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span id="achv-progress-text" style="font-size:13px;font-weight:900;color:var(--accent)">0/0</span>
+          </div>
+        </div>
+        <div style="height:6px;background:rgba(255,255,255,.06);border-radius:10px;overflow:hidden;margin-bottom:14px">
+          <div id="achv-progress-bar" style="height:100%;background:var(--grad);border-radius:10px;width:0%;transition:width .8s"></div>
+        </div>
+        <div id="stats-achv-grid" class="achv-grid"></div>
+      </div>
     </div>
 
   </div><!-- /screens -->
 
   <!-- NAVBAR -->
   <div id="main-nav" class="nav-bar">
-    <div onclick="window.navTo('home')"        id="n-home"        class="nav-link active"><i class="fas fa-home"></i><span>الرئيسية</span></div>
+    <div onclick="window.navTo('home')"        id="n-home"        class="nav-link active"><i class="fas fa-house"></i><span>الرئيسية</span></div>
     <div onclick="window.navTo('map')"         id="n-map"         class="nav-link"><i class="fas fa-th-large"></i><span>المجالات</span></div>
     <div onclick="window.navTo('rooms')"       id="n-rooms"       class="nav-link"><i class="fas fa-users"></i><span>غرف</span></div>
-    <div onclick="window.navTo('leaderboard')" id="n-leaderboard" class="nav-link"><i class="fas fa-trophy"></i><span>المتصدرين</span></div>
-    <div onclick="window.navTo('shop')"        id="n-shop"        class="nav-link"><i class="fas fa-store"></i><span>المتجر</span></div>
+    <div onclick="window.navTo('leaderboard')" id="n-leaderboard" class="nav-link"><i class="fas fa-ranking-star"></i><span>الصدارة</span></div>
+    <div onclick="window.navTo('shop')"        id="n-shop"        class="nav-link"><i class="fas fa-bag-shopping"></i><span>المتجر</span></div>
   </div>
 </div>
 
@@ -414,16 +468,18 @@ window.dbWhere     = where;
   <div class="xp-label"><span id="side-xp-label">0 / 1500</span><span>XP</span></div>
   <div class="xp-bar"><div id="side-xp-fill" class="xp-fill" style="width:0%"></div></div>
   <div class="sb-stats">
-    <div class="sb-stat-row"><span class="sb-stat-val" id="side-coins">500</span><span class="sb-stat-label">العملات 💰</span></div>
-    <div class="sb-stat-row"><span class="sb-stat-val" id="side-lvl">1</span><span class="sb-stat-label">المستوى 🏆</span></div>
-    <div class="sb-stat-row"><span class="sb-stat-val" id="side-sections">0</span><span class="sb-stat-label">أقسام مكتملة ✅</span></div>
+    <div class="sb-stat-row"><span class="sb-stat-val" id="side-coins">500</span><span class="sb-stat-label">العملات <i class="fas fa-coins" style="color:#fbbf24"></i></span></div>
+    <div class="sb-stat-row"><span class="sb-stat-val" id="side-lvl">1</span><span class="sb-stat-label">المستوى <i class="fas fa-star" style="color:#a78bfa"></i></span></div>
+    <div class="sb-stat-row"><span class="sb-stat-val" id="side-sections">0</span><span class="sb-stat-label">أقسام مكتملة <i class="fas fa-circle-check" style="color:#22c55e"></i></span></div>
   </div>
   <div class="sb-menu">
-    <div class="sb-item" onclick="window.showDailyTasksModal()"><span class="sb-arrow">→</span><span class="sb-item-name">مهام اليوم 📅</span></div>
+    <div class="sb-item" onclick="window.showDailyTasksModal()"><span class="sb-arrow">→</span><span class="sb-item-name">مهام اليوم <i class="fas fa-calendar-check" style="color:#f97316;margin-right:4px"></i></span></div>
     <div class="sb-item" onclick="window.showAchievementsModal()"><span class="sb-arrow">→</span><span class="sb-item-name">الإنجازات 🏅</span></div>
     <div class="sb-item" onclick="window.showPlayerCard()"><span class="sb-arrow">→</span><span class="sb-item-name">بطاقتي 🪪</span></div>
-    <div class="sb-item" onclick="window.toggleSidebar();window.navTo('daily')"><span class="sb-arrow">→</span><span class="sb-item-name">تحدي اليوم 📅</span></div>
-    <div class="sb-item" onclick="window.toggleSidebar();window.navTo('rooms')"><span class="sb-arrow">→</span><span class="sb-item-name">غرف اللعب 👥</span></div>
+    <div class="sb-item" onclick="window.toggleSidebar();window.navTo('daily')"><span class="sb-arrow">→</span><span class="sb-item-name">تحدي اليوم <i class="fas fa-bolt" style="color:#f97316;margin-right:4px"></i></span></div>
+    <div class="sb-item" onclick="window.toggleSidebar();window.navTo('weekly')"><span class="sb-arrow">→</span><span class="sb-item-name">التحدي الأسبوعي <i class="fas fa-calendar-week" style="color:#fbbf24;margin-right:4px"></i></span></div>
+    <div class="sb-item" onclick="window.toggleSidebar();window.navTo('rooms')"><span class="sb-arrow">→</span><span class="sb-item-name">غرف اللعب <i class="fas fa-users" style="color:#06b6d4;margin-right:4px"></i></span></div>
+    <div class="sb-item" onclick="window.showFriendsModal?.()"><span class="sb-arrow">→</span><span class="sb-item-name">الأصدقاء 👥</span></div>
     <div class="sb-item" onclick="window.toggleSettings()" style="border-color:rgba(251,191,36,.12)">
       <div style="display:flex;align-items:center;gap:8px">
         <span id="settings-arrow" class="sb-arrow" style="transition:transform .3s">→</span>
@@ -438,7 +494,7 @@ window.dbWhere     = where;
           <button onclick="window.changeUsername()" style="background:rgba(251,191,36,.12);color:var(--accent);border:1px solid rgba(251,191,36,.2);border-radius:11px;padding:6px 14px;font-weight:900;font-size:12px;cursor:pointer;font-family:'Tajawal',sans-serif">تغيير</button>
         </div>
         <div class="sb-setting-row">
-          <span class="sb-setting-label"><span id="theme-icon-sb">🌙</span> <span id="theme-label-sb">الوضع الليلي</span></span>
+          <span class="sb-setting-label"><span id="theme-icon-sb"><i class="fas fa-moon"></i></span> <span id="theme-label-sb">الوضع الليلي</span></span>
           <div id="theme-toggle" class="toggle on" onclick="window.toggleTheme()"><div class="toggle-knob"></div></div>
         </div>
         <div class="sb-setting-row">
@@ -516,6 +572,47 @@ window.dbWhere     = where;
   </div>
 </div>
 
+<!-- ══════════════════════════════════════════════════
+     MODAL: اختر وضع اللعب (12 وضع)
+══════════════════════════════════════════════════ -->
+<div id="modal-gamemode" style="display:none;position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.85);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);align-items:flex-end;justify-content:center" onclick="window.closeGameMode()">
+  <div onclick="event.stopPropagation()" style="width:100%;max-width:500px;background:#0e0e14;border-radius:32px 32px 0 0;border:1px solid rgba(255,255,255,.08);border-bottom:none;padding:0 0 env(safe-area-inset-bottom);animation:slideUpModal .35s cubic-bezier(.16,1,.3,1) both;max-height:88vh;display:flex;flex-direction:column">
+    <!-- Handle -->
+    <div style="display:flex;justify-content:center;padding:12px 0 0"><div style="width:38px;height:4px;border-radius:10px;background:rgba(255,255,255,.15)"></div></div>
+    <!-- Header -->
+    <div style="padding:14px 20px 10px;display:flex;align-items:center;gap:12px;flex-shrink:0">
+      <div style="width:46px;height:46px;border-radius:16px;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">
+        <span id="gm-cat-icon">🎯</span>
+      </div>
+      <div style="flex:1;min-width:0">
+        <div id="gm-cat-name" style="font-size:16px;font-weight:900;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></div>
+        <div id="gm-sub-name" style="font-size:12px;font-weight:700;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></div>
+      </div>
+      <button onclick="window.closeGameMode()" style="width:36px;height:36px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.08);border-radius:12px;color:rgba(255,255,255,.6);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0">✕</button>
+    </div>
+    <!-- Tabs -->
+    <div style="display:flex;gap:6px;padding:0 16px 12px;flex-shrink:0;overflow-x:auto">
+      <button class="gm-tab" data-gmtab="popular"   onclick="window.switchGameModeTab('popular')"   style="padding:7px 16px;border-radius:12px;font-weight:900;font-size:11px;cursor:pointer;font-family:'Tajawal',sans-serif;white-space:nowrap;border:1px solid rgba(251,191,36,.28);background:rgba(251,191,36,.14);color:var(--accent)"><i class="fas fa-fire-flame-curved" style="margin-left:4px"></i>شائع</button>
+      <button class="gm-tab" data-gmtab="challenge" onclick="window.switchGameModeTab('challenge')" style="padding:7px 16px;border-radius:12px;font-weight:900;font-size:11px;cursor:pointer;font-family:'Tajawal',sans-serif;white-space:nowrap;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.05);color:var(--text2)"><i class="fas fa-crosshairs" style="margin-left:4px"></i>تحدي</button>
+      <button class="gm-tab" data-gmtab="custom"    onclick="window.switchGameModeTab('custom')"    style="padding:7px 16px;border-radius:12px;font-weight:900;font-size:11px;cursor:pointer;font-family:'Tajawal',sans-serif;white-space:nowrap;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.05);color:var(--text2)"><i class="fas fa-sliders" style="margin-left:4px"></i>مخصص</button>
+    </div>
+    <!-- Modes grid -->
+    <div id="gm-modes-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 16px;overflow-y:auto;flex:1"></div>
+    <!-- Info box -->
+    <div id="gm-info-box" style="display:none;margin:10px 16px 0;background:rgba(251,191,36,.07);border:1px solid rgba(251,191,36,.15);border-radius:18px;padding:12px 16px;flex-shrink:0">
+      <p id="gm-info-text" style="font-size:12px;font-weight:700;color:#cbd5e1;line-height:1.6;text-align:right"></p>
+    </div>
+    <!-- Start button -->
+    <div style="padding:14px 16px 20px;flex-shrink:0">
+      <button id="gm-start-btn" onclick="window.launchSelectedMode()"
+        style="width:100%;padding:17px;background:var(--grad);color:#000;font-weight:900;border-radius:26px;font-size:16px;border:none;border-bottom:4px solid rgba(0,0,0,.2);cursor:pointer;font-family:'Tajawal',sans-serif;opacity:.45;pointer-events:none;display:flex;align-items:center;justify-content:center;gap:8px">
+        <i class="fas fa-play"></i>
+        <span id="gm-start-label">اختر وضعًا</span>
+      </button>
+    </div>
+  </div>
+</div>
+
 <!-- CUSTOM DIALOGS -->
 <div id="cmod-confirm" class="cmod-overlay" onclick="window._cancelConfirm()">
   <div class="cmod-box" onclick="event.stopPropagation()">
@@ -542,7 +639,7 @@ window.dbWhere     = where;
   </div>
 </div>
 
-<!-- GAME JS -->
+<!-- GAME JS — يجب أن تكون الملفات في مجلد js/ -->
 <script type="module" src="js/main.js"></script>
 </body>
 </html>
