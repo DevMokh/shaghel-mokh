@@ -1,7 +1,7 @@
 // js/modes.js — أوضاع اللعب الجديدة: روليت + بطاقات + 1vs1
 import { db, APP_ID } from './firebase.js';
 import { showToast, playSound } from './helpers.js';
-import { navTo } from './ui.js';
+
 
 const categoryConfig = {
   islamic: { name:'إسلاميات',     icon:'🕌', subs:['فقه وعبادات','سيرة نبوية','قرآن كريم','أحاديث شريفة'] },
@@ -166,7 +166,7 @@ export async function openFlashcards(cat, sub) {
   _fcCat = cat; _fcSub = sub;
   _fcKnown.clear(); _fcReview.clear();
   _fcIdx = 0; _fcFlipped = false;
-  navTo('flashcards');
+  window.navTo('flashcards');
 
   // skeleton while loading
   const front = document.getElementById('fc-front');
@@ -398,7 +398,7 @@ function _listen1v1(code) {
 }
 
 function _show1v1Waiting(code) {
-  navTo('1v1');
+  window.navTo('1v1');
   const s = document.getElementById('screen-1v1');
   if (!s) return;
   s.innerHTML = `
@@ -423,7 +423,7 @@ function _show1v1Waiting(code) {
 
 function _start1v1() {
   _cvIdx = 0; _cvMyScore = 0; _cvTheirScore = 0;
-  navTo('1v1');
+  window.navTo('1v1');
   const s = document.getElementById('screen-1v1');
   if (!s) return;
   s.innerHTML = `
