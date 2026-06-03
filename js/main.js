@@ -72,11 +72,7 @@ import {
   addFriendByCode,
   removeFriend
 } from './friends.js';
-import {
-  openRoulette, closeRoulette, spinRoulette, startRouletteGame,
-  openFlashcards, renderFC, flipFC, markFC, restartFC,
-  open1v1, close1v1, create1v1, join1v1, _1v1Answer
-} from './modes.js';
+// modes.js — يتحمل dynamically عشان لو فيه مشكلة مش يوقف الـ app
 
 // ══════════════════════════════════════════════════════════════════
 // تعيين الدوال والكائنات العامة على window (للاستخدام في HTML onclick)
@@ -95,25 +91,34 @@ window.renderStats = renderStats;
 window.switchStatsTab = switchStatsTab;
 window.switchChallengeTab = switchChallengeTab;
 window.switchLeaderboard = (tab) => renderLeaderboard(tab);
-window.showShopTab = showShopTab;               // ← ضروري لتبويبات المتجر
-window.renderColorPicker = renderColorPicker;   // ← ضروري للسايدبار
-window.updateHomeStreak = updateHomeStreak;     // ← ضروري لبادج السلسلة
+window.showShopTab = showShopTab;
+window.renderColorPicker = renderColorPicker;
+window.updateHomeStreak = updateHomeStreak;
 
-// أوضاع اللعب الجديدة
-window.openRoulette      = openRoulette;
-window.closeRoulette     = closeRoulette;
-window.spinRoulette      = spinRoulette;
-window.startRouletteGame = startRouletteGame;
-window.openFlashcards    = openFlashcards;
-window.renderFC          = renderFC;
-window.flipFC            = flipFC;
-window.markFC            = markFC;
-window.restartFC         = restartFC;
-window.open1v1           = open1v1;
-window.close1v1          = close1v1;
-window.create1v1         = create1v1;
-window.join1v1           = join1v1;
-window._1v1Answer        = _1v1Answer;
+// أوضاع اللعب الجديدة — dynamic import
+import('./modes.js').then(m => {
+  window.openRoulette      = m.openRoulette;
+  window.closeRoulette     = m.closeRoulette;
+  window.spinRoulette      = m.spinRoulette;
+  window.startRouletteGame = m.startRouletteGame;
+  window.openFlashcards    = m.openFlashcards;
+  window.renderFC          = m.renderFC;
+  window.flipFC            = m.flipFC;
+  window.markFC            = m.markFC;
+  window.restartFC         = m.restartFC;
+  window.open1v1           = m.open1v1;
+  window.close1v1          = m.close1v1;
+  window.create1v1         = m.create1v1;
+  window.join1v1           = m.join1v1;
+  window._1v1Answer        = m._1v1Answer;
+  console.log('[Modes] أوضاع اللعب الجديدة جاهزة ✅');
+}).catch(e => {
+  console.warn('[Modes] فشل تحميل أوضاع اللعب:', e);
+  // fallbacks بسيطة
+  window.openRoulette   = () => window.showToast('🎰 قريباً!');
+  window.openFlashcards = () => window.showToast('🃏 قريباً!');
+  window.open1v1        = () => window.showToast('⚔️ قريباً!');
+});
 
 // المساعدات العامة
 window.showToast = showToast;
