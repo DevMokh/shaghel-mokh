@@ -136,7 +136,7 @@ export function spinRoulette() {
       </div>`;
     if (start) {
       start.style.display = 'flex';
-      start.innerHTML = \`<i class="fas ${_rResult.fa}" style="font-size:13px;margin-left:6px"></i> ابدأ في ${_rResult.name}\`;
+      start.innerHTML = '<i class="fas ' + _rResult.fa + '" style="font-size:13px;margin-left:6px"></i> ابدأ في ' + _rResult.name;
     }
     if (btn)   { btn.innerText = 'دوّر تاني 🔄'; btn.disabled = false; btn.style.opacity = '1'; }
 
