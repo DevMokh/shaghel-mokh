@@ -33,6 +33,23 @@
         .catch(e => console.warn('[SW] Failed:', e));
     });
   }
+
+  // Fallback: إخفاء loading screen بعد 6 ثواني حتى لو JS فيها مشكلة
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      const ls = document.getElementById('loading-screen');
+      if (ls) { ls.style.opacity='0'; ls.style.pointerEvents='none';
+                setTimeout(()=>ls.remove(),500); }
+    }, 6000);
+  });
+
+  // Global error logger
+  window.addEventListener('error', (e) => {
+    console.error('[AppError]', e.message, e.filename, e.lineno);
+  });
+  window.addEventListener('unhandledrejection', (e) => {
+    console.error('[UnhandledPromise]', e.reason);
+  });
 </script>
 </head>
 <body id="main-body">
