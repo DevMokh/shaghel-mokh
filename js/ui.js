@@ -233,89 +233,147 @@ window.navTo = navTo;
 export function renderMap() {
   const grid = document.getElementById('map-grid');
   if (!grid) return;
-  const unlocked = window.gameData.unlockedCategories || ['islamic'];
-  const keys = Object.keys(categoryConfig).sort((a, b) => categoryConfig[a].order - categoryConfig[b].order);
+  const unlocked  = window.gameData.unlockedCategories || ['islamic'];
+  const keys      = Object.keys(categoryConfig).sort((a,b) => (categoryConfig[a].order||0)-(categoryConfig[b].order||0));
   const doneByKey = {};
   (window.gameData._mapProgress || []).forEach(k => doneByKey[k] = true);
   let totalUnlocked = 0;
   grid.innerHTML = '';
-  keys.forEach((key) => {
-    const cat = categoryConfig[key];
-    const isUnlocked = true;
-    const isDone = !!doneByKey[key];
+
+  // ── FA icon per category ──
+  const FA_ICONS = {
+    islamic : { fa:'fa-mosque',         color:'#f59e0b', bg:'#f59e0b' },
+    egypt   : { fa:'fa-landmark',       color:'#ef4444', bg:'#ef4444' },
+    tech    : { fa:'fa-laptop-code',    color:'#3b82f6', bg:'#3b82f6' },
+    science : { fa:'fa-atom',           color:'#8b5cf6', bg:'#8b5cf6' },
+    geo     : { fa:'fa-earth-africa',   color:'#10b981', bg:'#10b981' },
+    sports  : { fa:'fa-futbol',         color:'#f97316', bg:'#f97316' },
+    puzzles : { fa:'fa-puzzle-piece',   color:'#ec4899', bg:'#ec4899' },
+    food    : { fa:'fa-utensils',       color:'#84cc16', bg:'#84cc16' },
+    cairo   : { fa:'fa-city',           color:'#06b6d4', bg:'#06b6d4' },
+    words   : { fa:'fa-comment-dots',   color:'#a855f7', bg:'#a855f7' },
+    music   : { fa:'fa-music',          color:'#f43f5e', bg:'#f43f5e' },
+    cinema  : { fa:'fa-clapperboard',   color:'#eab308', bg:'#eab308' },
+  };
+  const catColors = {
+    islamic:['#f59e0b','#d97706'], egypt:['#ef4444','#dc2626'],
+    tech:['#3b82f6','#2563eb'],    science:['#8b5cf6','#7c3aed'],
+    geo:['#10b981','#059669'],     sports:['#f97316','#ea580c'],
+    puzzles:['#ec4899','#db2777'], food:['#84cc16','#65a30d'],
+    cairo:['#06b6d4','#0891b2'],   words:['#a855f7','#9333ea'],
+    music:['#f43f5e','#e11d48'],   cinema:['#eab308','#ca8a04'],
+  };
+
+  keys.forEach(key => {
+    const cat          = categoryConfig[key];
+    const isUnlocked   = true;
+    const isDone       = !!doneByKey[key];
     if (isUnlocked) totalUnlocked++;
-    const subsCompleted = (window.gameData._subProgress || {})[key] || 0;
-    const pct = Math.round((subsCompleted / cat.subs.length) * 100);
+    const subsCompleted= (window.gameData._subProgress||{})[key]||0;
+    const pct          = Math.round((subsCompleted/cat.subs.length)*100);
+    const [c1,c2]      = catColors[key] || ['#fbbf24','#f59e0b'];
+    const ic           = FA_ICONS[key] || { fa:'fa-star', color:c1 };
+
     const node = document.createElement('div');
-    const catColors2 = {
-      islamic: '#f59e0b', egypt: '#ef4444', tech: '#3b82f6', science: '#8b5cf6',
-      geo: '#10b981', sports: '#f97316', puzzles: '#ec4899', food: '#84cc16',
-      cairo: '#06b6d4', words: '#a855f7', music: '#f43f5e', cinema: '#eab308',
-    };
-    const nodeColor = catColors2[key] || (window.gameData?.accentColor || '#fbbf24');
-    node.className = `map-node ${isDone ? 'completed' : isUnlocked ? 'unlocked' : 'locked'}`;
-    node.style.borderColor = isDone ? '#22c55e55' : nodeColor + '44';
-    node.style.boxShadow = isDone ? '0 8px 30px rgba(34,197,94,.12)' : `0 8px 30px ${nodeColor}15`;
-    const catColors = {
-      islamic: ['#f59e0b', '#d97706'], egypt: ['#ef4444', '#dc2626'],
-      tech: ['#3b82f6', '#2563eb'], science: ['#8b5cf6', '#7c3aed'],
-      geo: ['#10b981', '#059669'], sports: ['#f97316', '#ea580c'],
-      puzzles: ['#ec4899', '#db2777'], food: ['#84cc16', '#65a30d'],
-      cairo: ['#06b6d4', '#0891b2'], words: ['#a855f7', '#9333ea'],
-      music: ['#f43f5e', '#e11d48'], cinema: ['#eab308', '#ca8a04'],
-    };
-    const [c1, c2] = catColors[key] || ['#fbbf24', '#f59e0b'];
+    node.className = `map-node ${isDone?'completed':isUnlocked?'unlocked':'locked'}`;
+    node.style.borderColor  = isDone ? '#22c55e55' : c1+'44';
+    node.style.boxShadow    = isDone ? '0 8px 30px rgba(34,197,94,.12)' : `0 8px 30px ${c1}18`;
+
     node.innerHTML = `
-      <div style="position:absolute;inset:0;border-radius:inherit;background:linear-gradient(145deg,${c1}14,${c2}07);pointer-events:none"></div>
+      <div style="position:absolute;inset:0;border-radius:22px;
+                  background:linear-gradient(135deg,${c1}18,${c2}08);pointer-events:none"></div>
       ${isDone ? '<div class="map-check">✓</div>' : ''}
-      <div class="map-icon-wrap" style="
-        width:48px;height:48px;
-        border-radius:16px;
-        background:linear-gradient(135deg,${c1},${c2});
-        display:flex;align-items:center;justify-content:center;
-        margin:0 auto 9px;
-        box-shadow:0 6px 18px ${c1}50;
-        flex-shrink:0;
-      ">
-        <i class="fas ${cat.fa}" style="
-          font-size:20px;
-          color:#fff;
-          filter:drop-shadow(0 1px 3px rgba(0,0,0,.3));
-        "></i>
+      <div class="map-icon-wrap" style="width:52px;height:52px;border-radius:18px;
+                  background:linear-gradient(145deg,${c1},${c2});
+                  display:flex;align-items:center;justify-content:center;
+                  margin:0 auto 10px;box-shadow:0 4px 12px ${c1}55">
+        <i class="fas ${ic.fa}" style="font-size:22px;color:#fff;text-shadow:0 2px 4px rgba(0,0,0,.2)"></i>
       </div>
       <div class="map-name" style="color:#fff">${cat.name}</div>
       <div class="map-subs">${cat.subs.length} أقسام</div>
-      <div class="map-progress-bar" style="margin-top:8px">
+      <div class="map-progress-bar" style="margin-top:10px">
         <div class="map-progress-fill" style="width:${pct}%;background:linear-gradient(90deg,${c1},${c2})"></div>
       </div>`;
-    if (isUnlocked && !isDone) node.onclick = () => { window.selectedCategory = key; showSubsForMap(key); };
+
+    if (isUnlocked && !isDone)
+      node.onclick = () => { window.selectedCategory = key; showSubsForMap(key, c1, ic); };
     grid.appendChild(node);
   });
-  document.getElementById('map-progress-badge').innerText = `${totalUnlocked}/${Object.keys(categoryConfig).length} مفتوح`;
+  document.getElementById('map-progress-badge').innerText =
+    `${totalUnlocked}/${Object.keys(categoryConfig).length} مفتوح`;
 }
 window.renderMap = renderMap;
 
-function showSubsForMap(key) {
+function showSubsForMap(key, c1, ic) {
   const cat = categoryConfig[key];
+  const iconHtml = ic
+    ? `<div style="width:44px;height:44px;border-radius:16px;background:linear-gradient(145deg,${c1},${c1}bb);
+         display:flex;align-items:center;justify-content:center;flex-shrink:0">
+         <i class="fas ${ic.fa}" style="font-size:20px;color:#fff"></i></div>`
+    : `<div style="font-size:28px">${cat.icon||'🎯'}</div>`;
+
   document.getElementById('paths-header').innerHTML = `
     <button onclick="window.navTo('map')"
-      style="color:var(--accent);font-weight:900;margin-bottom:18px;display:inline-flex;
-      align-items:center;gap:8px;background:rgba(251,191,36,.07);padding:10px 16px;
-      border-radius:14px;border:none;cursor:pointer;font-family:'Tajawal',sans-serif;font-size:14px">
-      <i class="fas fa-arrow-right"></i> العودة للخريطة
+      style="color:var(--accent);font-weight:900;margin-bottom:14px;display:inline-flex;
+      align-items:center;gap:8px;background:rgba(251,191,36,.07);padding:8px 14px;
+      border-radius:14px;border:1px solid rgba(251,191,36,.12);cursor:pointer;
+      font-family:'Tajawal',sans-serif;font-size:13px">
+      <i class="fas fa-arrow-right"></i> الخريطة
     </button>
-    <h2 style="font-size:24px;font-weight:900;margin-bottom:16px">${cat.icon} ${cat.name}</h2>`;
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
+      ${iconHtml}
+      <h2 style="font-size:22px;font-weight:900;margin:0">${cat.name}</h2>
+    </div>`;
+
   const list = document.getElementById('paths-list');
   list.innerHTML = '';
-  cat.subs.forEach(sub => {
-    const div = document.createElement('div');
-    div.style.cssText = 'background:var(--card);padding:18px 20px;border-radius:22px;border:1px solid rgba(255,255,255,.05);display:flex;justify-content:space-between;align-items:center;cursor:pointer;transition:.2s';
-    div.innerHTML = `<div style="display:flex;align-items:center;gap:12px">
-      <div style="width:8px;height:8px;border-radius:50%;background:var(--accent)"></div>
-      <span style="font-weight:700;font-size:16px">${sub}</span>
-    </div>
-    <span style="background:var(--grad);color:#000;padding:8px 18px;border-radius:14px;font-weight:900;font-size:12px;border:none">ابدأ</span>`;
-    div.onclick = () => window.openGameMode(cat.name, sub, cat.icon);
+
+  cat.subs.forEach((sub, idx) => {
+    const done = ((window.gameData._subProgress||{})[key]||0) > idx;
+    const div  = document.createElement('div');
+    div.style.cssText = `background:var(--card);padding:13px 16px;border-radius:18px;
+      border:1px solid ${done?'rgba(34,197,94,.18)':'rgba(255,255,255,.05)'};
+      display:flex;justify-content:space-between;align-items:center;cursor:pointer;
+      transition:.15s;box-shadow:0 2px 8px rgba(0,0,0,.15);position:relative;overflow:hidden`;
+
+    div.innerHTML = `
+      <div style="display:flex;align-items:center;gap:12px">
+        <div style="width:36px;height:36px;border-radius:12px;
+             background:${done?'rgba(34,197,94,.15)':`${c1}18`};
+             display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <i class="fas ${done?'fa-circle-check':'fa-play'}"
+             style="font-size:14px;color:${done?'#22c55e':c1}"></i>
+        </div>
+        <div>
+          <span style="font-weight:700;font-size:14px;color:#fff">${sub}</span>
+          ${done?'<div style="font-size:10px;color:#22c55e;font-weight:700;margin-top:2px">✓ مكتمل</div>':''}
+        </div>
+      </div>
+      <div style="display:flex;gap:6px">
+        <button onclick="event.stopPropagation();window.openFlashcards('${cat.name}','${sub}')"
+          style="background:rgba(96,165,250,.1);color:#60a5fa;padding:8px 10px;border-radius:12px;
+                 font-weight:900;border:1px solid rgba(96,165,250,.18);cursor:pointer;
+                 font-family:'Tajawal',sans-serif;font-size:11px;display:flex;align-items:center;gap:4px">
+          <i class="fas fa-clone" style="font-size:11px"></i>
+        </button>
+        <button onclick="event.stopPropagation();window.open1v1('${cat.name}','${sub}')"
+          style="background:rgba(239,68,68,.1);color:#ef4444;padding:8px 10px;border-radius:12px;
+                 font-weight:900;border:1px solid rgba(239,68,68,.18);cursor:pointer;
+                 font-family:'Tajawal',sans-serif;font-size:11px;display:flex;align-items:center;gap:4px">
+          <i class="fas fa-swords" style="font-size:11px"></i>
+        </button>
+        <button onclick="event.stopPropagation();window.openGameMode('${cat.name}','${sub}','${ic?.fa||''}')"
+          style="background:${c1};color:#000;padding:8px 14px;border-radius:12px;
+                 font-weight:900;border:none;border-bottom:2px solid rgba(0,0,0,.2);
+                 cursor:pointer;font-family:'Tajawal',sans-serif;font-size:12px">
+          ابدأ
+        </button>
+      </div>`;
+
+    div.onmousedown  = () => div.style.transform = 'scale(.98)';
+    div.onmouseup    = () => div.style.transform = '';
+    div.ontouchstart = () => div.style.transform = 'scale(.98)';
+    div.ontouchend   = () => div.style.transform = '';
     list.appendChild(div);
   });
   window.navTo('paths');
