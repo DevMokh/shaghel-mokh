@@ -4,18 +4,18 @@ import { showToast, playSound } from './helpers.js';
 
 
 const categoryConfig = {
-  islamic: { name:'إسلاميات',     icon:'🕌', subs:['فقه وعبادات','سيرة نبوية','قرآن كريم','أحاديث شريفة'] },
-  egypt:   { name:'تاريخ مصر',    icon:'🏛️', subs:['فراعنة','العصر الإسلامي','مصر الحديثة','ثورات مصر'] },
-  tech:    { name:'تقنية',         icon:'💻', subs:['برمجة','ذكاء اصطناعي','شبكات','أجهزة'] },
-  science: { name:'علوم وفضاء',   icon:'🔬', subs:['فيزياء','كيمياء','أحياء','فلك'] },
-  geo:     { name:'جغرافيا',       icon:'🌍', subs:['عواصم','أنهار وجبال','دول العالم','خرائط'] },
-  sports:  { name:'رياضة',         icon:'⚽', subs:['كرة قدم','كرة سلة','رياضات أخرى','أبطال'] },
-  puzzles: { name:'ألغاز',         icon:'🧩', subs:['ألغاز منطقية','رياضيات','معادلات','ألغاز لغوية'] },
-  food:    { name:'طعام',          icon:'🍽️', subs:['مطبخ مصري','مطبخ عربي','مطبخ عالمي','مشروبات'] },
-  cairo:   { name:'أحياء القاهرة', icon:'🏙️', subs:['القاهرة القديمة','القاهرة الحديثة','ضواحي','شوارع'] },
-  words:   { name:'كلمات مصرية',  icon:'💬', subs:['أصول الكلمات','أمثال شعبية','لهجات','معاني'] },
-  music:   { name:'موسيقى وأغاني',icon:'🎵', subs:['كلاسيكيات','أغاني حديثة','موسيقيون','فرق'] },
-  cinema:  { name:'سينما وتليفزيون',icon:'🎬', subs:['أفلام مصرية','مسلسلات','ممثلون','مخرجون'] },
+  islamic: { name:'إسلاميات',      fa:'fa-mosque',       color:'#f59e0b', icon:'🕌', subs:['فقه وعبادات','سيرة نبوية','قرآن كريم','أحاديث شريفة'] },
+  egypt:   { name:'تاريخ مصر',     fa:'fa-landmark',     color:'#ef4444', icon:'🏛️', subs:['فراعنة','العصر الإسلامي','مصر الحديثة','ثورات مصر'] },
+  tech:    { name:'تقنية',          fa:'fa-laptop-code',  color:'#3b82f6', icon:'💻', subs:['برمجة','ذكاء اصطناعي','شبكات','أجهزة'] },
+  science: { name:'علوم وفضاء',    fa:'fa-atom',         color:'#8b5cf6', icon:'🔬', subs:['فيزياء','كيمياء','أحياء','فلك'] },
+  geo:     { name:'جغرافيا',        fa:'fa-earth-africa', color:'#10b981', icon:'🌍', subs:['عواصم','أنهار وجبال','دول العالم','خرائط'] },
+  sports:  { name:'رياضة',          fa:'fa-futbol',       color:'#f97316', icon:'⚽', subs:['كرة قدم','كرة سلة','رياضات أخرى','أبطال'] },
+  puzzles: { name:'ألغاز',          fa:'fa-puzzle-piece', color:'#ec4899', icon:'🧩', subs:['ألغاز منطقية','رياضيات','معادلات','ألغاز لغوية'] },
+  food:    { name:'طعام',           fa:'fa-utensils',     color:'#84cc16', icon:'🍽️', subs:['مطبخ مصري','مطبخ عربي','مطبخ عالمي','مشروبات'] },
+  cairo:   { name:'أحياء القاهرة', fa:'fa-city',         color:'#06b6d4', icon:'🏙️', subs:['القاهرة القديمة','القاهرة الحديثة','ضواحي','شوارع'] },
+  words:   { name:'كلمات مصرية',   fa:'fa-comment-dots', color:'#a855f7', icon:'💬', subs:['أصول الكلمات','أمثال شعبية','لهجات','معاني'] },
+  music:   { name:'موسيقى وأغاني', fa:'fa-music',        color:'#f43f5e', icon:'🎵', subs:['كلاسيكيات','أغاني حديثة','موسيقيون','فرق'] },
+  cinema:  { name:'سينما وتليفزيون',fa:'fa-clapperboard', color:'#eab308', icon:'🎬', subs:['أفلام مصرية','مسلسلات','ممثلون','مخرجون'] },
 };
 
 const COLORS = ['#f97316','#fbbf24','#22c55e','#60a5fa','#a78bfa','#f472b6',
@@ -80,7 +80,7 @@ function drawWheel(rotDeg) {
     ctx.translate(R, R); ctx.rotate(sa + arc / 2);
     ctx.textAlign = 'right';
     ctx.font = 'bold 10px Tajawal,sans-serif'; ctx.fillStyle = 'rgba(0,0,0,.85)';
-    ctx.fillText(cat.icon + ' ' + cat.name, R - 10, 3.5);
+    ctx.fillText(cat.name, R - 10, 3.5);
     ctx.restore();
   });
 
@@ -126,8 +126,18 @@ export function spinRoulette() {
 
     const lbl   = document.getElementById('roulette-result-lbl');
     const start = document.getElementById('roulette-start-btn');
-    if (lbl)   lbl.innerText = `${_rResult.icon}  ${_rResult.name}!`;
-    if (start) { start.style.display = 'flex'; start.innerText = `ابدأ في ${_rResult.name} 🎮`; }
+    if (lbl)   lbl.innerHTML = `
+      <div style="display:flex;align-items:center;justify-content:center;gap:10px">
+        <div style="width:36px;height:36px;border-radius:12px;background:linear-gradient(145deg,${COLORS[idx%COLORS.length]},${COLORS[(idx+1)%COLORS.length]});
+             display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <i class="fas ${_rResult.fa}" style="font-size:16px;color:#fff"></i>
+        </div>
+        <span style="font-size:16px;font-weight:900;color:#fff">${_rResult.name}</span>
+      </div>`;
+    if (start) {
+      start.style.display = 'flex';
+      start.innerHTML = \`<i class="fas ${_rResult.fa}" style="font-size:13px;margin-left:6px"></i> ابدأ في ${_rResult.name}\`;
+    }
     if (btn)   { btn.innerText = 'دوّر تاني 🔄'; btn.disabled = false; btn.style.opacity = '1'; }
 
     if (navigator.vibrate) navigator.vibrate([50, 30, 100]);
@@ -143,7 +153,7 @@ export function startRouletteGame() {
   if (!_rResult) return;
   closeRoulette();
   const sub = _rResult.subs[Math.floor(Math.random() * _rResult.subs.length)];
-  window.openGameMode?.(_rResult.name, sub, _rResult.icon);
+  window.openGameMode?.(_rResult.name, sub, _rResult.fa);
 }
 window.startRouletteGame = startRouletteGame;
 
@@ -236,9 +246,20 @@ export function renderFC() {
   const L = ['A','B','C','D'];
   if (counter) counter.innerText = `${_fcIdx+1} / ${tot}`;
 
+  // إيجاد بيانات التصنيف
+  const _catData = Object.values(categoryConfig).find(c => c.name === _fcCat) || {};
+  const _catColor = _catData.color || 'var(--accent)';
+  const _catFa = _catData.fa || 'fa-star';
+
   if (front) front.innerHTML = `
-    <div style="font-size:10px;font-weight:900;color:var(--accent);letter-spacing:.08em;margin-bottom:14px">
-      ${_fcCat} • ${_fcSub}</div>
+    <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:14px">
+      <div style="width:30px;height:30px;border-radius:10px;
+           background:linear-gradient(145deg,${_catColor},${_catColor}bb);
+           display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <i class="fas ${_catFa}" style="font-size:13px;color:#fff"></i>
+      </div>
+      <span style="font-size:10px;font-weight:900;color:${_catColor};letter-spacing:.06em">${_fcCat} • ${_fcSub}</span>
+    </div>
     <p style="font-size:18px;font-weight:700;color:#fff;line-height:1.65;text-align:center">${q.t}</p>
     <div style="margin-top:18px;font-size:11px;font-weight:700;color:var(--text2)">👆 اضغط للقلب</div>`;
 
@@ -311,7 +332,18 @@ let _cvTheirScore = 0;
 export function open1v1(cat, sub) {
   const m = document.getElementById('modal-1v1');
   if (!m) return;
-  document.getElementById('1v1-cat-lbl').innerText = `${cat} • ${sub}`;
+  const _1v1Cat = Object.values(categoryConfig).find(c => c.name === cat) || {};
+  const _1v1El  = document.getElementById('1v1-cat-lbl');
+  if (_1v1El) _1v1El.innerHTML = `
+    <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.05);
+         border-radius:12px;padding:7px 14px;border:1px solid rgba(255,255,255,.08)">
+      <div style="width:26px;height:26px;border-radius:8px;
+           background:${_1v1Cat.color||'var(--accent)'};
+           display:flex;align-items:center;justify-content:center">
+        <i class="fas ${_1v1Cat.fa||'fa-star'}" style="font-size:12px;color:#fff"></i>
+      </div>
+      <span style="font-size:12px;font-weight:700;color:#fff">${cat} • ${sub}</span>
+    </div>`;
   m.dataset.cat = cat; m.dataset.sub = sub;
   m.style.display = 'flex';
 }
