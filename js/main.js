@@ -785,7 +785,7 @@ window.openGameMode = (cat, sub, icon) => {
   s('gm-info-box').style.display = 'none';
   s('gm-start-label').innerText = 'اختر وضعًا';
   const _disBtn = s('gm-start-btn');
-  _disBtn.style.cssText = 'width:100%;padding:16px;background:rgba(255,255,255,.06);color:rgba(255,255,255,.3);font-weight:900;border-radius:24px;font-size:15px;border:1.5px dashed rgba(255,255,255,.12);cursor:default;font-family:'Tajawal',sans-serif;display:flex;align-items:center;justify-content:center;gap:10px;transition:all .25s;pointer-events:none';
+  _disBtn.style.cssText = 'width:100%;padding:16px;background:rgba(255,255,255,.06);color:rgba(255,255,255,.3);font-weight:900;border-radius:24px;font-size:15px;border:1.5px dashed rgba(255,255,255,.12);cursor:default;font-family:Tajawal,sans-serif;display:flex;align-items:center;justify-content:center;gap:10px;transition:all .25s;pointer-events:none';
   window.switchGameModeTab('popular');
   s('modal-gamemode').style.display = 'flex';
   document.body.style.overflow = 'hidden';
@@ -835,7 +835,7 @@ function _selectMode(mode) {
   if (_hint) _hint.style.display = 'none';
   document.getElementById('gm-start-label').innerText = `ابدأ · ${mode.title}`;
   const btn = document.getElementById('gm-start-btn');
-  btn.style.cssText = 'width:100%;padding:16px;background:var(--grad);color:#000;font-weight:900;border-radius:24px;font-size:15px;border:none;border-bottom:3px solid rgba(0,0,0,.2);cursor:pointer;font-family:'Tajawal',sans-serif;display:flex;align-items:center;justify-content:center;gap:10px;transition:all .25s;pointer-events:auto;box-shadow:0 6px 20px rgba(251,191,36,.25)';
+  btn.style.cssText = 'width:100%;padding:16px;background:var(--grad);color:#000;font-weight:900;border-radius:24px;font-size:15px;border:none;border-bottom:3px solid rgba(0,0,0,.2);cursor:pointer;font-family:Tajawal,sans-serif;display:flex;align-items:center;justify-content:center;gap:10px;transition:all .25s;pointer-events:auto;box-shadow:0 6px 20px rgba(251,191,36,.25)';
 }
 
 window.launchSelectedMode = () => {
