@@ -857,20 +857,26 @@ body{font-family:'Tajawal',sans-serif;background:#050508;color:#fff;
   inset: 0;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  background: var(--card);
-  border: 1px solid rgba(255,255,255,.06);
-  border-radius: 26px;
+  border: 1px solid rgba(255,255,255,.07);
+  border-radius: 22px;
   padding: 24px 20px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
+  align-items: stretch;
+  justify-content: flex-start;
+  overflow: hidden;
+  /* خلفية الكارت */
+  background: linear-gradient(180deg, #181820 0%, #111118 100%);
 }
 #fc-back {
   transform: rotateY(180deg);
-  background: #0e1a14;
-  border-color: rgba(34,197,94,.15);
+  background: linear-gradient(180deg, #0d1a10 0%, #0a0f0b 100%);
+  border-color: rgba(34,197,94,.12);
+}
+/* تحريك البطاقة عند الضغط */
+#fc-outer:active #fc-inner {
+  transform: scale(.98);
+  transition-duration: .08s;
 }
 
 /* ═══════════════════════════════════════════════
