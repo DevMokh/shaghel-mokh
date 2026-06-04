@@ -84,6 +84,31 @@ window.updateUI = updateUI;
 window.renderMap = renderMap;
 window.renderShop = renderShop;
 window.renderLeaderboard = renderLeaderboard;
+
+// ── cache بسيط للـ leaderboard لتجنب re-fetch غير ضروري ──
+window._lbCache = {};
+window._lbCacheTime = {};
+const LB_CACHE_TTL = 60000; // دقيقة واحدة
+
+const _origRenderLb = renderLeaderboard;
+window.renderLeaderboard = async (tab = 'global') => {
+  const now = Date.now();
+  const cacheKey = tab;
+  // لو في cache حديث، استخدمه
+  if (window._lbCache[cacheKey] && now - window._lbCacheTime[cacheKey] < LB_CACHE_TTL) {
+    // عرض من الـ cache بدون Firebase
+    const container = document.getElementById('lb-list');
+    if (container) container.innerHTML = window._lbCache[cacheKey];
+    return;
+  }
+  // وإلا fetch وحفظ في cache
+  await _origRenderLb(tab);
+  const container = document.getElementById('lb-list');
+  if (container) {
+    window._lbCache[cacheKey] = container.innerHTML;
+    window._lbCacheTime[cacheKey] = Date.now();
+  }
+};
 window.renderDailyChallenge = renderDailyChallenge;
 window.renderWeeklyChallenge = renderWeeklyChallenge;
 window.renderSeasonTab = renderSeasonTab;
