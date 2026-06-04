@@ -779,7 +779,16 @@ let _gmCat='', _gmSub='', _gmIcon='', _gmSelected=null;
 window.openGameMode = (cat, sub, icon) => {
   _gmCat=cat; _gmSub=sub; _gmIcon=icon||'🎯'; _gmSelected=null;
   const s = id => document.getElementById(id);
-  s('gm-cat-icon').innerText = _gmIcon;
+  // عرض أيقونة Font Awesome بدل نص الكلاس
+  const iconEl = s('gm-cat-icon');
+  if (iconEl) {
+    if (_gmIcon && _gmIcon.startsWith('fa-')) {
+      iconEl.innerHTML = `<i class="fas ${_gmIcon}" style="font-size:22px;color:#fff;filter:drop-shadow(0 1px 3px rgba(0,0,0,.35))"></i>`;
+    } else {
+      // fallback لو لسه emoji قديم
+      iconEl.innerHTML = `<span style="font-size:22px">${_gmIcon}</span>`;
+    }
+  }
   s('gm-cat-name').innerText = cat;
   s('gm-sub-name').innerText = sub;
   s('gm-info-box').style.display = 'none';
