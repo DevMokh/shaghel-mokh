@@ -68,15 +68,15 @@
 </div>
 
 <!-- SOUNDS -->
-<audio id="snd-correct" src="https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3" preload="auto"></audio>
-<audio id="snd-wrong"   src="https://assets.mixkit.co/active_storage/sfx/2018/2018-preview.mp3" preload="auto"></audio>
-<audio id="snd-level"   src="https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3" preload="auto"></audio>
-<audio id="snd-timeout" src="https://assets.mixkit.co/active_storage/sfx/2019/2019-preview.mp3" preload="auto"></audio>
-<audio id="snd-buy"     src="https://assets.mixkit.co/active_storage/sfx/2017/2017-preview.mp3" preload="auto"></audio>
-<audio id="snd-win"     src="https://assets.mixkit.co/active_storage/sfx/2015/2015-preview.mp3" preload="auto"></audio>
-<audio id="snd-warn"    src="https://assets.mixkit.co/active_storage/sfx/2021/2021-preview.mp3" preload="auto"></audio>
+<audio id="snd-correct" src="https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3" preload="none"></audio>
+<audio id="snd-wrong"   src="https://assets.mixkit.co/active_storage/sfx/2018/2018-preview.mp3" preload="none"></audio>
+<audio id="snd-level"   src="https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3" preload="none"></audio>
+<audio id="snd-timeout" src="https://assets.mixkit.co/active_storage/sfx/2019/2019-preview.mp3" preload="none"></audio>
+<audio id="snd-buy"     src="https://assets.mixkit.co/active_storage/sfx/2017/2017-preview.mp3" preload="none"></audio>
+<audio id="snd-win"     src="https://assets.mixkit.co/active_storage/sfx/2015/2015-preview.mp3" preload="none"></audio>
+<audio id="snd-warn"    src="https://assets.mixkit.co/active_storage/sfx/2021/2021-preview.mp3" preload="none"></audio>
 
-<div style="max-width:500px;margin:0 auto;height:100vh;display:flex;flex-direction:column;overflow:hidden;background:var(--bg);position:relative;box-shadow:0 0 80px rgba(0,0,0,.6)">
+<div style="max-width:500px;margin:0 auto;height:100vh;display:flex;flex-direction:column;overflow:hidden;background:var(--bg);position:relative;box-shadow:0 0 30px rgba(0,0,0,.5)">
 
   <!-- TOPBAR -->
   <div class="topbar">
@@ -105,9 +105,9 @@
     <!-- HOME -->
     <div id="screen-home" class="screen active" style="justify-content:center;align-items:center;text-align:center">
       <div style="position:relative;margin-bottom:22px;display:inline-block">
-        <div style="position:absolute;inset:-10px;background:var(--accent);filter:blur(70px);opacity:.16;border-radius:50%;animation:pulse 2s infinite;pointer-events:none"></div>
+        
         <img id="home-avatar" src="https://i.postimg.cc/qqTBP312/1000061201.png"
-          style="width:150px;height:150px;border-radius:44px;object-fit:cover;border:4px solid var(--accent);box-shadow:0 20px 50px rgba(251,191,36,.22);position:relative;z-index:10;display:block">
+          style="width:150px;height:150px;border-radius:44px;object-fit:cover;border:4px solid var(--accent);box-shadow:0 8px 24px rgba(251,191,36,.15);position:relative;z-index:10;display:block">
         <div id="home-avatar-frame" style="position:absolute;inset:-4px;border-radius:48px;pointer-events:none;z-index:11"></div>
         <div id="home-lvl-badge" style="position:absolute;bottom:-13px;left:50%;transform:translateX(-50%);background:var(--grad);color:#000;font-weight:900;font-size:12px;padding:5px 18px;border-radius:20px;z-index:20;border:3px solid var(--bg);white-space:nowrap;box-shadow:0 4px 15px rgba(251,191,36,.4)">المستوى 1</div>
       </div>
@@ -146,7 +146,7 @@
         </div>
       </div>
       <button onclick="window.navTo('map')"
-        style="width:290px;background:var(--grad);color:#000;padding:20px 0;border-radius:32px;font-weight:900;font-size:21px;border:none;border-bottom:5px solid rgba(0,0,0,.2);cursor:pointer;box-shadow:0 15px 40px rgba(245,158,11,.3);font-family:'Tajawal',sans-serif;transition:.12s;display:flex;align-items:center;justify-content:center;gap:10px"
+        style="width:290px;background:var(--grad);color:#000;padding:20px 0;border-radius:32px;font-weight:900;font-size:21px;border:none;border-bottom:5px solid rgba(0,0,0,.2);cursor:pointer;box-shadow:0 6px 20px rgba(245,158,11,.2);transition:.12s;display:flex;align-items:center;justify-content:center;gap:10px"
         onmousedown="this.style.transform='scale(.96) translateY(3px)';this.style.borderBottomWidth='2px'"
         onmouseup="this.style.transform='';this.style.borderBottomWidth='5px'"
         ontouchstart="this.style.transform='scale(.96) translateY(3px)';this.style.borderBottomWidth='2px'"
@@ -156,13 +156,13 @@
       <!-- أزرار الأوضاع الجديدة -->
       <div style="display:flex;gap:10px;margin-top:12px">
         <button onclick="window.openRoulette()"
-          style="flex:1;padding:13px 0;background:rgba(251,191,36,.1);color:var(--accent);border:1px solid rgba(251,191,36,.22);border-radius:22px;font-weight:900;font-size:13px;cursor:pointer;font-family:'Tajawal',sans-serif;display:flex;align-items:center;justify-content:center;gap:7px"
+          style="flex:1;padding:13px 0;background:rgba(251,191,36,.1);color:var(--accent);border:1px solid rgba(251,191,36,.22);border-radius:22px;font-weight:900;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px"
           onmousedown="this.style.transform='scale(.95)'" onmouseup="this.style.transform=''"
           ontouchstart="this.style.transform='scale(.95)'" ontouchend="this.style.transform=''">
           <i class="fas fa-rotate"></i> روليت 🎰
         </button>
         <button onclick="window.open1v1('عام','عام')"
-          style="flex:1;padding:13px 0;background:rgba(239,68,68,.1);color:#ef4444;border:1px solid rgba(239,68,68,.2);border-radius:22px;font-weight:900;font-size:13px;cursor:pointer;font-family:'Tajawal',sans-serif;display:flex;align-items:center;justify-content:center;gap:7px"
+          style="flex:1;padding:13px 0;background:rgba(239,68,68,.1);color:#ef4444;border:1px solid rgba(239,68,68,.2);border-radius:22px;font-weight:900;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px"
           onmousedown="this.style.transform='scale(.95)'" onmouseup="this.style.transform=''"
           ontouchstart="this.style.transform='scale(.95)'" ontouchend="this.style.transform=''">
           <i class="fas fa-swords"></i> 1vs1 ⚔️
@@ -228,7 +228,7 @@
         <div style="background:var(--card);padding:22px;border-radius:32px;border:1px solid rgba(255,255,255,.05);margin-bottom:14px;text-align:center;min-height:140px;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;position:relative">
           <div id="q-cat-badge" style="background:rgba(251,191,36,.1);color:var(--accent);font-size:10px;font-weight:900;padding:3px 12px;border-radius:20px;margin-bottom:10px;letter-spacing:.05em">فئة</div>
           <h3 id="q-text" style="font-size:21px;font-weight:700;line-height:1.5">جاري التحضير...</h3>
-          <button id="btn-analyze" onclick="window.askAIAnalysis()" style="position:absolute;bottom:-14px;left:50%;transform:translateX(-50%);background:#2563eb;color:#fff;padding:7px 18px;border-radius:18px;font-size:11px;font-weight:900;border:none;cursor:pointer;z-index:10;display:none;white-space:nowrap;font-family:'Tajawal',sans-serif">تحليل ذكي 🤖</button>
+          <button id="btn-analyze" onclick="window.askAIAnalysis()" style="position:absolute;bottom:-14px;left:50%;transform:translateX(-50%);background:#2563eb;color:#fff;padding:7px 18px;border-radius:18px;font-size:11px;font-weight:900;border:none;cursor:pointer;z-index:10;display:none;white-space:nowrap">تحليل ذكي 🤖</button>
         </div>
 
         <!-- Skeleton Loading -->
@@ -248,7 +248,7 @@
             <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px"><span style="font-size:16px">💡</span><span style="color:var(--accent);font-weight:900;font-size:12px;text-transform:uppercase">هل تعلم؟</span></div>
             <p id="analysis-text" style="color:#cbd5e1;font-size:13px;font-weight:700;line-height:1.7"></p>
           </div>
-          <button id="btn-next" onclick="window.nextQuestion()" style="width:100%;padding:17px;background:var(--grad);color:#000;font-weight:900;border-radius:26px;font-size:17px;border:none;border-bottom:4px solid rgba(0,0,0,.2);cursor:pointer;font-family:'Tajawal',sans-serif">السؤال التالي ➜</button>
+          <button id="btn-next" onclick="window.nextQuestion()" style="width:100%;padding:17px;background:var(--grad);color:#000;font-weight:900;border-radius:26px;font-size:17px;border:none;border-bottom:4px solid rgba(0,0,0,.2);cursor:pointer">السؤال التالي ➜</button>
         </div>
 
         <!-- Helpers -->
@@ -271,8 +271,8 @@
         <div class="result-stat"><span class="result-stat-label"><i class="fas fa-coins" style="color:#fbbf24"></i> عملات</span><span class="result-stat-value" id="res-coins">0</span></div>
         <div class="result-stat"><span class="result-stat-label"><i class="fas fa-star" style="color:#a78bfa"></i> XP</span><span class="result-stat-value" id="res-xp">0</span></div>
       </div>
-      <button onclick="window.navTo('map')" style="width:100%;max-width:300px;padding:17px;background:var(--grad);color:#000;font-weight:900;border-radius:28px;font-size:17px;border:none;border-bottom:4px solid rgba(0,0,0,.2);cursor:pointer;font-family:'Tajawal',sans-serif;margin-bottom:10px">العب مجدداً 🔄</button>
-      <button onclick="window.navTo('home')" style="width:100%;max-width:300px;padding:13px;background:rgba(255,255,255,.05);color:var(--text2);font-weight:700;border-radius:22px;font-size:14px;border:1px solid rgba(255,255,255,.08);cursor:pointer;font-family:'Tajawal',sans-serif">الرئيسية 🏠</button>
+      <button onclick="window.navTo('map')" style="width:100%;max-width:300px;padding:17px;background:var(--grad);color:#000;font-weight:900;border-radius:28px;font-size:17px;border:none;border-bottom:4px solid rgba(0,0,0,.2);cursor:pointer;margin-bottom:10px">العب مجدداً 🔄</button>
+      <button onclick="window.navTo('home')" style="width:100%;max-width:300px;padding:13px;background:rgba(255,255,255,.05);color:var(--text2);font-weight:700;border-radius:22px;font-size:14px;border:1px solid rgba(255,255,255,.08);cursor:pointer">الرئيسية 🏠</button>
     </div>
 
     <!-- DAILY CHALLENGE -->
@@ -293,17 +293,17 @@
       <!-- Tabs -->
       <div style="display:flex;gap:7px;margin-bottom:14px;flex-shrink:0;overflow-x:auto;padding-bottom:2px">
         <button class="ch-tab-btn" data-ctab="weekly"
-          style="padding:8px 18px;border-radius:14px;font-weight:900;font-size:12px;cursor:pointer;font-family:'Tajawal',sans-serif;border:1px solid rgba(251,191,36,.2);white-space:nowrap;background:rgba(251,191,36,.12);color:var(--accent)"
+          style="padding:8px 18px;border-radius:14px;font-weight:900;font-size:12px;cursor:pointer;border:1px solid rgba(251,191,36,.2);white-space:nowrap;background:rgba(251,191,36,.12);color:var(--accent)"
           onclick="window.switchChallengeTab('weekly')">
           <i class="fas fa-calendar-week" style="margin-left:4px"></i>أسبوعي
         </button>
         <button class="ch-tab-btn" data-ctab="season"
-          style="padding:8px 18px;border-radius:14px;font-weight:900;font-size:12px;cursor:pointer;font-family:'Tajawal',sans-serif;border:1px solid rgba(255,255,255,.07);white-space:nowrap;background:rgba(255,255,255,.05);color:var(--text2)"
+          style="padding:8px 18px;border-radius:14px;font-weight:900;font-size:12px;cursor:pointer;border:1px solid rgba(255,255,255,.07);white-space:nowrap;background:rgba(255,255,255,.05);color:var(--text2)"
           onclick="window.switchChallengeTab('season')">
           <i class="fas fa-trophy" style="margin-left:4px"></i>الموسم
         </button>
         <button class="ch-tab-btn" data-ctab="wtasks"
-          style="padding:8px 18px;border-radius:14px;font-weight:900;font-size:12px;cursor:pointer;font-family:'Tajawal',sans-serif;border:1px solid rgba(255,255,255,.07);white-space:nowrap;background:rgba(255,255,255,.05);color:var(--text2)"
+          style="padding:8px 18px;border-radius:14px;font-weight:900;font-size:12px;cursor:pointer;border:1px solid rgba(255,255,255,.07);white-space:nowrap;background:rgba(255,255,255,.05);color:var(--text2)"
           onclick="window.switchChallengeTab('wtasks')">
           <i class="fas fa-list-check" style="margin-left:4px"></i>مهام
         </button>
@@ -330,23 +330,23 @@
         <h2 style="font-size:26px;font-weight:900;display:flex;align-items:center;gap:10px">
           <i class="fas fa-users" style="color:#06b6d4;font-size:22px"></i> غرف اللعب
         </h2>
-        <button onclick="window.createRoom()" style="background:var(--grad);color:#000;font-weight:900;font-size:13px;border:none;border-radius:14px;padding:10px 18px;cursor:pointer;font-family:'Tajawal',sans-serif;border-bottom:3px solid rgba(0,0,0,.2)">+ إنشاء غرفة</button>
+        <button onclick="window.createRoom()" style="background:var(--grad);color:#000;font-weight:900;font-size:13px;border:none;border-radius:14px;padding:10px 18px;cursor:pointer;border-bottom:3px solid rgba(0,0,0,.2)">+ إنشاء غرفة</button>
       </div>
       <div id="rooms-list" style="flex:1;overflow-y:auto"></div>
-      <button onclick="window.openJoinRoomModal()" style="width:100%;margin-top:10px;padding:14px;background:rgba(255,255,255,.05);color:var(--text2);border:1px solid rgba(255,255,255,.08);border-radius:18px;font-weight:900;font-size:14px;cursor:pointer;font-family:'Tajawal',sans-serif;flex-shrink:0">🔑 الانضمام بكود</button>
+      <button onclick="window.openJoinRoomModal()" style="width:100%;margin-top:10px;padding:14px;background:rgba(255,255,255,.05);color:var(--text2);border:1px solid rgba(255,255,255,.08);border-radius:18px;font-weight:900;font-size:14px;cursor:pointer;flex-shrink:0">🔑 الانضمام بكود</button>
     </div>
 
     <!-- LOBBY -->
     <div id="screen-lobby" class="screen" style="padding:0">
       <div style="padding:16px;height:100%;display:flex;flex-direction:column;overflow:hidden">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-shrink:0">
-          <button onclick="window.leaveRoom()" style="background:rgba(239,68,68,.1);color:#ef4444;border:1px solid rgba(239,68,68,.2);border-radius:14px;padding:10px 16px;font-weight:900;font-size:13px;cursor:pointer;font-family:'Tajawal',sans-serif">← خروج</button>
+          <button onclick="window.leaveRoom()" style="background:rgba(239,68,68,.1);color:#ef4444;border:1px solid rgba(239,68,68,.2);border-radius:14px;padding:10px 16px;font-weight:900;font-size:13px;cursor:pointer">← خروج</button>
           <h3 id="lobby-room-name" style="font-size:18px;font-weight:900">الغرفة</h3>
           <div id="lobby-room-code" style="font-size:13px;font-weight:900;color:var(--accent);background:rgba(251,191,36,.1);padding:6px 14px;border-radius:12px;border:1px solid rgba(251,191,36,.15)"></div>
         </div>
         <div id="waiting-players" style="flex:1;overflow-y:auto"></div>
         <div style="flex-shrink:0;padding-top:14px">
-          <button id="start-room-btn" onclick="window.startRoomGame()" style="width:100%;padding:18px;background:var(--grad);color:#000;font-weight:900;border-radius:28px;font-size:17px;border:none;border-bottom:4px solid rgba(0,0,0,.2);cursor:pointer;font-family:'Tajawal',sans-serif;display:none">ابدأ اللعبة 🎮</button>
+          <button id="start-room-btn" onclick="window.startRoomGame()" style="width:100%;padding:18px;background:var(--grad);color:#000;font-weight:900;border-radius:28px;font-size:17px;border:none;border-bottom:4px solid rgba(0,0,0,.2);cursor:pointer;display:none">ابدأ اللعبة 🎮</button>
           <div id="waiting-msg" style="text-align:center;color:var(--text2);font-weight:700;font-size:14px;padding:14px"><i class="fas fa-circle-notch fa-spin"></i> في انتظار مزيد من اللاعبين...</div>
         </div>
       </div>
@@ -385,14 +385,14 @@
         <h2 style="font-size:24px;font-weight:900;display:flex;align-items:center;gap:8px">
           <i class="fas fa-chart-bar" style="color:#f97316;font-size:20px"></i> إحصائياتي
         </h2>
-        <button onclick="window.showPlayerCard()" style="background:rgba(251,191,36,.1);color:var(--accent);border:1px solid rgba(251,191,36,.2);border-radius:14px;padding:8px 14px;font-weight:900;font-size:12px;cursor:pointer;font-family:'Tajawal',sans-serif">بطاقتي 🪪</button>
+        <button onclick="window.showPlayerCard()" style="background:rgba(251,191,36,.1);color:var(--accent);border:1px solid rgba(251,191,36,.2);border-radius:14px;padding:8px 14px;font-weight:900;font-size:12px;cursor:pointer">بطاقتي 🪪</button>
       </div>
 
       <!-- Tabs -->
       <div style="display:flex;gap:7px;margin-bottom:14px;flex-shrink:0">
-        <button data-stab="overview"     onclick="window.switchStatsTab('overview')"     style="padding:7px 14px;border-radius:12px;font-weight:900;font-size:11px;cursor:pointer;font-family:'Tajawal',sans-serif;border:1px solid rgba(251,191,36,.2);background:rgba(251,191,36,.12);color:var(--accent)">نظرة عامة</button>
-        <button data-stab="charts"       onclick="window.switchStatsTab('charts')"       style="padding:7px 14px;border-radius:12px;font-weight:900;font-size:11px;cursor:pointer;font-family:'Tajawal',sans-serif;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.05);color:var(--text2)">تفاصيل</button>
-        <button data-stab="achievements" onclick="window.switchStatsTab('achievements')" style="padding:7px 14px;border-radius:12px;font-weight:900;font-size:11px;cursor:pointer;font-family:'Tajawal',sans-serif;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.05);color:var(--text2)">إنجازات</button>
+        <button data-stab="overview"     onclick="window.switchStatsTab('overview')"     style="padding:7px 14px;border-radius:12px;font-weight:900;font-size:11px;cursor:pointer;border:1px solid rgba(251,191,36,.2);background:rgba(251,191,36,.12);color:var(--accent)">نظرة عامة</button>
+        <button data-stab="charts"       onclick="window.switchStatsTab('charts')"       style="padding:7px 14px;border-radius:12px;font-weight:900;font-size:11px;cursor:pointer;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.05);color:var(--text2)">تفاصيل</button>
+        <button data-stab="achievements" onclick="window.switchStatsTab('achievements')" style="padding:7px 14px;border-radius:12px;font-weight:900;font-size:11px;cursor:pointer;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.05);color:var(--text2)">إنجازات</button>
       </div>
 
       <!-- Tab: Overview -->
@@ -523,11 +523,11 @@
     </div>
     <!-- buttons -->
     <div style="display:flex;gap:10px;flex-shrink:0">
-      <button id="fc-review-btn" onclick="window.markFC(false)" style="display:none;flex:1;padding:14px;background:rgba(239,68,68,.1);color:#ef4444;border:1px solid rgba(239,68,68,.2);border-radius:20px;font-weight:900;font-size:14px;cursor:pointer;font-family:'Tajawal',sans-serif;align-items:center;justify-content:center;gap:6px">🔁 للمراجعة</button>
-      <button id="fc-flip-btn" onclick="window.flipFC()" style="flex:1;padding:14px;background:rgba(96,165,250,.1);color:#60a5fa;border:1px solid rgba(96,165,250,.2);border-radius:20px;font-weight:900;font-size:14px;cursor:pointer;font-family:'Tajawal',sans-serif;display:flex;align-items:center;justify-content:center;gap:6px"><i class="fas fa-rotate"></i> اقلب البطاقة</button>
-      <button id="fc-known-btn" onclick="window.markFC(true)" style="display:none;flex:1;padding:14px;background:rgba(34,197,94,.1);color:#22c55e;border:1px solid rgba(34,197,94,.2);border-radius:20px;font-weight:900;font-size:14px;cursor:pointer;font-family:'Tajawal',sans-serif;align-items:center;justify-content:center;gap:6px">✅ عارفها</button>
+      <button id="fc-review-btn" onclick="window.markFC(false)" style="display:none;flex:1;padding:14px;background:rgba(239,68,68,.1);color:#ef4444;border:1px solid rgba(239,68,68,.2);border-radius:20px;font-weight:900;font-size:14px;cursor:pointer;align-items:center;justify-content:center;gap:6px">🔁 للمراجعة</button>
+      <button id="fc-flip-btn" onclick="window.flipFC()" style="flex:1;padding:14px;background:rgba(96,165,250,.1);color:#60a5fa;border:1px solid rgba(96,165,250,.2);border-radius:20px;font-weight:900;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px"><i class="fas fa-rotate"></i> اقلب البطاقة</button>
+      <button id="fc-known-btn" onclick="window.markFC(true)" style="display:none;flex:1;padding:14px;background:rgba(34,197,94,.1);color:#22c55e;border:1px solid rgba(34,197,94,.2);border-radius:20px;font-weight:900;font-size:14px;cursor:pointer;align-items:center;justify-content:center;gap:6px">✅ عارفها</button>
     </div>
-    <button id="fc-restart-btn" onclick="window.restartFC()" style="display:none;width:100%;margin-top:10px;padding:15px;background:var(--grad);color:#000;font-weight:900;border-radius:24px;font-size:15px;border:none;border-bottom:4px solid rgba(0,0,0,.2);cursor:pointer;font-family:'Tajawal',sans-serif;align-items:center;justify-content:center;gap:8px"><i class="fas fa-rotate-right"></i> ابدأ من جديد</button>
+    <button id="fc-restart-btn" onclick="window.restartFC()" style="display:none;width:100%;margin-top:10px;padding:15px;background:var(--grad);color:#000;font-weight:900;border-radius:24px;font-size:15px;border:none;border-bottom:4px solid rgba(0,0,0,.2);cursor:pointer;align-items:center;justify-content:center;gap:8px"><i class="fas fa-rotate-right"></i> ابدأ من جديد</button>
   </div>
 
   <!-- ══ SCREEN: 1v1 ══ -->
@@ -671,10 +671,10 @@
   </div>
   <div style="padding:6px 16px 10px">
     <div style="font-size:10px;font-weight:700;color:var(--text2);margin-bottom:7px">💬 رسالتي في اللوحة</div>
-    <input id="my-message-input" type="text" maxlength="40" placeholder="رسالة تظهر للاعبين..." style="width:100%;background:#111;border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:10px 12px;color:#fff;font-family:'Tajawal',sans-serif;font-size:12px;font-weight:700;outline:none;text-align:right" oninput="window.saveMessageDebounced()" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='rgba(255,255,255,.1)'">
+    <input id="my-message-input" type="text" maxlength="40" placeholder="رسالة تظهر للاعبين..." style="width:100%;background:#111;border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:10px 12px;color:#fff;font-size:12px;font-weight:700;outline:none;text-align:right" oninput="window.saveMessageDebounced()" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='rgba(255,255,255,.1)'">
   </div>
   <div style="padding:0 16px 16px">
-    <button onclick="window.requestNotifPermission()" id="notif-btn" style="width:100%;background:rgba(96,165,250,.08);color:#60a5fa;border:1px solid rgba(96,165,250,.15);border-radius:12px;padding:10px;font-weight:900;font-size:12px;cursor:pointer;font-family:'Tajawal',sans-serif">🔔 تفعيل الإشعارات</button>
+    <button onclick="window.requestNotifPermission()" id="notif-btn" style="width:100%;background:rgba(96,165,250,.08);color:#60a5fa;border:1px solid rgba(96,165,250,.15);border-radius:12px;padding:10px;font-weight:900;font-size:12px;cursor:pointer">🔔 تفعيل الإشعارات</button>
   </div>
 
   <!-- Footer -->
@@ -709,7 +709,7 @@
   <div class="m-sheet" onclick="event.stopPropagation()">
     <div class="m-handle"></div><div class="m-head"><span class="m-title">🪪 بطاقتي</span><button class="m-x" onclick="window.closeModal('card')">✕</button></div>
     <div class="m-body"><div id="player-card-content"></div>
-      <button onclick="window.sharePlayerCard()" style="width:100%;margin-top:14px;padding:15px;background:rgba(96,165,250,.12);color:#60a5fa;border:1px solid rgba(96,165,250,.2);border-radius:18px;font-weight:900;font-size:15px;cursor:pointer;font-family:'Tajawal',sans-serif">📤 مشاركة البطاقة</button>
+      <button onclick="window.sharePlayerCard()" style="width:100%;margin-top:14px;padding:15px;background:rgba(96,165,250,.12);color:#60a5fa;border:1px solid rgba(96,165,250,.2);border-radius:18px;font-weight:900;font-size:15px;cursor:pointer">📤 مشاركة البطاقة</button>
     </div>
   </div>
 </div>
@@ -718,12 +718,12 @@
     <div class="m-handle"></div><div class="m-head"><span class="m-title">🎮 إنشاء غرفة</span><button class="m-x" onclick="window.closeModal('create-room')">✕</button></div>
     <div class="m-body">
       <div style="margin-bottom:14px"><label style="display:block;font-size:11px;font-weight:900;color:var(--text2);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px">اسم الغرفة</label>
-        <input id="room-name-input" type="text" maxlength="20" placeholder="غرفة التحدي 🎮" style="width:100%;background:#111;border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:14px;color:#fff;font-family:'Tajawal',sans-serif;font-size:15px;font-weight:700;outline:none;text-align:right" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='rgba(255,255,255,.1)'">
+        <input id="room-name-input" type="text" maxlength="20" placeholder="غرفة التحدي 🎮" style="width:100%;background:#111;border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:14px;color:#fff;font-size:15px;font-weight:700;outline:none;text-align:right" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='rgba(255,255,255,.1)'">
       </div>
       <div style="margin-bottom:16px"><label style="display:block;font-size:11px;font-weight:900;color:var(--text2);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px">التصنيف</label>
-        <select id="room-cat-select" style="width:100%;background:#111;border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:14px;color:#fff;font-family:'Tajawal',sans-serif;font-size:15px;font-weight:700;outline:none;cursor:pointer"></select>
+        <select id="room-cat-select" style="width:100%;background:#111;border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:14px;color:#fff;font-size:15px;font-weight:700;outline:none;cursor:pointer"></select>
       </div>
-      <button onclick="window.confirmCreateRoom()" style="width:100%;padding:16px;background:var(--grad);color:#000;font-weight:900;border-radius:24px;font-size:16px;border:none;border-bottom:4px solid rgba(0,0,0,.2);cursor:pointer;font-family:'Tajawal',sans-serif">إنشاء الغرفة 🚀</button>
+      <button onclick="window.confirmCreateRoom()" style="width:100%;padding:16px;background:var(--grad);color:#000;font-weight:900;border-radius:24px;font-size:16px;border:none;border-bottom:4px solid rgba(0,0,0,.2);cursor:pointer">إنشاء الغرفة 🚀</button>
     </div>
   </div>
 </div>
@@ -732,9 +732,9 @@
     <div class="m-handle"></div><div class="m-head"><span class="m-title">🔑 انضمام بكود</span><button class="m-x" onclick="window.closeModal('join-room')">✕</button></div>
     <div class="m-body">
       <div style="margin-bottom:16px"><label style="display:block;font-size:11px;font-weight:900;color:var(--text2);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px">كود الغرفة</label>
-        <input id="join-code-input" type="text" maxlength="6" placeholder="ABC123" style="width:100%;background:#111;border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:14px;color:#fff;font-family:'Tajawal',sans-serif;font-size:22px;font-weight:900;outline:none;text-align:center;letter-spacing:.2em;text-transform:uppercase" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='rgba(255,255,255,.1)'">
+        <input id="join-code-input" type="text" maxlength="6" placeholder="ABC123" style="width:100%;background:#111;border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:14px;color:#fff;font-size:22px;font-weight:900;outline:none;text-align:center;letter-spacing:.2em;text-transform:uppercase" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='rgba(255,255,255,.1)'">
       </div>
-      <button onclick="window.joinRoomByCode()" style="width:100%;padding:16px;background:var(--grad);color:#000;font-weight:900;border-radius:24px;font-size:16px;border:none;border-bottom:4px solid rgba(0,0,0,.2);cursor:pointer;font-family:'Tajawal',sans-serif">انضمام 🎮</button>
+      <button onclick="window.joinRoomByCode()" style="width:100%;padding:16px;background:var(--grad);color:#000;font-weight:900;border-radius:24px;font-size:16px;border:none;border-bottom:4px solid rgba(0,0,0,.2);cursor:pointer">انضمام 🎮</button>
     </div>
   </div>
 </div>
@@ -742,7 +742,7 @@
 <!-- ══════════════════════════════════════════════════
      MODAL: اختر وضع اللعب (12 وضع)
 ══════════════════════════════════════════════════ -->
-<div id="modal-gamemode" style="display:none;position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.85);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);align-items:flex-end;justify-content:center" onclick="window.closeGameMode()">
+<div id="modal-gamemode" style="display:none;position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.85);align-items:flex-end;justify-content:center" onclick="window.closeGameMode()">
   <div onclick="event.stopPropagation()" style="width:100%;max-width:500px;background:#0e0e14;border-radius:32px 32px 0 0;border:1px solid rgba(255,255,255,.08);border-bottom:none;padding:0 0 env(safe-area-inset-bottom);animation:slideUpModal .35s cubic-bezier(.16,1,.3,1) both;max-height:88vh;display:flex;flex-direction:column">
     <!-- Handle -->
     <div style="display:flex;justify-content:center;padding:12px 0 0"><div style="width:38px;height:4px;border-radius:10px;background:rgba(255,255,255,.15)"></div></div>
@@ -766,9 +766,9 @@
     </div>
     <!-- Tabs -->
     <div style="display:flex;gap:6px;padding:0 16px 12px;flex-shrink:0;overflow-x:auto">
-      <button class="gm-tab" data-gmtab="popular"   onclick="window.switchGameModeTab('popular')"   style="padding:7px 16px;border-radius:12px;font-weight:900;font-size:11px;cursor:pointer;font-family:'Tajawal',sans-serif;white-space:nowrap;border:1px solid rgba(251,191,36,.28);background:rgba(251,191,36,.14);color:var(--accent)"><i class="fas fa-fire-flame-curved" style="margin-left:4px"></i>شائع</button>
-      <button class="gm-tab" data-gmtab="challenge" onclick="window.switchGameModeTab('challenge')" style="padding:7px 16px;border-radius:12px;font-weight:900;font-size:11px;cursor:pointer;font-family:'Tajawal',sans-serif;white-space:nowrap;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.05);color:var(--text2)"><i class="fas fa-crosshairs" style="margin-left:4px"></i>تحدي</button>
-      <button class="gm-tab" data-gmtab="custom"    onclick="window.switchGameModeTab('custom')"    style="padding:7px 16px;border-radius:12px;font-weight:900;font-size:11px;cursor:pointer;font-family:'Tajawal',sans-serif;white-space:nowrap;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.05);color:var(--text2)"><i class="fas fa-sliders" style="margin-left:4px"></i>مخصص</button>
+      <button class="gm-tab" data-gmtab="popular"   onclick="window.switchGameModeTab('popular')"   style="padding:7px 16px;border-radius:12px;font-weight:900;font-size:11px;cursor:pointer;white-space:nowrap;border:1px solid rgba(251,191,36,.28);background:rgba(251,191,36,.14);color:var(--accent)"><i class="fas fa-fire-flame-curved" style="margin-left:4px"></i>شائع</button>
+      <button class="gm-tab" data-gmtab="challenge" onclick="window.switchGameModeTab('challenge')" style="padding:7px 16px;border-radius:12px;font-weight:900;font-size:11px;cursor:pointer;white-space:nowrap;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.05);color:var(--text2)"><i class="fas fa-crosshairs" style="margin-left:4px"></i>تحدي</button>
+      <button class="gm-tab" data-gmtab="custom"    onclick="window.switchGameModeTab('custom')"    style="padding:7px 16px;border-radius:12px;font-weight:900;font-size:11px;cursor:pointer;white-space:nowrap;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.05);color:var(--text2)"><i class="fas fa-sliders" style="margin-left:4px"></i>مخصص</button>
     </div>
     <!-- Modes grid -->
     <div id="gm-modes-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 16px;overflow-y:auto;flex:1"></div>
@@ -785,7 +785,7 @@
         style="width:100%;padding:16px;background:rgba(255,255,255,.06);color:rgba(255,255,255,.3);
                font-weight:900;border-radius:24px;font-size:15px;
                border:1.5px dashed rgba(255,255,255,.12);cursor:default;
-               font-family:'Tajawal',sans-serif;
+               
                display:flex;align-items:center;justify-content:center;gap:10px;
                transition:all .25s;pointer-events:none">
         <i class="fas fa-play" style="font-size:13px"></i>
@@ -842,10 +842,10 @@
     <!-- buttons -->
     <div style="padding:12px 16px 22px;display:flex;flex-direction:column;gap:10px">
       <button id="roulette-spin-btn" onclick="window.spinRoulette()"
-        style="width:100%;padding:15px;background:var(--grad);color:#000;font-weight:900;border-radius:24px;font-size:15px;border:none;border-bottom:4px solid rgba(0,0,0,.2);cursor:pointer;font-family:'Tajawal',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px">
+        style="width:100%;padding:15px;background:var(--grad);color:#000;font-weight:900;border-radius:24px;font-size:15px;border:none;border-bottom:4px solid rgba(0,0,0,.2);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">
         <i class="fas fa-rotate"></i> دوّر 🎰</button>
       <button id="roulette-start-btn" onclick="window.startRouletteGame()"
-        style="display:none;width:100%;padding:14px;background:rgba(251,191,36,.12);color:var(--accent);border:1px solid rgba(251,191,36,.25);border-radius:22px;font-size:14px;font-weight:900;cursor:pointer;font-family:'Tajawal',sans-serif;align-items:center;justify-content:center;gap:8px">
+        style="display:none;width:100%;padding:14px;background:rgba(251,191,36,.12);color:var(--accent);border:1px solid rgba(251,191,36,.25);border-radius:22px;font-size:14px;font-weight:900;cursor:pointer;align-items:center;justify-content:center;gap:8px">
         <i class="fas fa-play"></i></button>
     </div>
   </div>
@@ -864,7 +864,7 @@
     <div id="1v1-cat-lbl" style="text-align:center;font-size:12px;font-weight:700;color:var(--text2);padding-bottom:14px"></div>
     <div style="padding:0 16px 8px">
       <button onclick="window.create1v1()"
-        style="width:100%;padding:15px;background:var(--grad);color:#000;font-weight:900;border-radius:22px;font-size:15px;border:none;border-bottom:4px solid rgba(0,0,0,.2);cursor:pointer;font-family:'Tajawal',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:12px">
+        style="width:100%;padding:15px;background:var(--grad);color:#000;font-weight:900;border-radius:22px;font-size:15px;border:none;border-bottom:4px solid rgba(0,0,0,.2);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:12px">
         <i class="fas fa-plus"></i> إنشاء تحدي جديد</button>
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
         <div style="flex:1;height:1px;background:rgba(255,255,255,.08)"></div>
@@ -872,8 +872,8 @@
         <div style="flex:1;height:1px;background:rgba(255,255,255,.08)"></div>
       </div>
       <div style="display:flex;gap:8px;margin-bottom:20px">
-        <input id="1v1-join-input" type="text" maxlength="6" placeholder="كود التحدي" style="flex:1;background:#111;border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:13px;color:#fff;font-family:'Tajawal',sans-serif;font-size:16px;font-weight:900;outline:none;text-align:center;letter-spacing:.15em;text-transform:uppercase" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='rgba(255,255,255,.1)'" onkeydown="if(event.key==='Enter') window.join1v1()">
-        <button onclick="window.join1v1()" style="padding:13px 18px;background:rgba(239,68,68,.12);color:#ef4444;border:1px solid rgba(239,68,68,.2);border-radius:14px;font-weight:900;font-size:13px;cursor:pointer;font-family:'Tajawal',sans-serif;white-space:nowrap">انضم ⚔️</button>
+        <input id="1v1-join-input" type="text" maxlength="6" placeholder="كود التحدي" style="flex:1;background:#111;border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:13px;color:#fff;font-size:16px;font-weight:900;outline:none;text-align:center;letter-spacing:.15em;text-transform:uppercase" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='rgba(255,255,255,.1)'" onkeydown="if(event.key==='Enter') window.join1v1()">
+        <button onclick="window.join1v1()" style="padding:13px 18px;background:rgba(239,68,68,.12);color:#ef4444;border:1px solid rgba(239,68,68,.2);border-radius:14px;font-weight:900;font-size:13px;cursor:pointer;white-space:nowrap">انضم ⚔️</button>
       </div>
     </div>
   </div>
