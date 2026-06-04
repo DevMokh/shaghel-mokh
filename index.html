@@ -57,9 +57,9 @@
 <!-- LOADING SCREEN -->
 <div id="loading-screen" style="position:fixed;inset:0;background:#0d0d0d;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;transition:opacity .5s">
   <div style="animation:loadingPop .6s cubic-bezier(.34,1.56,.64,1) both">
-    <img src="https://i.postimg.cc/qqTBP312/1000061201.png" style="width:88px;height:88px;border-radius:28px;border:3px solid rgba(251,191,36,.4);box-shadow:0 0 40px rgba(251,191,36,.3)">
+    <img src="https://i.postimg.cc/qqTBP312/1000061201.png" style="width:70px;height:70px;border-radius:22px;border:3px solid rgba(251,191,36,.4);box-shadow:0 0 40px rgba(251,191,36,.3)">
   </div>
-  <div style="animation:fadeUp .6s .2s both;font-size:22px;font-weight:900;color:#fff">شغل <span style="color:#fbbf24">مخك</span></div>
+  <div style="animation:fadeUp .6s .2s both;font-size:18px;font-weight:900;color:#fff">شغل <span style="color:#fbbf24">مخك</span></div>
   <div style="display:flex;gap:7px;animation:fadeUp .6s .35s both">
     <div class="loading-dot" style="animation-delay:0s"></div>
     <div class="loading-dot" style="animation-delay:.2s"></div>
@@ -107,11 +107,11 @@
       <div style="position:relative;margin-bottom:22px;display:inline-block">
         
         <img id="home-avatar" src="https://i.postimg.cc/qqTBP312/1000061201.png"
-          style="width:150px;height:150px;border-radius:44px;object-fit:cover;border:4px solid var(--accent);box-shadow:0 8px 24px rgba(251,191,36,.15);position:relative;z-index:10;display:block">
+          style="width:100px;height:100px;border-radius:30px;object-fit:cover;border:4px solid var(--accent);box-shadow:0 8px 24px rgba(251,191,36,.15);position:relative;z-index:10;display:block">
         <div id="home-avatar-frame" style="position:absolute;inset:-4px;border-radius:48px;pointer-events:none;z-index:11"></div>
         <div id="home-lvl-badge" style="position:absolute;bottom:-13px;left:50%;transform:translateX(-50%);background:var(--grad);color:#000;font-weight:900;font-size:12px;padding:5px 18px;border-radius:20px;z-index:20;border:3px solid var(--bg);white-space:nowrap;box-shadow:0 4px 15px rgba(251,191,36,.4)">المستوى 1</div>
       </div>
-      <h1 style="font-size:50px;font-weight:900;color:#fff;letter-spacing:-.03em;margin-bottom:6px;margin-top:8px">شغل <span style="color:var(--accent)">مخك</span></h1>
+      <h1 style="font-size:34px;font-weight:900;color:#fff;letter-spacing:-.03em;margin-bottom:6px;margin-top:8px">شغل <span style="color:var(--accent)">مخك</span></h1>
       <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:14px">
         <span style="height:2px;width:24px;background:var(--accent);border-radius:10px;opacity:.5"></span>
         <p style="color:var(--text2);font-weight:700;font-size:12px">الإصدار الألترا 4.0</p>
@@ -119,9 +119,9 @@
       </div>
 
       <!-- بادج السلسلة اليومية -->
-      <div id="home-streak-badge" style="display:none;align-items:center;gap:8px;background:rgba(251,191,36,.09);border:1px solid rgba(251,191,36,.22);border-radius:18px;padding:8px 18px;margin-bottom:12px;transition:.3s">
+      <div id="home-streak-badge" style="display:none;align-items:center;gap:8px;background:rgba(251,191,36,.09);border:1px solid rgba(251,191,36,.22);border-radius:18px;padding:6px 14px;margin-bottom:8px;transition:.3s">
         <i class="fas fa-fire-flame-curved" style="color:#f97316;font-size:16px"></i>
-        <span id="home-streak-num" style="font-size:22px;font-weight:900;color:#fff">0</span>
+        <span id="home-streak-num" style="font-size:17px;font-weight:900;color:#fff">0</span>
         <span id="home-streak-lbl" style="font-size:12px;font-weight:700;color:var(--text2)">يوم متتالي</span>
       </div>
       <div id="home-streak-warn" style="display:none;color:#fbbf24;font-size:12px;font-weight:700;margin-bottom:10px;padding:6px 14px;background:rgba(251,191,36,.08);border-radius:12px;border:1px solid rgba(251,191,36,.15)"></div>
@@ -135,7 +135,7 @@
       </div>
 
       <div id="home-daily-teaser" onclick="window.navTo('daily')"
-        style="width:100%;max-width:300px;background:rgba(251,191,36,.07);border:1px solid rgba(251,191,36,.18);border-radius:20px;padding:12px 18px;margin-bottom:22px;cursor:pointer;transition:.2s"
+        style="width:100%;max-width:300px;background:rgba(251,191,36,.07);border:1px solid rgba(251,191,36,.18);border-radius:20px;padding:10px 14px;margin-bottom:14px;cursor:pointer;transition:.2s"
         onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform=''">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
           <span id="daily-teaser-status" style="font-size:11px;font-weight:900;color:var(--accent)">👆 العب الآن!</span>
@@ -146,7 +146,7 @@
         </div>
       </div>
       <button onclick="window.navTo('map')"
-        style="width:290px;background:var(--grad);color:#000;padding:20px 0;border-radius:32px;font-weight:900;font-size:21px;border:none;border-bottom:5px solid rgba(0,0,0,.2);cursor:pointer;box-shadow:0 6px 20px rgba(245,158,11,.2);transition:.12s;display:flex;align-items:center;justify-content:center;gap:10px"
+        style="width:290px;background:var(--grad);color:#000;padding:14px 0;border-radius:32px;font-weight:900;font-size:17px;border:none;border-bottom:5px solid rgba(0,0,0,.2);cursor:pointer;box-shadow:0 6px 20px rgba(245,158,11,.2);transition:.12s;display:flex;align-items:center;justify-content:center;gap:10px"
         onmousedown="this.style.transform='scale(.96) translateY(3px)';this.style.borderBottomWidth='2px'"
         onmouseup="this.style.transform='';this.style.borderBottomWidth='5px'"
         ontouchstart="this.style.transform='scale(.96) translateY(3px)';this.style.borderBottomWidth='2px'"
@@ -173,7 +173,7 @@
     <!-- MAP -->
     <div id="screen-map" class="screen">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-shrink:0">
-        <h2 style="font-size:26px;font-weight:900">اختر المجال 🗺️</h2>
+        <h2 style="font-size:20px;font-weight:900">اختر المجال 🗺️</h2>
         <span id="map-progress-badge" style="font-size:12px;font-weight:900;color:var(--accent);background:rgba(251,191,36,.1);padding:5px 14px;border-radius:20px;border:1px solid rgba(251,191,36,.15)">8/8</span>
       </div>
       <div id="map-grid" class="map-grid"></div>
@@ -189,7 +189,7 @@
     <div id="screen-quiz" class="screen" style="padding:0">
       <div style="padding:16px;display:flex;flex-direction:column;height:100%;overflow:hidden">
         <!-- Header bar -->
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-shrink:0">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-shrink:0">
           <button onclick="window.confirmExit()" style="width:46px;height:46px;background:rgba(239,68,68,.1);color:#ef4444;border-radius:18px;font-size:18px;border:1px solid rgba(239,68,68,.2);cursor:pointer;display:flex;align-items:center;justify-content:center" onmousedown="this.style.transform='scale(.88)'" onmouseup="this.style.transform=''">✕</button>
           <div style="flex:1;padding:0 14px">
             <div style="display:flex;justify-content:space-between;font-size:11px;font-weight:900;margin-bottom:7px;color:var(--text2);text-transform:uppercase;letter-spacing:.08em">
@@ -202,16 +202,16 @@
             </div>
           </div>
           <!-- Timer Ring SVG -->
-          <div style="position:relative;width:50px;height:50px;flex-shrink:0">
-            <svg width="50" height="50" style="position:absolute;top:0;left:0;transform:rotate(-90deg)">
-              <circle cx="25" cy="25" r="22" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="3.5"/>
-              <circle id="timer-ring-fill" cx="25" cy="25" r="22" fill="none"
+          <div style="position:relative;width:42px;height:42px;flex-shrink:0">
+            <svg width="42" height="42" style="position:absolute;top:0;left:0;transform:rotate(-90deg)">
+              <circle cx="21" cy="21" r="18" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="3.5"/>
+              <circle id="timer-ring-fill" cx="21" cy="21" r="18" fill="none"
                 stroke="#f97316" stroke-width="3.5"
                 stroke-dasharray="138" stroke-dashoffset="0"
                 stroke-linecap="round"
                 style="transition:stroke-dashoffset .9s linear,stroke .3s"/>
             </svg>
-            <div id="timer-box" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:17px;color:#60a5fa">15</div>
+            <div id="timer-box" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;color:#60a5fa">15</div>
           </div>
         </div>
 
@@ -225,9 +225,9 @@
         <div class="timer-bar" style="margin-bottom:14px;flex-shrink:0"><div id="timer-bar-fill"></div></div>
 
         <!-- Question card -->
-        <div style="background:var(--card);padding:22px;border-radius:32px;border:1px solid rgba(255,255,255,.05);margin-bottom:14px;text-align:center;min-height:140px;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;position:relative">
+        <div style="background:var(--card);padding:14px;border-radius:22px;border:1px solid rgba(255,255,255,.05);margin-bottom:14px;text-align:center;min-height:100px;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;position:relative">
           <div id="q-cat-badge" style="background:rgba(251,191,36,.1);color:var(--accent);font-size:10px;font-weight:900;padding:3px 12px;border-radius:20px;margin-bottom:10px;letter-spacing:.05em">فئة</div>
-          <h3 id="q-text" style="font-size:21px;font-weight:700;line-height:1.5">جاري التحضير...</h3>
+          <h3 id="q-text" style="font-size:16px;font-weight:700;line-height:1.5">جاري التحضير...</h3>
           <button id="btn-analyze" onclick="window.askAIAnalysis()" style="position:absolute;bottom:-14px;left:50%;transform:translateX(-50%);background:#2563eb;color:#fff;padding:7px 18px;border-radius:18px;font-size:11px;font-weight:900;border:none;cursor:pointer;z-index:10;display:none;white-space:nowrap">تحليل ذكي 🤖</button>
         </div>
 
@@ -244,11 +244,11 @@
 
         <!-- Analysis / next -->
         <div id="analysis-container" style="display:none;flex-shrink:0;margin-top:10px">
-          <div style="background:rgba(251,191,36,.07);border:1px solid rgba(251,191,36,.2);border-radius:22px;padding:16px;margin-bottom:12px;text-align:right">
+          <div style="background:rgba(251,191,36,.07);border:1px solid rgba(251,191,36,.2);border-radius:18px;padding:12px;margin-bottom:10px;text-align:right">
             <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px"><span style="font-size:16px">💡</span><span style="color:var(--accent);font-weight:900;font-size:12px;text-transform:uppercase">هل تعلم؟</span></div>
-            <p id="analysis-text" style="color:#cbd5e1;font-size:13px;font-weight:700;line-height:1.7"></p>
+            <p id="analysis-text" style="color:#cbd5e1;font-size:12px;font-weight:700;line-height:1.65"></p>
           </div>
-          <button id="btn-next" onclick="window.nextQuestion()" style="width:100%;padding:17px;background:var(--grad);color:#000;font-weight:900;border-radius:26px;font-size:17px;border:none;border-bottom:4px solid rgba(0,0,0,.2);cursor:pointer">السؤال التالي ➜</button>
+          <button id="btn-next" onclick="window.nextQuestion()" style="width:100%;padding:14px;background:var(--grad);color:#000;font-weight:900;border-radius:22px;font-size:15px;border:none;border-bottom:3px solid rgba(0,0,0,.2);cursor:pointer">السؤال التالي ➜</button>
         </div>
 
         <!-- Helpers -->
@@ -262,8 +262,8 @@
 
     <!-- RESULT -->
     <div id="screen-result" class="screen" style="justify-content:center;align-items:center;text-align:center">
-      <div style="font-size:75px;margin-bottom:12px" id="result-emoji">🎉</div>
-      <h2 style="font-size:34px;font-weight:900;margin-bottom:4px" id="result-title">أحسنت!</h2>
+      <div style="font-size:52px;margin-bottom:8px" id="result-emoji">🎉</div>
+      <h2 style="font-size:19px;font-weight:900;margin-bottom:4px" id="result-title">أحسنت!</h2>
       <p style="color:var(--text2);font-size:13px;font-weight:700;margin-bottom:20px" id="result-subtitle"></p>
       <div style="width:100%;max-width:320px;margin:0 auto 20px">
         <div class="result-stat"><span class="result-stat-label"><i class="fas fa-circle-check" style="color:#22c55e"></i> صحيحة</span><span class="result-stat-value" id="res-correct">0</span></div>
@@ -277,7 +277,7 @@
 
     <!-- DAILY CHALLENGE -->
     <div id="screen-daily" class="screen">
-      <h2 style="font-size:26px;font-weight:900;margin-bottom:16px;flex-shrink:0;display:flex;align-items:center;gap:10px">
+      <h2 style="font-size:20px;font-weight:900;margin-bottom:16px;flex-shrink:0;display:flex;align-items:center;gap:10px">
         <i class="fas fa-bolt" style="color:#f97316;font-size:22px"></i> تحدي اليوم
       </h2>
       <div id="daily-header-card" class="daily-header"></div>
@@ -287,7 +287,7 @@
 
     <!-- WEEKLY / SEASON SCREEN -->
     <div id="screen-weekly" class="screen">
-      <h2 style="font-size:24px;font-weight:900;margin-bottom:14px;flex-shrink:0;display:flex;align-items:center;gap:10px">
+      <h2 style="font-size:19px;font-weight:900;margin-bottom:14px;flex-shrink:0;display:flex;align-items:center;gap:10px">
         <i class="fas fa-ranking-star" style="color:#fbbf24;font-size:20px"></i> التحديات
       </h2>
       <!-- Tabs -->
@@ -327,7 +327,7 @@
     <!-- ROOMS -->
     <div id="screen-rooms" class="screen">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-shrink:0">
-        <h2 style="font-size:26px;font-weight:900;display:flex;align-items:center;gap:10px">
+        <h2 style="font-size:20px;font-weight:900;display:flex;align-items:center;gap:10px">
           <i class="fas fa-users" style="color:#06b6d4;font-size:22px"></i> غرف اللعب
         </h2>
         <button onclick="window.createRoom()" style="background:var(--grad);color:#000;font-weight:900;font-size:13px;border:none;border-radius:14px;padding:10px 18px;cursor:pointer;border-bottom:3px solid rgba(0,0,0,.2)">+ إنشاء غرفة</button>
@@ -354,7 +354,7 @@
 
     <!-- LEADERBOARD -->
     <div id="screen-leaderboard" class="screen">
-      <h2 style="font-size:26px;font-weight:900;margin-bottom:12px;display:flex;align-items:center;gap:10px">
+      <h2 style="font-size:20px;font-weight:900;margin-bottom:12px;display:flex;align-items:center;gap:10px">
         <i class="fas fa-ranking-star" style="color:#fbbf24;font-size:22px"></i> قاعة المشاهير
       </h2>
       <div style="display:flex;gap:8px;margin-bottom:14px;overflow-x:auto;padding-bottom:4px;flex-shrink:0">
@@ -368,7 +368,7 @@
 
     <!-- SHOP -->
     <div id="screen-shop" class="screen">
-      <h2 style="font-size:26px;font-weight:900;margin-bottom:14px;flex-shrink:0;display:flex;align-items:center;gap:10px">
+      <h2 style="font-size:20px;font-weight:900;margin-bottom:14px;flex-shrink:0;display:flex;align-items:center;gap:10px">
         <i class="fas fa-bag-shopping" style="color:#22c55e;font-size:22px"></i> المتجر
       </h2>
       <div style="display:flex;gap:8px;margin-bottom:14px;flex-shrink:0">
@@ -382,7 +382,7 @@
     <!-- STATS -->
     <div id="screen-stats" class="screen">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-shrink:0">
-        <h2 style="font-size:24px;font-weight:900;display:flex;align-items:center;gap:8px">
+        <h2 style="font-size:19px;font-weight:900;display:flex;align-items:center;gap:8px">
           <i class="fas fa-chart-bar" style="color:#f97316;font-size:20px"></i> إحصائياتي
         </h2>
         <button onclick="window.showPlayerCard()" style="background:rgba(251,191,36,.1);color:var(--accent);border:1px solid rgba(251,191,36,.2);border-radius:14px;padding:8px 14px;font-weight:900;font-size:12px;cursor:pointer">بطاقتي 🪪</button>
@@ -497,7 +497,7 @@
 
   <!-- ══ SCREEN: FLASHCARDS ══ -->
   <div id="screen-flashcards" class="screen" style="padding:10px">
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-shrink:0">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-shrink:0">
       <button onclick="window.navTo('map')" style="width:40px;height:40px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:14px;color:rgba(255,255,255,.7);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center">←</button>
       <div>
         <h2 style="font-size:18px;font-weight:900;color:#fff;margin:0;display:flex;align-items:center;gap:6px">
