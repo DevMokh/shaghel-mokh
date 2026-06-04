@@ -252,29 +252,130 @@ export function renderFC() {
   const _catFa = _catData.fa || 'fa-star';
 
   if (front) front.innerHTML = `
-    <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:14px">
-      <div style="width:30px;height:30px;border-radius:10px;
-           background:linear-gradient(145deg,${_catColor},${_catColor}bb);
-           display:flex;align-items:center;justify-content:center;flex-shrink:0">
-        <i class="fas ${_catFa}" style="font-size:13px;color:#fff"></i>
+    <div style="
+      display:flex;flex-direction:column;
+      width:100%;height:100%;
+      align-items:center;justify-content:space-between;
+    ">
+      <!-- الجزء العلوي — أيقونة التصنيف الكبيرة -->
+      <div style="
+        flex:1;width:100%;
+        display:flex;flex-direction:column;
+        align-items:center;justify-content:center;
+        gap:12px;
+        background:linear-gradient(180deg,${_catColor}18 0%,${_catColor}08 60%,transparent 100%);
+        border-radius:18px 18px 0 0;
+        margin:-24px -20px 0;
+        padding:24px 20px 16px;
+      ">
+        <!-- أيقونة كبيرة -->
+        <div style="
+          width:76px;height:76px;border-radius:22px;
+          background:linear-gradient(145deg,${_catColor},${_catColor}bb);
+          display:flex;align-items:center;justify-content:center;
+          box-shadow:0 8px 28px ${_catColor}55;
+        ">
+          <i class="fas ${_catFa}" style="font-size:34px;color:#fff;filter:drop-shadow(0 2px 4px rgba(0,0,0,.3))"></i>
+        </div>
+        <!-- اسم التصنيف -->
+        <div style="text-align:center">
+          <div style="font-size:13px;font-weight:900;color:${_catColor};letter-spacing:.04em">${_fcCat}</div>
+          <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,.35);margin-top:2px">${_fcSub}</div>
+        </div>
+        <!-- رقم البطاقة -->
+        <div style="
+          background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);
+          border-radius:20px;padding:3px 12px;
+          font-size:10px;font-weight:900;color:rgba(255,255,255,.3);
+        ">${_fcIdx+1} / ${_fcCards.length}</div>
       </div>
-      <span style="font-size:10px;font-weight:900;color:${_catColor};letter-spacing:.06em">${_fcCat} • ${_fcSub}</span>
-    </div>
-    <p style="font-size:18px;font-weight:700;color:#fff;line-height:1.65;text-align:center">${q.t}</p>
-    <div style="margin-top:18px;font-size:11px;font-weight:700;color:var(--text2)">👆 اضغط للقلب</div>`;
+
+      <!-- الفاصل -->
+      <div style="width:90%;height:1px;background:rgba(255,255,255,.06);flex-shrink:0"></div>
+
+      <!-- الجزء السفلي — نص السؤال -->
+      <div style="
+        padding:18px 4px 4px;
+        display:flex;flex-direction:column;
+        align-items:center;gap:12px;
+        flex-shrink:0;
+      ">
+        <p style="
+          font-size:17px;font-weight:700;color:#fff;
+          line-height:1.7;text-align:center;
+          margin:0;
+        ">${q.t}</p>
+        <div style="
+          display:flex;align-items:center;gap:5px;
+          font-size:11px;font-weight:700;color:rgba(255,255,255,.25);
+        ">
+          <i class="fas fa-rotate" style="font-size:10px"></i>
+          اضغط للقلب
+        </div>
+      </div>
+    </div>`;
 
   if (back) back.innerHTML = `
-    <div style="font-size:10px;font-weight:900;color:#22c55e;letter-spacing:.08em;margin-bottom:12px">✅ الإجابة الصحيحة</div>
-    <div style="background:rgba(34,197,94,.12);border:1.5px solid rgba(34,197,94,.3);border-radius:16px;
-                padding:12px 16px;margin-bottom:14px;display:flex;align-items:center;gap:10px">
-      <span style="background:#22c55e;color:#000;font-weight:900;font-size:11px;
-                   padding:3px 9px;border-radius:8px">${L[q.c]}</span>
-      <span style="font-size:16px;font-weight:900;color:#fff">${q.a[q.c]}</span>
-    </div>
-    ${q.x ? `<div style="background:rgba(251,191,36,.07);border:1px solid rgba(251,191,36,.15);
-                border-radius:14px;padding:12px 14px">
-               <p style="font-size:12px;font-weight:700;color:#cbd5e1;line-height:1.75">${q.x}</p>
-             </div>` : ''}`;
+    <div style="
+      display:flex;flex-direction:column;
+      width:100%;height:100%;
+      align-items:center;justify-content:space-between;
+    ">
+      <!-- الجزء العلوي — علامة الإجابة الصحيحة -->
+      <div style="
+        flex:1;width:100%;
+        display:flex;flex-direction:column;
+        align-items:center;justify-content:center;
+        gap:10px;
+        background:linear-gradient(180deg,rgba(34,197,94,.1) 0%,rgba(34,197,94,.04) 60%,transparent 100%);
+        border-radius:18px 18px 0 0;
+        margin:-24px -20px 0;
+        padding:24px 20px 16px;
+      ">
+        <!-- أيقونة الإجابة -->
+        <div style="
+          width:72px;height:72px;border-radius:50%;
+          background:linear-gradient(145deg,#22c55e,#16a34a);
+          display:flex;align-items:center;justify-content:center;
+          box-shadow:0 8px 24px rgba(34,197,94,.4);
+        ">
+          <i class="fas fa-check" style="font-size:30px;color:#fff;filter:drop-shadow(0 2px 4px rgba(0,0,0,.3))"></i>
+        </div>
+        <!-- الإجابة الصحيحة -->
+        <div style="text-align:center">
+          <div style="font-size:10px;font-weight:900;color:#22c55e;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px">الإجابة الصحيحة</div>
+          <div style="
+            background:rgba(34,197,94,.1);border:1.5px solid rgba(34,197,94,.25);
+            border-radius:14px;padding:10px 20px;
+            display:inline-flex;align-items:center;gap:8px;
+          ">
+            <span style="background:#22c55e;color:#000;font-weight:900;font-size:11px;
+                         padding:3px 9px;border-radius:7px">${L[q.c]}</span>
+            <span style="font-size:16px;font-weight:900;color:#fff">${q.a[q.c]}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- الفاصل -->
+      <div style="width:90%;height:1px;background:rgba(255,255,255,.06);flex-shrink:0"></div>
+
+      <!-- الشرح (لو موجود) -->
+      <div style="padding:14px 4px 4px;width:100%;flex-shrink:0">
+        ${q.x
+          ? `<div style="background:rgba(251,191,36,.06);border:1px solid rgba(251,191,36,.14);
+                         border-radius:14px;padding:12px 14px;text-align:center">
+               <div style="font-size:10px;font-weight:900;color:var(--accent);letter-spacing:.06em;margin-bottom:5px">
+                 <i class="fas fa-lightbulb" style="font-size:10px"></i> معلومة
+               </div>
+               <p style="font-size:12px;font-weight:700;color:#cbd5e1;line-height:1.7;margin:0">${q.x}</p>
+             </div>`
+          : `<div style="text-align:center;font-size:11px;font-weight:700;color:rgba(255,255,255,.2)">
+               <i class="fas fa-arrow-left" style="font-size:10px"></i>
+               اضغط التالية أو أدّي رأيك
+             </div>`
+        }
+      </div>
+    </div>`;
 }
 window.renderFC = renderFC;
 
