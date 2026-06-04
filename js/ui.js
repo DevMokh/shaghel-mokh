@@ -65,21 +65,25 @@ function _doUpdateUI() {
     el.style.borderRadius = id === 'home-avatar-frame' ? '44px' : '50%';
   });
 
-  if (d.accentColor) {
+  if (d.accentColor && d.accentColor !== window._lastAccent) {
+    window._lastAccent = d.accentColor;
     const ac = ACCENT_COLORS.find(c => c.val === d.accentColor) || ACCENT_COLORS[0];
     document.documentElement.style.setProperty('--accent', ac.val);
     document.documentElement.style.setProperty('--accent2', ac.val2);
     document.documentElement.style.setProperty('--grad', `linear-gradient(135deg,${ac.val},${ac.val2})`);
   }
 
-  // دايماً داكن - Gaming UI
-  document.body.classList.remove('light-mode');
-  const themeToggle  = document.getElementById('theme-toggle');
-  if (themeToggle)   themeToggle.classList.add('on');
-  const themeIconSb  = document.getElementById('theme-icon-sb');
-  const themeLabelSb = document.getElementById('theme-label-sb');
-  if (themeIconSb)   themeIconSb.className  = 'fas fa-moon';
-  if (themeLabelSb)  themeLabelSb.innerText  = 'الوضع الليلي';
+  // تثبيت الثيم مرة واحدة فقط عند أول تحميل (مش كل updateUI)
+  if (!document.body._themeSet) {
+    document.body.classList.remove('light-mode');
+    const themeToggle  = document.getElementById('theme-toggle');
+    if (themeToggle)   themeToggle.classList.add('on');
+    const themeIconSb  = document.getElementById('theme-icon-sb');
+    const themeLabelSb = document.getElementById('theme-label-sb');
+    if (themeIconSb)   themeIconSb.className  = 'fas fa-moon';
+    if (themeLabelSb)  themeLabelSb.innerText  = 'الوضع الليلي';
+    document.body._themeSet = true;
+  }
 
   const isSoundOn = d.soundEnabled !== false;
   const st = document.getElementById('sound-toggle-sb');
@@ -158,7 +162,7 @@ export function updateHomeStreak() {
 let _rivalryLastRun = 0;
 async function checkFriendRivalry() {
   const now = Date.now();
-  if (now - _rivalryLastRun < 120000) return; // throttle: مرة كل دقيقتين
+  if (now - _rivalryLastRun < 300000) return; // throttle: مرة كل 5 دقائق
   _rivalryLastRun = now;
   const d = window.gameData;
   if (!d || !window.firebaseReady || !window.currentUser) return;
@@ -207,8 +211,11 @@ export function navTo(id) {
   if (window.timerInterval) { clearInterval(window.timerInterval); window.timerInterval = null; }
   if (window._dailyCountdownInterval) { clearInterval(window._dailyCountdownInterval); window._dailyCountdownInterval = null; }
 
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
+  // querySelector أسرع من querySelectorAll + forEach
+  const prevScreen  = document.querySelector('.screen.active');
+  const prevNavLink = document.querySelector('.nav-link.active');
+  if (prevScreen)  prevScreen.classList.remove('active');
+  if (prevNavLink) prevNavLink.classList.remove('active');
   const scr = document.getElementById(`screen-${id}`);
   if (scr) scr.classList.add('active');
   const nav = document.getElementById(`n-${id}`);
