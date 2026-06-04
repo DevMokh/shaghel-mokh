@@ -16,10 +16,10 @@ body{font-family:'Tajawal',sans-serif;background:#050508;color:#fff;
 /* ═══════════════════════════════════════════════
    SCREENS
 ═══════════════════════════════════════════════ */
-.screen{display:none;height:calc(100vh - 58px - 50px);padding:10px 10px 30px;will-change:transform;
+.screen{display:none;height:calc(100vh - 58px - 50px);padding:10px 10px 30px;
   overflow-y:auto;width:100%;-webkit-overflow-scrolling:touch}
-.screen.active{display:flex;flex-direction:column;
-  animation:slideIn .4s cubic-bezier(.16,1,.3,1)}
+.screen.active{display:flex;flex-direction:column;contain:layout style;
+  animation:slideIn .2s ease}
 @keyframes slideIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
 ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--accent);border-radius:10px;opacity:.4}
@@ -29,7 +29,7 @@ body{font-family:'Tajawal',sans-serif;background:#050508;color:#fff;
 ═══════════════════════════════════════════════ */
 .topbar{height:50px;padding:0 12px;display:flex;align-items:center;
   justify-content:space-between;flex-shrink:0;position:relative;z-index:50;
-  background:rgba(13,13,13,.96);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  background:#0d0d0d;
   border-bottom:1px solid rgba(255,255,255,.06)}
 .topbar-left,.topbar-right{display:flex;align-items:center;gap:10px}
 
@@ -69,7 +69,6 @@ body{font-family:'Tajawal',sans-serif;background:#050508;color:#fff;
 .nav-bar{
   height:58px;
   background:rgba(10,10,12,.98);
-  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
   border-top:1px solid rgba(255,255,255,.10);
   box-shadow:0 -4px 20px rgba(0,0,0,.4);
   display:flex;justify-content:space-around;align-items:center;
@@ -132,9 +131,7 @@ body{font-family:'Tajawal',sans-serif;background:#050508;color:#fff;
 /* ═══════════════════════════════════════════════
    SIDEBAR
 ═══════════════════════════════════════════════ */
-.sidebar{position:fixed;top:0;right:-105%;width:72%;max-width:290px;height:100%;background:#0b0b10;z-index:1001;transition:right .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden;border-left:1px solid rgba(249,115,22,.1);box-shadow:-8px 0 24px rgba(0,0,0,.5);will-change:right}
-.sidebar.open{right:0}
-.sb-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1000;display:none}
+.sidebar{will-change:right;position:fixed;top:0;right:-105%;width:72%;max-width:290px;height:100%;background:#0b0b10;z-index:1001;transition:right .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden;border-left:1px solid rgba(249,115,22,.1);box-shadow:-8px 0 24px rgba(0,0,0,.5);inset:0;background:rgba(0,0,0,.7);z-index:1000;display:none}
 .sb-header{display:flex;justify-content:space-between;align-items:center;padding:14px 16px 8px}
 .sb-close{width:42px;height:42px;background:#1e1e1e;border:1px solid rgba(255,255,255,.07);
   border-radius:14px;color:rgba(255,255,255,.7);font-size:16px;cursor:pointer;
@@ -142,7 +139,7 @@ body{font-family:'Tajawal',sans-serif;background:#050508;color:#fff;
 .sb-close:active{transform:scale(.9)}
 .sb-title{font-size:18px;font-weight:900;color:#fff}
 .sb-avatar-ring{width:80px;height:80px;margin:0 auto 10px;border-radius:50%;
-  background:var(--grad);padding:4px;box-shadow:0 0 35px rgba(251,191,36,.35);cursor:pointer}
+  background:var(--grad);padding:4px;box-shadow:0 3px 12px rgba(251,191,36,.2);cursor:pointer}
 .sb-avatar-inner{width:100%;height:100%;border-radius:50%;overflow:hidden;
   border:3px solid #111;background:#1a1a1a;position:relative}
 .sb-avatar-inner img{width:100%;height:100%;object-fit:cover;display:block}
@@ -272,14 +269,13 @@ body{font-family:'Tajawal',sans-serif;background:#050508;color:#fff;
 /* ═══════════════════════════════════════════════
    MODALS
 ═══════════════════════════════════════════════ */
-.m-overlay{position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,0);
-  backdrop-filter:blur(0px);display:flex;align-items:flex-end;justify-content:center;
-  transition:background .3s,backdrop-filter .3s;pointer-events:none}
-.m-overlay.active{background:rgba(0,0,0,.8);backdrop-filter:blur(16px);pointer-events:all}
+.m-overlay{position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,0);display:flex;align-items:flex-end;justify-content:center;
+  transition:background .25s;pointer-events:none}
+.m-overlay.active{background:rgba(0,0,0,.82);pointer-events:all}
 .m-sheet{width:100%;max-width:500px;background:#161616;border-radius:32px 32px 0 0;
   transform:translateY(100%);transition:transform .4s cubic-bezier(.34,1.56,.64,1);
   max-height:88vh;overflow-y:auto;overflow-x:hidden;
-  border-top:1px solid rgba(255,255,255,.07);box-shadow:0 -20px 60px rgba(0,0,0,.8)}
+  border-top:1px solid rgba(255,255,255,.07);box-shadow:0 -2px 12px rgba(0,0,0,.4)}
 .m-overlay.active .m-sheet{transform:translateY(0)}
 .m-handle{width:40px;height:5px;background:rgba(255,255,255,.15);border-radius:10px;margin:14px auto 0}
 .m-head{display:flex;justify-content:space-between;align-items:center;padding:14px 18px 10px}
@@ -294,10 +290,9 @@ body{font-family:'Tajawal',sans-serif;background:#050508;color:#fff;
 /* ═══════════════════════════════════════════════
    CUSTOM CONFIRM/INPUT DIALOGS
 ═══════════════════════════════════════════════ */
-.cmod-overlay{position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,0);
-  backdrop-filter:blur(0px);display:flex;align-items:center;justify-content:center;
-  padding:24px;pointer-events:none;transition:background .3s,backdrop-filter .3s}
-.cmod-overlay.active{background:rgba(0,0,0,.82);backdrop-filter:blur(18px);pointer-events:all}
+.cmod-overlay{position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,0);display:flex;align-items:center;justify-content:center;
+  padding:24px;pointer-events:none;transition:background .25s}
+.cmod-overlay.active{background:rgba(0,0,0,.85);pointer-events:all}
 .cmod-box{width:100%;max-width:340px;background:#1a1a1a;border-radius:28px;
   border:1px solid rgba(255,255,255,.08);box-shadow:0 14px 32px rgba(0,0,0,.5);
   transform:scale(.82) translateY(20px);opacity:0;
@@ -470,7 +465,7 @@ body{font-family:'Tajawal',sans-serif;background:#050508;color:#fff;
 .toast-msg{background:#1e1e1e;border:1px solid rgba(255,255,255,.1);color:#fff;
   font-family:'Tajawal',sans-serif;font-size:14px;font-weight:900;padding:13px 20px;
   border-radius:22px;box-shadow:0 4px 14px rgba(0,0,0,.3);
-  animation:toastIn .35s cubic-bezier(.34,1.56,.64,1) forwards;text-align:center}
+  animation:toastIn .2s ease forwards;text-align:center}
 .toast-msg.hide{animation:toastOut .3s ease forwards}
 @keyframes toastIn{from{opacity:0;transform:scale(.82) translateY(-10px)}to{opacity:1;transform:scale(1) translateY(0)}}
 @keyframes toastOut{from{opacity:1;transform:scale(1)}to{opacity:0;transform:scale(.82) translateY(-8px)}}
@@ -1140,5 +1135,33 @@ button, input, select, textarea { font-family: inherit; }
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+/* ════════════════════════════════════════════
+   PERFORMANCE: prefers-reduced-motion
+   أجهزة ضعيفة أو المستخدم يفضل عدم الحركة
+════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ════════════════════════════════════════════
+   PERFORMANCE: GPU layers فقط للمتحرك
+════════════════════════════════════════════ */
+.sidebar, #fc-inner, .m-sheet, .cmod-box {
+  transform: translateZ(0);
+}
+/* إيقاف hover effects على touch devices */
+@media (hover: none) {
+  .map-node:hover, .btn-option:hover, .gm-card:hover,
+  .task-card:hover, .leader-item:hover, .room-card:hover {
+    transform: none !important;
+    box-shadow: none !important;
   }
 }
