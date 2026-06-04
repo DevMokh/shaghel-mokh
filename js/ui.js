@@ -310,7 +310,13 @@ function showSubsForMap(key, c1, ic) {
     ? `<div style="width:44px;height:44px;border-radius:16px;background:linear-gradient(145deg,${c1},${c1}bb);
          display:flex;align-items:center;justify-content:center;flex-shrink:0">
          <i class="fas ${ic.fa}" style="font-size:20px;color:#fff"></i></div>`
-    : `<div style="font-size:28px">${cat.icon||'🎯'}</div>`;
+    : `<div style="
+        width:48px;height:48px;border-radius:15px;
+        background:linear-gradient(135deg,${c1||'#fbbf24'},${c2||'#f59e0b'});
+        display:flex;align-items:center;justify-content:center;
+        margin:0 auto;box-shadow:0 4px 16px ${c1||'#fbbf24'}55">
+        <i class="fas ${cat.fa||'fa-star'}" style="font-size:20px;color:#fff"></i>
+      </div>`;
 
   document.getElementById('paths-header').innerHTML = `
     <button onclick="window.navTo('map')"
