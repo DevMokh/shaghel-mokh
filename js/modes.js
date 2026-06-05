@@ -703,4 +703,127 @@ function _pop(el) {
   requestAnimationFrame(() => { el.style.animation = 'scorePopup .4s cubic-bezier(.34,1.56,.64,1)'; });
   setTimeout(() => { el.style.animation = ''; }, 400);
 }
+// ══════════════════════════════════════════════════════════════════
+// كود معالجة تحدي 1vs1 وجلب الأسئلة بالكامل (بدون أي اختصار)
+// ══════════════════════════════════════════════════════════════════
+
+/**
+ * دالة جلب الأسئلة من الـ Firestore وتجهيزها للتحدي
+ * تم ربطها بالـ window لحل مشكلة window.fetchQuestions is not a function
+ */
+export async function fetchQuestions(category = 'عام', count = 10) {
+  try {
+    console.log(`جاري جلب ${count} سؤال من قسم: ${category}`);
+    
+    // التأكد من أن Firebase يعمل ومحدد
+    if (!db) {
+      throw new Error("قاعدة البيانات Firebase db غير معرفة في هذا الملف");
+    }
+
+    const questionsRef = collection(db, "questions");
+    // عمل استعلام بناءً على القسم المختار
+    const q = query(questionsRef, where("category", "==", category), limit(count));
+    const querySnapshot = await getDocs(q);
+    
+    const fetchedQuestions = [];
+    querySnapshot.forEach((doc) => {
+      fetchedQuestions.push({ id: doc.id, ...doc.data() });
+    });
+
+    // إذا لم يجد أسئلة في القسم، يجلب أسئلة عامة كاحتياط
+    if (fetchedQuestions.length === 0) {
+      console.warn("لم يتم العثور على أسئلة في القسم المحدد، جاري جلب أسئلة عامة");
+      const fallbackQuery = query(questionsRef, limit(count));
+      const fallbackSnapshot = await getDocs(fallbackQuery);
+      fallbackSnapshot.forEach((doc) => {
+        fetchedQuestions.push({ id: doc.id, ...doc.data() });
+      });
+    }
+
+    // حفظ الأسئلة في الـ Global Scope عشان اللعبة تقرأها
+    window.currentMatchQuestions = fetchedQuestions;
+    return fetchedQuestions;
+
+  } catch (error) {
+    console.error("خطأ أثناء جلب الأسئلة:", error);
+    if (typeof showToast === 'function') {
+      showToast("❌ فشل في تحميل الأسئلة، تحقق من الاتصال");
+    }
+    return [];
+  }
+}
+
+/**
+ * دالة فتح نافذة (مودال) تحدي 1vs1 المباشر
+ */
+export function openCreate1v1Modal() {
+  // البحث عن المودال في الـ HTML وتنشيطه
+  const modal = document.getElementById('1v1-modal') || document.getElementById('1v1-create-modal');
+  if (modal) {
+    modal.classList.add('active');
+    console.log("تم فتح مودال التحدي المباشر 1vs1 بنجاح");
+  } else {
+    console.error("لم يتم العثور على عنصر المودال في الـ HTML. تأكد من الـ ID المعطى للمودال");
+    if (typeof showToast === 'function') {
+      showToast("❌ عذراً، تعذر فتح نافذة التحدي حالياً");
+    }
+  }
+}
+
+/**
+ * دالة إغلاق نافذة (مودال) تحدي 1vs1 المباشر
+ */
+export function close1v1Modal() {
+  const modal = document.getElementById('1v1-modal') || document.getElementById('1v1-create-modal');
+  if (modal) {
+    modal.classList.remove('active');
+    console.log("تم إغلاق مودال التحدي المباشر 1vs1");
+  }
+}
+
+/**
+ * دالة بدء تحدي 1vs1 جديد وإنشاء الكود الخاص به
+ */
+export async function create1v1Challenge(category = 'عام') {
+  try {
+    if (typeof showToast === 'function') showToast("⏳ جاري إنشاء التحدي...");
+    
+    // جلب الأسئلة أولاً للتأكد من جاهزية التحدي
+    const questions = await fetchQuestions(category, 5);
+    if (questions.length === 0) {
+      throw new Error("لا يمكن إنشاء تحدي بدون أسئلة");
+    }
+
+    // توليد كود عشوائي فريد للتحدي مكون من 6 رموز
+    const challengeCode = Math.random().toString(36).substring(2, 8).toUpperCase();
+    console.log(`تم إنشاء كود التحدي: ${challengeCode}`);
+
+    // حفظ بيانات التحدي في الـ Firestore
+    const challengeRef = doc(db, "challenges", challengeCode);
+    await setDoc(challengeRef, {
+      creator: window.gameData?.username || "لاعب مجهول",
+      status: "waiting",
+      category: category,
+      questions: questions,
+      createdAt: new Date()
+    });
+
+    if (typeof showToast === 'function') showToast(`🎉 تم إنشاء التحدي بكود: ${challengeCode}`);
+    
+    // هنا تضع كود فتح شاشة الانتظار للتحدي الخاص بك
+    return challengeCode;
+
+  } catch (error) {
+    console.error("خطأ في إنشاء التحدي 1vs1:", error);
+    if (typeof showToast === 'function') showToast("❌ فشل في إنشاء غرفة التحدي");
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════
+// تصدير وربط الدوال بـ window لجعلها مرئية عالمياً في الـ HTML والملفات الأخرى
+// ══════════════════════════════════════════════════════════════════
+window.fetchQuestions = fetchQuestions;
+window.openCreate1v1Modal = openCreate1v1Modal;
+window.close1v1Modal = close1v1Modal;
+window.create1v1Challenge = create1v1Challenge;
 
