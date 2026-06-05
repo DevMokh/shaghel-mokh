@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>شغل مخك - الإصدار الألترا 4.0</title>
 
-<!-- PWA -->
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0d0d0d">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -16,15 +15,12 @@
 <meta name="application-name" content="شغل مخك">
 <meta name="description" content="لعبة تريفيا عربية تنافسية — تحديات يومية وأسبوعية وغرف لعب جماعي">
 
-<!-- Fonts & Icons -->
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link rel="stylesheet" href="styles.css">
 
-<!-- Confetti -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/canvas-confetti/1.6.0/confetti.browser.min.js"></script>
 
-<!-- Service Worker -->
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
@@ -54,7 +50,6 @@
 </head>
 <body id="main-body">
 
-<!-- LOADING SCREEN -->
 <div id="loading-screen" style="position:fixed;inset:0;background:#0d0d0d;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;transition:opacity .5s">
   <div style="animation:loadingPop .6s cubic-bezier(.34,1.56,.64,1) both">
     <img src="https://i.postimg.cc/qqTBP312/1000061201.png" style="width:70px;height:70px;border-radius:22px;border:3px solid rgba(251,191,36,.4);box-shadow:0 0 40px rgba(251,191,36,.3)">
@@ -67,7 +62,6 @@
   </div>
 </div>
 
-<!-- SOUNDS -->
 <audio id="snd-correct" src="https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3" preload="none"></audio>
 <audio id="snd-wrong"   src="https://assets.mixkit.co/active_storage/sfx/2018/2018-preview.mp3" preload="none"></audio>
 <audio id="snd-level"   src="https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3" preload="none"></audio>
@@ -78,7 +72,6 @@
 
 <div style="max-width:500px;margin:0 auto;height:100vh;display:flex;flex-direction:column;overflow:hidden;background:var(--bg);position:relative;box-shadow:0 0 30px rgba(0,0,0,.5)">
 
-  <!-- TOPBAR -->
   <div class="topbar">
     <div class="topbar-left">
       <div class="icon-btn lvl-btn" id="top-lvl" onclick="window.navTo('stats')">1</div>
@@ -99,10 +92,8 @@
     </div>
   </div>
 
-  <!-- SCREENS -->
   <div style="flex:1;position:relative;overflow:hidden">
 
-    <!-- HOME -->
     <div id="screen-home" class="screen active" style="justify-content:center;align-items:center;text-align:center">
       <div style="position:relative;margin-bottom:22px;display:inline-block">
         
@@ -118,7 +109,6 @@
         <span style="height:2px;width:24px;background:var(--accent);border-radius:10px;opacity:.5"></span>
       </div>
 
-      <!-- بادج السلسلة اليومية -->
       <div id="home-streak-badge" style="display:none;align-items:center;gap:8px;background:rgba(251,191,36,.09);border:1px solid rgba(251,191,36,.22);border-radius:18px;padding:6px 14px;margin-bottom:8px;transition:.3s">
         <i class="fas fa-fire-flame-curved" style="color:#f97316;font-size:16px"></i>
         <span id="home-streak-num" style="font-size:17px;font-weight:900;color:#fff">0</span>
@@ -126,7 +116,6 @@
       </div>
       <div id="home-streak-warn" style="display:none;color:#fbbf24;font-size:12px;font-weight:700;margin-bottom:10px;padding:6px 14px;background:rgba(251,191,36,.08);border-radius:12px;border:1px solid rgba(251,191,36,.15)"></div>
 
-      <!-- بانر منافسة الأصدقاء -->
       <div id="home-rival-banner" style="display:none;align-items:center;gap:10px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:18px;padding:10px 16px;margin-bottom:12px;cursor:pointer;width:100%;max-width:300px" onclick="window.navTo('leaderboard')">
         <i class="fas fa-bolt" style="color:#ef4444;font-size:15px"></i>
         <span style="font-size:12px;font-weight:700;color:var(--text2)">صاحبك</span>
@@ -153,7 +142,6 @@
         ontouchend="this.style.transform='';this.style.borderBottomWidth='5px'">
         <i class="fas fa-gamepad"></i> ابدأ التحدي
       </button>
-      <!-- أزرار الأوضاع الجديدة -->
       <div style="display:flex;gap:10px;margin-top:12px">
         <button onclick="window.openRoulette()"
           style="flex:1;padding:13px 0;background:rgba(251,191,36,.1);color:var(--accent);border:1px solid rgba(251,191,36,.22);border-radius:22px;font-weight:900;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px"
@@ -170,7 +158,6 @@
       </div>
     </div>
 
-    <!-- MAP -->
     <div id="screen-map" class="screen">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-shrink:0">
         <h2 style="font-size:20px;font-weight:900">اختر المجال 🗺️</h2>
@@ -179,16 +166,13 @@
       <div id="map-grid" class="map-grid"></div>
     </div>
 
-    <!-- PATHS -->
     <div id="screen-paths" class="screen">
       <div style="flex-shrink:0" id="paths-header"></div>
       <div id="paths-list" style="display:flex;flex-direction:column;gap:12px;padding-bottom:30px"></div>
     </div>
 
-    <!-- QUIZ -->
     <div id="screen-quiz" class="screen" style="padding:0">
       <div style="padding:16px;display:flex;flex-direction:column;height:100%;overflow:hidden">
-        <!-- Header bar -->
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-shrink:0">
           <button onclick="window.confirmExit()" style="width:46px;height:46px;background:rgba(239,68,68,.1);color:#ef4444;border-radius:18px;font-size:18px;border:1px solid rgba(239,68,68,.2);cursor:pointer;display:flex;align-items:center;justify-content:center" onmousedown="this.style.transform='scale(.88)'" onmouseup="this.style.transform=''">✕</button>
           <div style="flex:1;padding:0 14px">
@@ -201,7 +185,6 @@
               <div id="q-progress" style="height:100%;background:var(--grad);transition:.4s;width:0%;border-radius:20px"></div>
             </div>
           </div>
-          <!-- Timer Ring SVG -->
           <div style="position:relative;width:42px;height:42px;flex-shrink:0">
             <svg width="42" height="42" style="position:absolute;top:0;left:0;transform:rotate(-90deg)">
               <circle cx="21" cy="21" r="18" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="3.5"/>
@@ -215,23 +198,18 @@
           </div>
         </div>
 
-        <!-- Hearts bar (for hearts mode) -->
         <div id="hearts-bar" style="display:none;justify-content:center;gap:6px;margin-bottom:8px;flex-shrink:0"></div>
 
-        <!-- Streak badge -->
         <div id="quiz-streak-badge" class="streak-badge" style="display:none;font-size:9px;padding:2px 7px;text-align:center;margin-bottom:6px;flex-shrink:0">🔥 <span id="quiz-streak-num">0</span> متتالية</div>
 
-        <!-- Timer bar -->
         <div class="timer-bar" style="margin-bottom:14px;flex-shrink:0"><div id="timer-bar-fill"></div></div>
 
-        <!-- Question card -->
         <div style="background:var(--card);padding:14px;border-radius:22px;border:1px solid rgba(255,255,255,.05);margin-bottom:14px;text-align:center;min-height:100px;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;position:relative">
           <div id="q-cat-badge" style="background:rgba(251,191,36,.1);color:var(--accent);font-size:10px;font-weight:900;padding:3px 12px;border-radius:20px;margin-bottom:10px;letter-spacing:.05em">فئة</div>
           <h3 id="q-text" style="font-size:16px;font-weight:700;line-height:1.5">جاري التحضير...</h3>
           <button id="btn-analyze" onclick="window.askAIAnalysis()" style="position:absolute;bottom:-14px;left:50%;transform:translateX(-50%);background:#2563eb;color:#fff;padding:7px 18px;border-radius:18px;font-size:11px;font-weight:900;border:none;cursor:pointer;z-index:10;display:none;white-space:nowrap">تحليل ذكي 🤖</button>
         </div>
 
-        <!-- Skeleton Loading -->
         <div id="skeleton-loading" style="display:none;flex-direction:column;gap:10px;flex-shrink:0">
           <div class="skeleton-opt"></div>
           <div class="skeleton-opt"></div>
@@ -239,10 +217,8 @@
           <div class="skeleton-opt"></div>
         </div>
 
-        <!-- Options box -->
         <div id="options-box" style="flex:1;overflow-y:auto;padding-right:2px"></div>
 
-        <!-- Analysis / next -->
         <div id="analysis-container" style="display:none;flex-shrink:0;margin-top:10px">
           <div style="background:rgba(251,191,36,.07);border:1px solid rgba(251,191,36,.2);border-radius:18px;padding:12px;margin-bottom:10px;text-align:right">
             <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px"><span style="font-size:16px">💡</span><span style="color:var(--accent);font-weight:900;font-size:12px;text-transform:uppercase">هل تعلم؟</span></div>
@@ -251,7 +227,6 @@
           <button id="btn-next" onclick="window.nextQuestion()" style="width:100%;padding:14px;background:var(--grad);color:#000;font-weight:900;border-radius:22px;font-size:15px;border:none;border-bottom:3px solid rgba(0,0,0,.2);cursor:pointer">السؤال التالي ➜</button>
         </div>
 
-        <!-- Helpers -->
         <div style="display:flex;gap:10px;padding-top:12px;flex-shrink:0">
           <button onclick="window.useHelper('skip')"   id="btn-skip" class="helper-btn h-skip"><span class="h-cnt" id="h-skip">5</span><span class="h-emoji">⏩</span><span class="h-label">تخطي</span></button>
           <button onclick="window.useHelper('hint')"   id="btn-hint" class="helper-btn h-hint"><span class="h-cnt" id="h-hint">5</span><span class="h-emoji">💡</span><span class="h-label">تلميح</span></button>
@@ -260,7 +235,6 @@
       </div>
     </div>
 
-    <!-- RESULT -->
     <div id="screen-result" class="screen" style="justify-content:center;align-items:center;text-align:center">
       <div style="font-size:52px;margin-bottom:8px" id="result-emoji">🎉</div>
       <h2 style="font-size:19px;font-weight:900;margin-bottom:4px" id="result-title">أحسنت!</h2>
@@ -275,7 +249,6 @@
       <button onclick="window.navTo('home')" style="width:100%;max-width:300px;padding:13px;background:rgba(255,255,255,.05);color:var(--text2);font-weight:700;border-radius:22px;font-size:14px;border:1px solid rgba(255,255,255,.08);cursor:pointer">الرئيسية 🏠</button>
     </div>
 
-    <!-- DAILY CHALLENGE -->
     <div id="screen-daily" class="screen">
       <h2 style="font-size:20px;font-weight:900;margin-bottom:16px;flex-shrink:0;display:flex;align-items:center;gap:10px">
         <i class="fas fa-bolt" style="color:#f97316;font-size:22px"></i> تحدي اليوم
@@ -285,12 +258,10 @@
       <div id="daily-leader-list" style="flex:1;overflow-y:auto;padding-bottom:20px"></div>
     </div>
 
-    <!-- WEEKLY / SEASON SCREEN -->
     <div id="screen-weekly" class="screen">
       <h2 style="font-size:19px;font-weight:900;margin-bottom:14px;flex-shrink:0;display:flex;align-items:center;gap:10px">
         <i class="fas fa-ranking-star" style="color:#fbbf24;font-size:20px"></i> التحديات
       </h2>
-      <!-- Tabs -->
       <div style="display:flex;gap:7px;margin-bottom:14px;flex-shrink:0;overflow-x:auto;padding-bottom:2px">
         <button class="ch-tab-btn" data-ctab="weekly"
           style="padding:8px 18px;border-radius:14px;font-weight:900;font-size:12px;cursor:pointer;border:1px solid rgba(251,191,36,.2);white-space:nowrap;background:rgba(251,191,36,.12);color:var(--accent)"
@@ -308,23 +279,19 @@
           <i class="fas fa-list-check" style="margin-left:4px"></i>مهام
         </button>
       </div>
-      <!-- Weekly tab -->
       <div id="ch-tab-weekly" style="flex:1;display:flex;flex-direction:column;overflow:hidden">
         <div id="weekly-header-card" style="flex-shrink:0"></div>
         <h3 style="font-size:13px;font-weight:900;color:var(--text2);text-transform:uppercase;letter-spacing:.08em;margin:12px 0 8px;flex-shrink:0">المتصدرون</h3>
         <div id="weekly-leader-list" style="flex:1;overflow-y:auto;padding-bottom:20px"></div>
       </div>
-      <!-- Season tab -->
       <div id="ch-tab-season" style="flex:1;overflow-y:auto;display:none;padding-bottom:20px">
         <div id="season-card"></div>
       </div>
-      <!-- Weekly tasks tab -->
       <div id="ch-tab-wtasks" style="flex:1;overflow-y:auto;display:none;padding-bottom:20px">
         <div id="weekly-tasks-list"></div>
       </div>
     </div>
 
-    <!-- ROOMS -->
     <div id="screen-rooms" class="screen">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-shrink:0">
         <h2 style="font-size:20px;font-weight:900;display:flex;align-items:center;gap:10px">
@@ -336,7 +303,6 @@
       <button onclick="window.openJoinRoomModal()" style="width:100%;margin-top:10px;padding:14px;background:rgba(255,255,255,.05);color:var(--text2);border:1px solid rgba(255,255,255,.08);border-radius:18px;font-weight:900;font-size:14px;cursor:pointer;flex-shrink:0">🔑 الانضمام بكود</button>
     </div>
 
-    <!-- LOBBY -->
     <div id="screen-lobby" class="screen" style="padding:0">
       <div style="padding:16px;height:100%;display:flex;flex-direction:column;overflow:hidden">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-shrink:0">
@@ -352,7 +318,6 @@
       </div>
     </div>
 
-    <!-- LEADERBOARD -->
     <div id="screen-leaderboard" class="screen">
       <h2 style="font-size:20px;font-weight:900;margin-bottom:12px;display:flex;align-items:center;gap:10px">
         <i class="fas fa-ranking-star" style="color:#fbbf24;font-size:22px"></i> قاعة المشاهير
@@ -366,7 +331,6 @@
       <div id="leader-list" style="flex:1;overflow-y:auto;padding-bottom:20px"></div>
     </div>
 
-    <!-- SHOP -->
     <div id="screen-shop" class="screen">
       <h2 style="font-size:20px;font-weight:900;margin-bottom:14px;flex-shrink:0;display:flex;align-items:center;gap:10px">
         <i class="fas fa-bag-shopping" style="color:#22c55e;font-size:22px"></i> المتجر
@@ -379,7 +343,6 @@
       <div id="shop-content" style="flex:1;overflow-y:auto;padding-bottom:20px"></div>
     </div>
 
-    <!-- STATS -->
     <div id="screen-stats" class="screen">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-shrink:0">
         <h2 style="font-size:19px;font-weight:900;display:flex;align-items:center;gap:8px">
@@ -388,14 +351,12 @@
         <button onclick="window.showPlayerCard()" style="background:rgba(251,191,36,.1);color:var(--accent);border:1px solid rgba(251,191,36,.2);border-radius:14px;padding:8px 14px;font-weight:900;font-size:12px;cursor:pointer">بطاقتي 🪪</button>
       </div>
 
-      <!-- Tabs -->
       <div style="display:flex;gap:7px;margin-bottom:14px;flex-shrink:0">
         <button data-stab="overview"     onclick="window.switchStatsTab('overview')"     style="padding:7px 14px;border-radius:12px;font-weight:900;font-size:11px;cursor:pointer;border:1px solid rgba(251,191,36,.2);background:rgba(251,191,36,.12);color:var(--accent)">نظرة عامة</button>
         <button data-stab="charts"       onclick="window.switchStatsTab('charts')"       style="padding:7px 14px;border-radius:12px;font-weight:900;font-size:11px;cursor:pointer;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.05);color:var(--text2)">تفاصيل</button>
         <button data-stab="achievements" onclick="window.switchStatsTab('achievements')" style="padding:7px 14px;border-radius:12px;font-weight:900;font-size:11px;cursor:pointer;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.05);color:var(--text2)">إنجازات</button>
       </div>
 
-      <!-- Tab: Overview -->
       <div id="stats-tab-overview" style="overflow-y:auto;padding-bottom:20px">
         <div class="stats-grid">
           <div class="stat-card">
@@ -429,7 +390,6 @@
             <span class="stat-card-label">مجموع XP</span>
           </div>
         </div>
-        <!-- Extra stats row -->
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px">
           <div class="stat-card" style="padding:12px 8px">
             <span class="stat-card-icon" style="font-size:16px"><i class="fas fa-bolt" style="color:#fbbf24"></i></span>
@@ -447,7 +407,6 @@
             <span class="stat-card-label">متوسط الوقت</span>
           </div>
         </div>
-        <!-- Login streak -->
         <div style="background:var(--card);border-radius:20px;border:1px solid rgba(255,255,255,.05);padding:16px;margin-top:12px">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
             <span style="font-size:13px;font-weight:900;color:#fff;display:flex;align-items:center;gap:6px"><i class="fas fa-fire-flame-curved" style="color:#f97316"></i> سلسلة الدخول</span>
@@ -460,7 +419,6 @@
         </div>
       </div>
 
-      <!-- Tab: Charts -->
       <div id="stats-tab-charts" style="display:none;overflow-y:auto;padding-bottom:20px">
         <div style="background:var(--card);border-radius:20px;border:1px solid rgba(255,255,255,.05);padding:16px;margin-bottom:12px">
           <div style="display:flex;justify-content:space-between;margin-bottom:12px">
@@ -478,7 +436,6 @@
         <div id="chart-categories" style="display:flex;flex-direction:column;gap:10px"></div>
       </div>
 
-      <!-- Tab: Achievements -->
       <div id="stats-tab-achievements" style="display:none;overflow-y:auto;padding-bottom:90px">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
           <span style="font-size:13px;font-weight:700;color:var(--text2)">المكتسبة</span>
@@ -493,10 +450,7 @@
       </div>
     </div>
 
-  </div><!-- /screens -->
-
-  <!-- ══ SCREEN: FLASHCARDS ══ -->
-  <div id="screen-flashcards" class="screen" style="padding:10px">
+  </div><div id="screen-flashcards" class="screen" style="padding:10px">
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-shrink:0">
       <button onclick="window.navTo('map')" style="width:40px;height:40px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:14px;color:rgba(255,255,255,.7);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center">←</button>
       <div>
@@ -510,18 +464,15 @@
         <span id="fc-review-cnt" style="font-size:11px;font-weight:900;color:#f97316">🔁 0</span>
       </div>
     </div>
-    <!-- progress bar -->
     <div style="height:5px;background:rgba(255,255,255,.06);border-radius:10px;overflow:hidden;margin-bottom:14px;flex-shrink:0">
       <div id="fc-progress" style="height:100%;background:var(--grad);border-radius:10px;width:0%;transition:width .5s"></div>
     </div>
-    <!-- card -->
     <div id="fc-outer" style="flex:1;display:flex;flex-direction:column;margin-bottom:12px">
       <div id="fc-inner">
         <div id="fc-front" style=""></div>
         <div id="fc-back" style=""></div>
       </div>
     </div>
-    <!-- buttons -->
     <div style="display:flex;gap:10px;flex-shrink:0">
       <button id="fc-review-btn" onclick="window.markFC(false)" style="display:none;flex:1;padding:14px;background:rgba(239,68,68,.1);color:#ef4444;border:1px solid rgba(239,68,68,.2);border-radius:20px;font-weight:900;font-size:14px;cursor:pointer;align-items:center;justify-content:center;gap:6px">🔁 للمراجعة</button>
       <button id="fc-flip-btn" onclick="window.flipFC()" style="flex:1;padding:14px;background:rgba(96,165,250,.1);color:#60a5fa;border:1px solid rgba(96,165,250,.2);border-radius:20px;font-weight:900;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px"><i class="fas fa-rotate"></i> اقلب البطاقة</button>
@@ -530,12 +481,10 @@
     <button id="fc-restart-btn" onclick="window.restartFC()" style="display:none;width:100%;margin-top:10px;padding:15px;background:var(--grad);color:#000;font-weight:900;border-radius:24px;font-size:15px;border:none;border-bottom:4px solid rgba(0,0,0,.2);cursor:pointer;align-items:center;justify-content:center;gap:8px"><i class="fas fa-rotate-right"></i> ابدأ من جديد</button>
   </div>
 
-  <!-- ══ SCREEN: 1v1 ══ -->
   <div id="screen-1v1" class="screen" style="padding:10px"></div>
 
 
 
-  <!-- NAVBAR -->
   <div id="main-nav" class="nav-bar">
     <div onclick="window.navTo('home')"        id="n-home"        class="nav-link active"><i class="fas fa-house"></i><span>الرئيسية</span></div>
     <div onclick="window.navTo('map')"         id="n-map"         class="nav-link"><i class="fas fa-th-large"></i><span>المجالات</span></div>
@@ -545,17 +494,14 @@
   </div>
 </div>
 
-<!-- SIDEBAR -->
 <div id="sb-overlay" class="sb-overlay" onclick="window.toggleSidebar()"></div>
 <div id="sidebar" class="sidebar">
-  <!-- Header -->
   <div class="sb-header" style="padding:16px 16px 10px">
     <button onclick="window.toggleSidebar()" class="sb-close" style="width:34px;height:34px;font-size:14px">✕</button>
     <h2 class="sb-title" style="font-size:15px">الملف الشخصي</h2>
     <div style="width:34px"></div>
   </div>
 
-  <!-- Avatar + info -->
   <div class="sb-center" style="padding:8px 16px 10px">
     <div class="sb-avatar-ring" onclick="window.changeUsername()" style="width:76px;height:76px;margin-bottom:10px">
       <div class="sb-avatar-inner" style="width:76px;height:76px;border-radius:24px">
@@ -567,7 +513,6 @@
     <span id="side-rank" class="sb-rank-pill" style="font-size:10px;padding:3px 10px">باحث عن المعرفة</span>
   </div>
 
-  <!-- XP bar -->
   <div style="padding:0 16px 12px">
     <div style="display:flex;justify-content:space-between;font-size:10px;font-weight:700;color:var(--text2);margin-bottom:5px">
       <span>XP</span><span id="side-xp-label">0 / 1500</span>
@@ -575,7 +520,6 @@
     <div class="xp-bar"><div id="side-xp-fill" class="xp-fill" style="width:0%"></div></div>
   </div>
 
-  <!-- Stats grid 3 cols -->
   <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;padding:0 16px 14px">
     <div style="background:rgba(251,191,36,.07);border:1px solid rgba(251,191,36,.12);border-radius:14px;padding:10px 6px;text-align:center">
       <div class="sb-stat-val" id="side-coins" style="font-size:18px;font-weight:900;color:var(--accent)">500</div>
@@ -593,7 +537,6 @@
 
   <div class="sb-divider"></div>
 
-  <!-- قسم: الأنشطة -->
   <div class="sb-section-label">الأنشطة</div>
   <div class="sb-item-new" onclick="window.openRoulette();window.toggleSidebar()">
     <div class="sb-item-icon" style="background:rgba(251,191,36,.14);border:1px solid rgba(251,191,36,.2)"><i class="fas fa-rotate" style="color:#fbbf24"></i></div>
@@ -618,7 +561,6 @@
 
   <div class="sb-divider"></div>
 
-  <!-- قسم: التحديات -->
   <div class="sb-section-label">التحديات</div>
   <div class="sb-item-new" onclick="window.showDailyTasksModal()">
     <div class="sb-item-icon" style="background:rgba(249,115,22,.14);border:1px solid rgba(249,115,22,.2)"><i class="fas fa-bolt" style="color:#f97316"></i></div>
@@ -648,7 +590,6 @@
 
   <div class="sb-divider"></div>
 
-  <!-- قسم: الإعدادات -->
   <div class="sb-section-label">الإعدادات</div>
   <div class="sb-item-new" onclick="window.changeUsername()">
     <div class="sb-item-icon" style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1)"><i class="fas fa-pen" style="color:rgba(255,255,255,.6)"></i></div>
@@ -677,7 +618,6 @@
     <button onclick="window.requestNotifPermission()" id="notif-btn" style="width:100%;background:rgba(96,165,250,.08);color:#60a5fa;border:1px solid rgba(96,165,250,.15);border-radius:12px;padding:10px;font-weight:900;font-size:12px;cursor:pointer">🔔 تفعيل الإشعارات</button>
   </div>
 
-  <!-- Footer -->
   <div class="sb-footer" style="margin-top:auto">
     <button onclick="window.resetGame()" class="sb-del-btn" style="font-size:12px;padding:10px">🗑️ مسح البيانات</button>
   </div>
@@ -685,7 +625,6 @@
 
 <div id="toast-container"></div>
 
-<!-- MODALS -->
 <div id="modal-hint" class="m-overlay" onclick="window.closeModal('hint')">
   <div class="m-sheet" onclick="event.stopPropagation()" style="border-top:2px solid rgba(96,165,250,.3)">
     <div class="m-handle"></div>
@@ -739,14 +678,9 @@
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════════════
-     MODAL: اختر وضع اللعب (12 وضع)
-══════════════════════════════════════════════════ -->
 <div id="modal-gamemode" style="display:none;position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.85);align-items:flex-end;justify-content:center" onclick="window.closeGameMode()">
   <div onclick="event.stopPropagation()" style="width:100%;max-width:500px;background:#0e0e14;border-radius:32px 32px 0 0;border:1px solid rgba(255,255,255,.08);border-bottom:none;padding:0 0 env(safe-area-inset-bottom);animation:slideUpModal .35s cubic-bezier(.16,1,.3,1) both;max-height:88vh;display:flex;flex-direction:column">
-    <!-- Handle -->
     <div style="display:flex;justify-content:center;padding:12px 0 0"><div style="width:38px;height:4px;border-radius:10px;background:rgba(255,255,255,.15)"></div></div>
-    <!-- Header -->
     <div style="padding:14px 20px 10px;display:flex;align-items:center;gap:12px;flex-shrink:0">
       <div style="width:46px;height:46px;border-radius:16px;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">
         <div id="gm-cat-icon"
@@ -764,19 +698,15 @@
       </div>
       <button onclick="window.closeGameMode()" style="width:36px;height:36px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.08);border-radius:12px;color:rgba(255,255,255,.6);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0">✕</button>
     </div>
-    <!-- Tabs -->
     <div style="display:flex;gap:6px;padding:0 16px 12px;flex-shrink:0;overflow-x:auto">
       <button class="gm-tab" data-gmtab="popular"   onclick="window.switchGameModeTab('popular')"   style="padding:7px 16px;border-radius:12px;font-weight:900;font-size:11px;cursor:pointer;white-space:nowrap;border:1px solid rgba(251,191,36,.28);background:rgba(251,191,36,.14);color:var(--accent)"><i class="fas fa-fire-flame-curved" style="margin-left:4px"></i>شائع</button>
       <button class="gm-tab" data-gmtab="challenge" onclick="window.switchGameModeTab('challenge')" style="padding:7px 16px;border-radius:12px;font-weight:900;font-size:11px;cursor:pointer;white-space:nowrap;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.05);color:var(--text2)"><i class="fas fa-crosshairs" style="margin-left:4px"></i>تحدي</button>
       <button class="gm-tab" data-gmtab="custom"    onclick="window.switchGameModeTab('custom')"    style="padding:7px 16px;border-radius:12px;font-weight:900;font-size:11px;cursor:pointer;white-space:nowrap;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.05);color:var(--text2)"><i class="fas fa-sliders" style="margin-left:4px"></i>مخصص</button>
     </div>
-    <!-- Modes grid -->
     <div id="gm-modes-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 16px;overflow-y:auto;flex:1"></div>
-    <!-- Info box -->
     <div id="gm-info-box" style="display:none;margin:10px 16px 0;background:rgba(251,191,36,.07);border:1px solid rgba(251,191,36,.15);border-radius:18px;padding:12px 16px;flex-shrink:0">
       <p id="gm-info-text" style="font-size:12px;font-weight:700;color:#cbd5e1;line-height:1.6;text-align:right"></p>
     </div>
-    <!-- Start button -->
     <div style="padding:12px 16px 22px;flex-shrink:0">
       <div id="gm-start-hint" style="text-align:center;font-size:11px;font-weight:700;color:rgba(255,255,255,.25);margin-bottom:8px">
         👆 اضغط على وضع لعب أعلاه
@@ -795,7 +725,6 @@
   </div>
 </div>
 
-<!-- CUSTOM DIALOGS -->
 <div id="cmod-confirm" class="cmod-overlay" onclick="window._cancelConfirm()">
   <div class="cmod-box" onclick="event.stopPropagation()">
     <div class="cmod-icon" id="cmod-ico">⚠️</div><div class="cmod-title" id="cmod-ttl">هل أنت متأكد؟</div><div class="cmod-msg" id="cmod-msg"></div>
@@ -821,7 +750,6 @@
   </div>
 </div>
 
-<!-- ══ MODAL: روليت ══ -->
 <div id="modal-roulette" onclick="window.closeRoulette()">
   <div onclick="event.stopPropagation()">
     <div style="display:flex;justify-content:center;padding:10px 0 0"><div style="width:36px;height:4px;border-radius:10px;background:rgba(255,255,255,.15)"></div></div>
@@ -831,15 +759,11 @@
       </h3>
       <button onclick="window.closeRoulette()" style="width:34px;height:34px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.08);border-radius:11px;color:rgba(255,255,255,.6);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center">✕</button>
     </div>
-    <!-- pointer needle -->
     <div id="roulette-pointer"></div>
-    <!-- canvas -->
     <div style="padding:10px 16px;display:flex;justify-content:center">
       <canvas id="roulette-canvas" width="250" height="250"></canvas>
     </div>
-    <!-- result label -->
     <div id="roulette-result-lbl" style="text-align:center;font-size:14px;font-weight:900;color:var(--accent);min-height:24px;padding:6px 16px 0">دوّر العجلة واكتشف تصنيفك!</div>
-    <!-- buttons -->
     <div style="padding:12px 16px 22px;display:flex;flex-direction:column;gap:10px">
       <button id="roulette-spin-btn" onclick="window.spinRoulette()"
         style="width:100%;padding:15px;background:var(--grad);color:#000;font-weight:900;border-radius:24px;font-size:15px;border:none;border-bottom:4px solid rgba(0,0,0,.2);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">
@@ -851,7 +775,6 @@
   </div>
 </div>
 
-<!-- ══ MODAL: 1vs1 تحدي مباشر ══ -->
 <div id="modal-1v1" onclick="window.close1v1()">
   <div onclick="event.stopPropagation()">
     <div style="display:flex;justify-content:center;padding:10px 0 0"><div style="width:36px;height:4px;border-radius:10px;background:rgba(255,255,255,.15)"></div></div>
@@ -879,7 +802,6 @@
   </div>
 </div>
 
-<!-- GAME JS — يجب أن تكون الملفات في مجلد js/ -->
 <script type="module" src="js/main.js"></script>
 </body>
 </html>
