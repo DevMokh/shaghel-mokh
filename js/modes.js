@@ -780,50 +780,58 @@ export function close1v1Modal() {
     console.log("تم إغلاق مودال التحدي المباشر 1vs1");
   }
 }
+// ══════════════════════════════════════════════════════════════════
+// كود معالجة تحدي 1vs1 وجلب الأسئلة (مخصص للإضافة في نهاية modes.js)
+// ══════════════════════════════════════════════════════════════════
 
-/**
- * دالة بدء تحدي 1vs1 جديد وإنشاء الكود الخاص به
- */
-export async function create1v1Challenge(category = 'عام') {
+window.fetchQuestions = async function(category = 'عام', count = 10) {
   try {
-    if (typeof showToast === 'function') showToast("⏳ جاري إنشاء التحدي...");
+    console.log(`جاري جلب ${count} سؤال من قسم: ${category}`);
     
-    // جلب الأسئلة أولاً للتأكد من جاهزية التحدي
-    const questions = await fetchQuestions(category, 5);
-    if (questions.length === 0) {
-      throw new Error("لا يمكن إنشاء تحدي بدون أسئلة");
-    }
+    // استيراد دالات الـ Firestore اللازمة ديناميكياً
+    const { collection, query, where, limit, getDocs } = await import(
+      "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js"
+    );
 
-    // توليد كود عشوائي فريد للتحدي مكون من 6 رموز
-    const challengeCode = Math.random().toString(36).substring(2, 8).toUpperCase();
-    console.log(`تم إنشاء كود التحدي: ${challengeCode}`);
+    // التحقق من جاهزية الفايربيس (الملف مستورد db و APP_ID بالفعل في أوله)
+    if (!db) throw new Error("قاعدة البيانات Firestore غير معرفة");
 
-    // حفظ بيانات التحدي في الـ Firestore
-    const challengeRef = doc(db, "challenges", challengeCode);
-    await setDoc(challengeRef, {
-      creator: window.gameData?.username || "لاعب مجهول",
-      status: "waiting",
-      category: category,
-      questions: questions,
-      createdAt: new Date()
+    // جلب الأسئلة من الهيكل الخاص بمشروعك في الفايربيس
+    const qCol = collection(db, 'artifacts', APP_ID, 'public', 'data', 'questions');
+    const q = query(qCol, where("category", "==", category), limit(count));
+    const querySnapshot = await getDocs(q);
+    
+    const fetchedQuestions = [];
+    querySnapshot.forEach((doc) => {
+      fetchedQuestions.push({ id: doc.id, ...doc.data() });
     });
 
-    if (typeof showToast === 'function') showToast(`🎉 تم إنشاء التحدي بكود: ${challengeCode}`);
-    
-    // هنا تضع كود فتح شاشة الانتظار للتحدي الخاص بك
-    return challengeCode;
+    // خطوة احتياطية: لو القسم ده مفيش فيه أسئلة كافية، يجيب أي أسئلة تانية عشان اللعبة متوقفش
+    if (fetchedQuestions.length === 0) {
+      const fallbackSnapshot = await getDocs(query(qCol, limit(count)));
+      fallbackSnapshot.forEach((doc) => {
+        fetchedQuestions.push({ id: doc.id, ...doc.data() });
+      });
+    }
+
+    // حفظ الأسئلة في المتغير العام لتبدأ اللعبة بها
+    window.currentMatchQuestions = fetchedQuestions;
+    return fetchedQuestions;
 
   } catch (error) {
-    console.error("خطأ في إنشاء التحدي 1vs1:", error);
-    if (typeof showToast === 'function') showToast("❌ فشل في إنشاء غرفة التحدي");
+    console.error("خطأ أثناء جلب أسئلة الـ 1vs1:", error);
+    if (typeof showToast === 'function') showToast("❌ فشل في تحميل الأسئلة");
+    return [];
   }
-}
+};
 
-// ══════════════════════════════════════════════════════════════════
-// تصدير وربط الدوال بـ window لجعلها مرئية عالمياً في الـ HTML والملفات الأخرى
-// ══════════════════════════════════════════════════════════════════
-window.fetchQuestions = fetchQuestions;
-window.openCreate1v1Modal = openCreate1v1Modal;
-window.close1v1Modal = close1v1Modal;
-window.create1v1Challenge = create1v1Challenge;
+// دالات فتح وإغلاق نافذة التحدي (Modal)
+window.openCreate1v1Modal = function() {
+  const modal = document.getElementById('1v1-modal') || document.getElementById('1v1-create-modal');
+  if (modal) modal.classList.add('active');
+};
 
+window.close1v1Modal = function() {
+  const modal = document.getElementById('1v1-modal') || document.getElementById('1v1-create-modal');
+  if (modal) modal.classList.remove('active');
+};
