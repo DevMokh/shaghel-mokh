@@ -669,3 +669,53 @@ export function switchChallengeTab(tab) {
   if (tab === 'wtasks') renderWeeklyTasksTab();
 }
 window.switchChallengeTab = switchChallengeTab;
+// ══════════════════════════════════════════════════════════════════
+// معالجة استلام المهام (اليومية والأسبوعية) للـ UI
+// ══════════════════════════════════════════════════════════════════
+export function claimDailyTask(id) {
+  if (!window.gameData || !window.gameData.dailyTasks) return;
+  
+  const t = window.gameData.dailyTasks.find(x => x.id === id);
+  if (!t) return;
+  
+  if (t.claimed) {
+    if (typeof showToast === 'function') showToast('❌ تم استلام المكافأة مسبقاً');
+    return;
+  }
+  
+  if (t.current < t.goal) {
+    if (typeof showToast === 'function') showToast('❌ لم تكمل المهمة بعد');
+    return;
+  }
+  
+  // إعطاء المكافأة
+  t.claimed = true;
+  window.gameData.coins += (t.reward || 50);
+  
+  if (typeof playSound === 'function') playSound('snd-buy');
+  
+  try {
+    if (typeof confetti !== 'undefined') {
+      confetti({ particleCount: 60, spread: 70, colors: ['#fbbf24', '#a78bfa', '#22c55e'] });
+    }
+  } catch (e) {
+    console.warn('Confetti failed to load');
+  }
+  
+  if (typeof saveData === 'function') saveData();
+  if (typeof updateUI === 'function') updateUI();
+  if (typeof showToast === 'function') showToast(`🎉 +${t.reward || 50} عملة مكافأة يومية!`);
+  
+  // تحديث واجهة التحدي اليومي لو كانت مفتوحة
+  if (typeof renderDailyChallenge === 'function') {
+    renderDailyChallenge();
+  } else if (window.renderDailyChallenge) {
+    window.renderDailyChallenge();
+  }
+}
+
+// ربط الدوال بالـ window عشان الـ HTML يقدر يقرأ الـ onclick
+window.claimDailyTask = claimDailyTask;
+if (typeof claimWeeklyTask !== 'undefined') window.claimWeeklyTask = claimWeeklyTask;
+if (typeof switchChallengeTab !== 'undefined') window.switchChallengeTab = switchChallengeTab;
+
