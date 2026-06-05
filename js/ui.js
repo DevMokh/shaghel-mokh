@@ -65,21 +65,25 @@ function _doUpdateUI() {
     el.style.borderRadius = id === 'home-avatar-frame' ? '44px' : '50%';
   });
 
-  if (d.accentColor) {
+  if (d.accentColor && d.accentColor !== window._lastAccent) {
+    window._lastAccent = d.accentColor;
     const ac = ACCENT_COLORS.find(c => c.val === d.accentColor) || ACCENT_COLORS[0];
     document.documentElement.style.setProperty('--accent', ac.val);
     document.documentElement.style.setProperty('--accent2', ac.val2);
     document.documentElement.style.setProperty('--grad', `linear-gradient(135deg,${ac.val},${ac.val2})`);
   }
 
-  // دايماً داكن - Gaming UI
-  document.body.classList.remove('light-mode');
-  const themeToggle  = document.getElementById('theme-toggle');
-  if (themeToggle)   themeToggle.classList.add('on');
-  const themeIconSb  = document.getElementById('theme-icon-sb');
-  const themeLabelSb = document.getElementById('theme-label-sb');
-  if (themeIconSb)   themeIconSb.className  = 'fas fa-moon';
-  if (themeLabelSb)  themeLabelSb.innerText  = 'الوضع الليلي';
+  // تثبيت الثيم مرة واحدة فقط عند أول تحميل (مش كل updateUI)
+  if (!document.body._themeSet) {
+    document.body.classList.remove('light-mode');
+    const themeToggle  = document.getElementById('theme-toggle');
+    if (themeToggle)   themeToggle.classList.add('on');
+    const themeIconSb  = document.getElementById('theme-icon-sb');
+    const themeLabelSb = document.getElementById('theme-label-sb');
+    if (themeIconSb)   themeIconSb.className  = 'fas fa-moon';
+    if (themeLabelSb)  themeLabelSb.innerText  = 'الوضع الليلي';
+    document.body._themeSet = true;
+  }
 
   const isSoundOn = d.soundEnabled !== false;
   const st = document.getElementById('sound-toggle-sb');
@@ -158,7 +162,7 @@ export function updateHomeStreak() {
 let _rivalryLastRun = 0;
 async function checkFriendRivalry() {
   const now = Date.now();
-  if (now - _rivalryLastRun < 120000) return; // throttle: مرة كل دقيقتين
+  if (now - _rivalryLastRun < 300000) return; // throttle: مرة كل 5 دقائق
   _rivalryLastRun = now;
   const d = window.gameData;
   if (!d || !window.firebaseReady || !window.currentUser) return;
@@ -207,18 +211,11 @@ export function navTo(id) {
   if (window.timerInterval) { clearInterval(window.timerInterval); window.timerInterval = null; }
   if (window._dailyCountdownInterval) { clearInterval(window._dailyCountdownInterval); window._dailyCountdownInterval = null; }
 
-  // ══ غلق كل الـ modals المفتوحة عند التنقل ══
-  document.querySelectorAll('.m-overlay.active').forEach(m => {
-    m.classList.remove('active');
-  });
-  // غلق game mode modal لو مفتوح
-  const gmModal = document.getElementById('modal-gamemode');
-  if (gmModal) gmModal.style.display = 'none';
-  // إعادة scroll الـ body
-  document.body.style.overflow = '';
-
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
+  // querySelector أسرع من querySelectorAll + forEach
+  const prevScreen  = document.querySelector('.screen.active');
+  const prevNavLink = document.querySelector('.nav-link.active');
+  if (prevScreen)  prevScreen.classList.remove('active');
+  if (prevNavLink) prevNavLink.classList.remove('active');
   const scr = document.getElementById(`screen-${id}`);
   if (scr) scr.classList.add('active');
   const nav = document.getElementById(`n-${id}`);
@@ -544,34 +541,66 @@ export async function renderLeaderboard(tab = 'global') {
     leaders = leaders.slice(0, 20);
     if (!leaders.length) { list.innerHTML = '<p style="text-align:center;opacity:.4;padding:30px;font-weight:700">لا يوجد لاعبون بعد 🏆</p>'; return; }
     list.innerHTML = '';
-    const medals = ['🥇', '🥈', '🥉'];
-    const topBg = ['rgba(251,191,36,.1)', 'rgba(203,213,225,.08)', 'rgba(217,119,6,.08)'];
-    const topBord = ['rgba(251,191,36,.3)', 'rgba(203,213,225,.2)', 'rgba(217,119,6,.2)'];
+    const medals    = ['🥇','🥈','🥉'];
+    const medalBg   = ['rgba(251,191,36,.12)','rgba(203,213,225,.08)','rgba(180,90,20,.1)'];
+    const medalBord = ['rgba(251,191,36,.35)','rgba(203,213,225,.22)','rgba(180,90,20,.3)'];
+    const medalCol  = ['#fbbf24','#cbd5e1','#b4701e'];
+
+    // ألوان للـ avatars الحرفية (بترتيب دوري)
+    const avatarColors = ['#f97316','#8b5cf6','#06b6d4','#22c55e','#ec4899','#f59e0b','#3b82f6','#10b981'];
+
     leaders.forEach((u, i) => {
-      const rank = i + 1;
-      const isMe = u.uid === window.currentUser?.uid;
-      const el = document.createElement('div');
-      el.className = `leader-item${isMe ? ' me' : ''}`;
-      if (rank <= 3) { el.style.background = topBg[rank - 1]; el.style.borderColor = topBord[rank - 1]; }
-      const score = tab === 'season' ? (u[`season_${season}`] || 0) : tab === 'daily' ? `${u.score || 0}/10` : (u.xp || 0);
+      const rank    = i + 1;
+      const isMe    = u.uid === window.currentUser?.uid;
+      const el      = document.createElement('div');
+      el.className  = `leader-item${isMe ? ' me' : ''}`;
+
+      if (rank <= 3) {
+        el.style.background   = medalBg[rank-1];
+        el.style.borderColor  = medalBord[rank-1];
+      }
+
+      const score      = tab === 'season' ? (u[`season_${season}`] || 0) : tab === 'daily' ? `${u.score || 0}/10` : (u.xp || 0);
       const scoreLabel = tab === 'daily' ? 'نقطة' : 'XP';
-      const accentCol = u.accentColor || '#fbbf24';
+      const accentCol  = isMe ? (u.accentColor || '#fbbf24') : (rank <= 3 ? medalCol[rank-1] : '#fff');
+
+      // Avatar: صورة مخصصة أو دائرة ملونة بأول حرف
+      const hasRealAvatar = u.avatar && !u.avatar.includes('1000061201');
+      const avatarColor   = avatarColors[i % avatarColors.length];
+      const firstLetter   = (u.username || 'L')[0].toUpperCase();
+      const avatarHtml    = hasRealAvatar
+        ? `<img src="${u.avatar}" style="width:42px;height:42px;border-radius:13px;object-fit:cover;flex-shrink:0;border:2px solid ${isMe ? accentCol : 'rgba(255,255,255,.1)'}">`
+        : `<div style="width:42px;height:42px;border-radius:13px;background:${avatarColor};
+               display:flex;align-items:center;justify-content:center;flex-shrink:0;
+               border:2px solid ${isMe ? accentCol : avatarColor+'88'};
+               font-size:17px;font-weight:900;color:#fff">${firstLetter}</div>`;
+
+      // Rank badge
+      const rankHtml = rank <= 3
+        ? `<div style="font-size:24px;flex-shrink:0;width:32px;text-align:center">${medals[rank-1]}</div>`
+        : `<div style="width:28px;height:28px;border-radius:9px;background:rgba(255,255,255,.06);
+               border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;
+               justify-content:center;font-size:11px;font-weight:900;color:rgba(255,255,255,.5);
+               flex-shrink:0">${rank}</div>`;
+
       el.innerHTML = `
-        <div class="rank-badge" style="background:${rank <= 3 ? 'transparent' : '#1e1e1e'};font-size:${rank <= 3 ? '22px' : '13px'};border:1px solid rgba(255,255,255,.07)">
-          ${rank <= 3 ? medals[rank - 1] : rank}
-        </div>
-        <img src="${u.avatar || 'https://i.postimg.cc/qqTBP312/1000061201.png'}"
-          style="width:44px;height:44px;border-radius:14px;object-fit:cover;border:2px solid ${isMe ? accentCol : 'rgba(255,255,255,.08)'};display:block;flex-shrink:0">
-        <div style="flex:1;min-width:0">
-          <div style="font-weight:900;font-size:13px;color:${isMe ? accentCol : '#fff'};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
-            ${u.username || 'لاعب'} ${isMe ? '(أنت)' : ''}
+        ${rankHtml}
+        ${avatarHtml}
+        <div style="flex:1;min-width:0;padding:0 2px">
+          <div style="font-weight:900;font-size:13px;color:${accentCol};
+                      white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
+            ${u.username || 'لاعب'} ${isMe ? '<span style="font-size:10px;opacity:.6">(أنت)</span>' : ''}
           </div>
-          <div style="font-size:9px;opacity:.35;font-weight:700">${u.rank || 'باحث'} · مستوى ${u.level || 1}</div>
+          <div style="font-size:9px;color:rgba(255,255,255,.3);font-weight:700;margin-top:2px">
+            ${u.rank || 'باحث'} · مستوى ${u.level || 1}
+          </div>
           ${u.message ? `<div class="leader-msg">"${u.message}"</div>` : ''}
         </div>
         <div style="text-align:left;flex-shrink:0">
-          <div style="color:${accentCol};font-weight:900;font-size:14px">${typeof score === 'number' ? score.toLocaleString() : score}</div>
-          <div style="font-size:9px;opacity:.3;font-weight:700">${scoreLabel}</div>
+          <div style="color:${accentCol};font-weight:900;font-size:15px">
+            ${typeof score === 'number' ? score.toLocaleString() : score}
+          </div>
+          <div style="font-size:9px;color:rgba(255,255,255,.25);font-weight:700">${scoreLabel}</div>
         </div>`;
       list.appendChild(el);
     });
@@ -628,12 +657,22 @@ export async function renderDailyChallenge() {
         let rows = []; snap.forEach(d => rows.push(d.data()));
         rows.sort((a, b) => b.score - a.score);
         if (!rows.length) { ldr.innerHTML = '<p style="text-align:center;opacity:.4;padding:20px;font-weight:700">لا يوجد لاعبون بعد — كن الأول!</p>'; return; }
-        ldr.innerHTML = '';
+        const medals3 = ['🥇','🥈','🥉'];
+        const aColors = ['#f97316','#8b5cf6','#06b6d4','#22c55e','#ec4899','#f59e0b'];
         rows.slice(0, 10).forEach((u, i) => {
           const isMe = u.uid === window.currentUser?.uid;
+          const hasRealAvatar = u.avatar && !u.avatar.includes('1000061201');
+          const ac = aColors[i % aColors.length];
+          const letter = (u.username || 'L')[0].toUpperCase();
+          const avHtml = hasRealAvatar
+            ? `<img src="${u.avatar}" style="width:38px;height:38px;border-radius:12px;object-fit:cover;flex-shrink:0">`
+            : `<div style="width:38px;height:38px;border-radius:12px;background:${ac};display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px;font-weight:900;color:#fff">${letter}</div>`;
+          const rnkHtml = i < 3
+            ? `<div style="font-size:20px;flex-shrink:0;width:28px;text-align:center">${medals3[i]}</div>`
+            : `<div style="width:28px;height:28px;border-radius:9px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:11px;color:rgba(255,255,255,.45);flex-shrink:0">${i+1}</div>`;
           ldr.innerHTML += `<div class="leader-item${isMe ? ' me' : ''}">
-            <div style="width:28px;height:28px;border-radius:9px;background:#1e1e1e;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:12px">${i + 1}</div>
-            <img src="${u.avatar || 'https://i.postimg.cc/qqTBP312/1000061201.png'}" style="width:38px;height:38px;border-radius:12px;object-fit:cover;flex-shrink:0">
+            ${rnkHtml}
+            ${avHtml}
             <div style="flex:1"><div style="font-weight:900;font-size:13px;color:${isMe ? 'var(--accent)' : '#fff'}">${u.username}</div></div>
             <div style="color:var(--accent);font-weight:900;font-size:15px">${u.score}/10 ✅</div>
           </div>`;
