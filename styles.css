@@ -286,9 +286,14 @@ body{font-family:'Tajawal',sans-serif;background:#050508;color:#fff;
 /* ═══════════════════════════════════════════════
    MODALS
 ═══════════════════════════════════════════════ */
-.m-overlay{position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,0);display:flex;align-items:flex-end;justify-content:center;
-  transition:background .25s;pointer-events:none}
-.m-overlay.active{background:rgba(0,0,0,.82);pointer-events:all}
+.m-overlay{
+  position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,0);display:flex;align-items:flex-end;justify-content:center;
+  transition:background .4s, visibility .4s;pointer-events:none;visibility:hidden;
+}
+.m-overlay.active{
+  background:rgba(0,0,0,.82);pointer-events:all;visibility:visible;
+  transition:background .25s, visibility 0s;
+}
 .m-sheet{width:100%;max-width:500px;background:#161616;border-radius:32px 32px 0 0;
   transform:translateY(100%);transition:transform .4s cubic-bezier(.34,1.56,.64,1);
   max-height:88vh;overflow-y:auto;overflow-x:hidden;
@@ -307,9 +312,15 @@ body{font-family:'Tajawal',sans-serif;background:#050508;color:#fff;
 /* ═══════════════════════════════════════════════
    CUSTOM CONFIRM/INPUT DIALOGS
 ═══════════════════════════════════════════════ */
-.cmod-overlay{position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,0);display:flex;align-items:center;justify-content:center;
-  padding:24px;pointer-events:none;transition:background .25s}
-.cmod-overlay.active{background:rgba(0,0,0,.85);pointer-events:all}
+.cmod-overlay{
+  position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,0);display:flex;align-items:center;justify-content:center;
+  padding:24px;pointer-events:none;
+  transition:background .35s, visibility .35s;visibility:hidden;
+}
+.cmod-overlay.active{
+  background:rgba(0,0,0,.85);pointer-events:all;visibility:visible;
+  transition:background .25s, visibility 0s;
+}
 .cmod-box{width:100%;max-width:340px;background:#1a1a1a;border-radius:28px;
   border:1px solid rgba(255,255,255,.08);box-shadow:0 14px 32px rgba(0,0,0,.5);
   transform:scale(.82) translateY(20px);opacity:0;
