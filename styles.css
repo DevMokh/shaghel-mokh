@@ -269,14 +269,29 @@ body{font-family:'Tajawal',sans-serif;background:#050508;color:#fff;
 /* ═══════════════════════════════════════════════
    MODALS
 ═══════════════════════════════════════════════ */
-.m-overlay{position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,0);display:flex;align-items:flex-end;justify-content:center;
-  transition:background .25s;pointer-events:none}
-.m-overlay.active{background:rgba(0,0,0,.82);pointer-events:all}
-.m-sheet{width:100%;max-width:500px;background:#161616;border-radius:32px 32px 0 0;
-  transform:translateY(100%);transition:transform .4s cubic-bezier(.34,1.56,.64,1);
+.m-overlay{
+  position:fixed;inset:0;z-index:2000;
+  display:none;
+  align-items:flex-end;justify-content:center;
+  pointer-events:none;
+  background:rgba(0,0,0,0);
+  transition:background .2s}
+.m-overlay.active{
+  display:flex;
+  background:rgba(0,0,0,.82);
+  pointer-events:all}
+.m-sheet{
+  width:100%;max-width:500px;
+  background:#161616;
+  border-radius:32px 32px 0 0;
   max-height:88vh;overflow-y:auto;overflow-x:hidden;
-  border-top:1px solid rgba(255,255,255,.07);box-shadow:0 -2px 12px rgba(0,0,0,.4)}
-.m-overlay.active .m-sheet{transform:translateY(0)}
+  border-top:1px solid rgba(255,255,255,.07);
+  box-shadow:0 -2px 12px rgba(0,0,0,.4)}
+.m-overlay.active .m-sheet{
+  animation:slideUpSheet .32s cubic-bezier(.16,1,.3,1) both}
+@keyframes slideUpSheet{
+  from{transform:translateY(100%)}
+  to{transform:translateY(0)}}
 .m-handle{width:40px;height:5px;background:rgba(255,255,255,.15);border-radius:10px;margin:14px auto 0}
 .m-head{display:flex;justify-content:space-between;align-items:center;padding:14px 18px 10px}
 .m-title{font-size:20px;font-weight:900;color:#fff;letter-spacing:-.02em}
@@ -290,9 +305,8 @@ body{font-family:'Tajawal',sans-serif;background:#050508;color:#fff;
 /* ═══════════════════════════════════════════════
    CUSTOM CONFIRM/INPUT DIALOGS
 ═══════════════════════════════════════════════ */
-.cmod-overlay{position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,0);display:flex;align-items:center;justify-content:center;
-  padding:24px;pointer-events:none;transition:background .25s}
-.cmod-overlay.active{background:rgba(0,0,0,.85);pointer-events:all}
+.cmod-overlay{position:fixed;inset:0;z-index:9000;display:none;align-items:center;justify-content:center;padding:24px;pointer-events:none}
+.cmod-overlay.active{display:flex;background:rgba(0,0,0,.85);pointer-events:all}
 .cmod-box{width:100%;max-width:340px;background:#1a1a1a;border-radius:28px;
   border:1px solid rgba(255,255,255,.08);box-shadow:0 14px 32px rgba(0,0,0,.5);
   transform:scale(.82) translateY(20px);opacity:0;
