@@ -160,18 +160,23 @@ window.playSound = playSound;
 // ─── MODALS (النوافذ المنبثقة) ────────────────────────────────────────
 export function openModal(type) {
   const modal = document.getElementById(`modal-${type}`);
-  if (modal) {
-    modal.classList.add("active");
-    document.body.style.overflow = "hidden";
-  }
+  if (!modal) return;
+  // أغلق أي modal آخر مفتوح
+  document.querySelectorAll('.m-overlay.active').forEach(m => {
+    if (m !== modal) m.classList.remove('active');
+  });
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
 }
 window.openModal = openModal;
 
 export function closeModal(type) {
   const modal = document.getElementById(`modal-${type}`);
-  if (modal) {
-    modal.classList.remove("active");
-    document.body.style.overflow = "";
+  if (!modal) return;
+  modal.classList.remove('active');
+  // أعد overflow بس لو مفيش modal تاني لسه مفتوح
+  if (!document.querySelector('.m-overlay.active')) {
+    document.body.style.overflow = '';
   }
 }
 window.closeModal = closeModal;
