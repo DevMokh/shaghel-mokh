@@ -643,3 +643,4 @@ export async function askAIAnalysis() {
   showToast('❌ الـ AI Analysis غير مفعّل حالياً');
 }
 window.askAIAnalysis = askAIAnalysis;
+window.fetchQuestions = fetchQuestions;
