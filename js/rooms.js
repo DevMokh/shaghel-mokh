@@ -21,9 +21,7 @@ import {
   serverTimestamp,
 } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-// ══════════════════════════════════════════════════════════════════
 // المتغيرات العامة للغرف
-// ══════════════════════════════════════════════════════════════════
 export let currentRoomId = null;
 let roomUnsubscribe = null;
 let chatUnsubscribe = null;
@@ -31,9 +29,7 @@ let roomsUnsubscribe = null;
 const ROOM_EXPIRY_MS = 2 * 60 * 60 * 1000; // ساعتين
 const ROOM_MAX_PLAYERS = 8;
 
-// ══════════════════════════════════════════════════════════════════
 // دوال مساعدة
-// ══════════════════════════════════════════════════════════════════
 function generateRoomCode() {
   return Math.random().toString(36).substr(2, 6).toUpperCase();
 }
@@ -46,7 +42,6 @@ async function deleteRoom(roomId) {
   try {
     await deleteDoc(getRoomRef(roomId));
   } catch (e) {
-    console.warn('deleteRoom:', e);
   }
 }
 
@@ -64,15 +59,12 @@ async function cleanupExpiredRooms() {
     const deletes = [];
     snap.forEach(d => deletes.push(deleteDoc(d.ref)));
     await Promise.all(deletes);
-    if (deletes.length > 0) console.log(`🧹 حُذف ${deletes.length} غرفة منتهية الصلاحية`);
+    if (deletes.length > 0)
   } catch (e) {
-    console.warn('cleanupExpiredRooms:', e);
   }
 }
 
-// ══════════════════════════════════════════════════════════════════
 // إنشاء غرفة جديدة
-// ══════════════════════════════════════════════════════════════════
 export function createRoom() {
   buildRoomCatSelect();
   window.openModal('create-room');
@@ -151,9 +143,7 @@ export async function confirmCreateRoom() {
 }
 window.confirmCreateRoom = confirmCreateRoom;
 
-// ══════════════════════════════════════════════════════════════════
 // الانضمام إلى غرفة
-// ══════════════════════════════════════════════════════════════════
 export async function joinRoomByCode() {
   const code = document.getElementById('join-code-input').value.trim().toUpperCase();
   if (!code || code.length < 4) {
@@ -220,9 +210,7 @@ export async function joinRoomById(roomId) {
 }
 window.joinRoomById = joinRoomById;
 
-// ══════════════════════════════════════════════════════════════════
 // الاستماع لتغييرات اللوبي
-// ══════════════════════════════════════════════════════════════════
 export function listenLobby(roomId) {
   if (roomUnsubscribe) roomUnsubscribe();
   const ref = getRoomRef(roomId);
@@ -304,9 +292,7 @@ function renderLobbyPlayers(room, isHost) {
   });
 }
 
-// ══════════════════════════════════════════════════════════════════
 // الدردشة داخل اللوبي
-// ══════════════════════════════════════════════════════════════════
 function listenChat(roomId) {
   if (chatUnsubscribe) chatUnsubscribe();
   const q = query(
@@ -368,9 +354,7 @@ export async function sendLobbyMessage() {
 }
 window.sendLobbyMessage = sendLobbyMessage;
 
-// ══════════════════════════════════════════════════════════════════
 // إدارة الجاهزية وطرد اللاعبين
-// ══════════════════════════════════════════════════════════════════
 export async function toggleReady() {
   if (!currentRoomId || !window.currentUser) return;
   const roomRef = getRoomRef(currentRoomId);
@@ -382,7 +366,6 @@ export async function toggleReady() {
       [`players.${window.currentUser.uid}.ready`]: !currentReady,
     });
   } catch (e) {
-    console.warn('toggleReady:', e);
   }
 }
 window.toggleReady = toggleReady;
@@ -394,14 +377,11 @@ export async function kickPlayer(uid) {
     await updateDoc(roomRef, { [`players.${uid}`]: deleteField() });
     showToast('👟 تم طرد اللاعب');
   } catch (e) {
-    console.warn('kickPlayer:', e);
   }
 }
 window.kickPlayer = kickPlayer;
 
-// ══════════════════════════════════════════════════════════════════
 // بدء اللعبة من قبل المضيف
-// ══════════════════════════════════════════════════════════════════
 export async function startRoomGame() {
   if (!currentRoomId) return;
   const btn = document.getElementById('start-room-btn');
@@ -432,17 +412,15 @@ export async function startRoomGame() {
     if (pool.length < 5) {
       for (const s of subs) {
         if (s === subName) continue;
+        if (typeof window.fetchQuestions !== 'function') break;
         const extra = await window.fetchQuestions(catName, s);
         pool = [...pool, ...extra];
         if (pool.length >= 10) break;
       }
     }
     if (!pool.length) {
-      showToast('❌ لا توجد أسئلة في هذا التصنيف — أضف أسئلة من الأدمن');
-      if (btn) {
-        btn.disabled = false;
-        btn.innerText = 'ابدأ اللعبة 🎮';
-      }
+      showToast('❌ لا توجد أسئلة — أضف من لوحة الأدمن');
+      if (btn) { btn.disabled = false; btn.innerText = 'ابدأ اللعبة 🎮'; }
       return;
     }
 
@@ -500,9 +478,7 @@ function startRoomGameAsPlayer(room) {
   window.showQuestion();
 }
 
-// ══════════════════════════════════════════════════════════════════
 // مزامنة النتيجة أثناء اللعبة
-// ══════════════════════════════════════════════════════════════════
 export async function syncRoomScore() {
   if (!currentRoomId || !window.currentUser) return;
   try {
@@ -511,14 +487,11 @@ export async function syncRoomScore() {
       [`players.${window.currentUser.uid}.done`]: true,
     });
   } catch (e) {
-    console.warn('syncRoomScore:', e);
   }
 }
 window.syncRoomScore = syncRoomScore;
 
-// ══════════════════════════════════════════════════════════════════
 // إنهاء اللعبة في الغرفة
-// ══════════════════════════════════════════════════════════════════
 export async function finishRoomGame() {
   if (!currentRoomId || !window.currentUser) return;
   await syncRoomScore();
@@ -556,9 +529,7 @@ export async function finishRoomGame() {
 }
 window.finishRoomGame = finishRoomGame;
 
-// ══════════════════════════════════════════════════════════════════
 // مغادرة الغرفة
-// ══════════════════════════════════════════════════════════════════
 export async function leaveRoom() {
   if (roomUnsubscribe) {
     roomUnsubscribe();
@@ -597,7 +568,6 @@ export async function leaveRoom() {
         }
       }
     } catch (e) {
-      console.warn('leaveRoom error:', e);
     }
   }
   currentRoomId = null;
@@ -605,9 +575,7 @@ export async function leaveRoom() {
 }
 window.leaveRoom = leaveRoom;
 
-// ══════════════════════════════════════════════════════════════════
 // تحميل قائمة الغرف المتاحة
-// ══════════════════════════════════════════════════════════════════
 export function loadRooms() {
   const list = document.getElementById('rooms-list');
   if (!list) return;
@@ -696,7 +664,6 @@ export function loadRooms() {
         </button>`;
     },
     err => {
-      console.error('loadRooms snapshot error:', err);
       list.innerHTML = `<div style="text-align:center;padding:20px;opacity:.5;font-weight:700">
         ⚠️ يحتاج Firebase Index — راجع الـ Console
       </div>`;
