@@ -84,6 +84,31 @@ window.updateUI = updateUI;
 window.renderMap = renderMap;
 window.renderShop = renderShop;
 window.renderLeaderboard = renderLeaderboard;
+
+// ── cache بسيط للـ leaderboard لتجنب re-fetch غير ضروري ──
+window._lbCache = {};
+window._lbCacheTime = {};
+const LB_CACHE_TTL = 60000; // دقيقة واحدة
+
+const _origRenderLb = renderLeaderboard;
+window.renderLeaderboard = async (tab = 'global') => {
+  const now = Date.now();
+  const cacheKey = tab;
+  // لو في cache حديث، استخدمه
+  if (window._lbCache[cacheKey] && now - window._lbCacheTime[cacheKey] < LB_CACHE_TTL) {
+    // عرض من الـ cache بدون Firebase
+    const container = document.getElementById('lb-list');
+    if (container) container.innerHTML = window._lbCache[cacheKey];
+    return;
+  }
+  // وإلا fetch وحفظ في cache
+  await _origRenderLb(tab);
+  const container = document.getElementById('lb-list');
+  if (container) {
+    window._lbCache[cacheKey] = container.innerHTML;
+    window._lbCacheTime[cacheKey] = Date.now();
+  }
+};
 window.renderDailyChallenge = renderDailyChallenge;
 window.renderWeeklyChallenge = renderWeeklyChallenge;
 window.renderSeasonTab = renderSeasonTab;
@@ -428,8 +453,8 @@ function sendNotification(title, body, tag = "general") {
           body, icon: NOTIF_ICON, badge: NOTIF_ICON,
           dir: "rtl", lang: "ar",
           tag, renotify: true,
-          vibrate: [150, 80, 150],
-        }).catch(() => new Notification(title, { body, icon: NOTIF_ICON, tag }));
+          vibrate: [150, 80, 150]
+}).catch(() => new Notification(title, { body, icon: NOTIF_ICON, tag }));
       });
     } else {
       new Notification(title, { body, icon: NOTIF_ICON, tag });
@@ -546,8 +571,8 @@ export function saveGameSession() {
     category:   window.selectedCategory || "",
     sub:        window.selectedSub    || "",
     savedAt:    Date.now(),
-    uid:        window.currentUser?.uid || "anon",
-  };
+    uid:        window.currentUser?.uid || "anon"
+};
   try {
     localStorage.setItem(SAVED_SESSION_KEY, JSON.stringify(session));
   } catch (e) {}
@@ -607,15 +632,14 @@ window.checkAndOfferResume = () => {
       document.getElementById("q-cat-badge").innerText = `${s.category} • ${s.sub}`;
       showToast(`▶️ استكمال الجولة — السؤال ${s.idx + 1}/10`, 3000);
       window.showQuestion?.();
-    },
-  });
+    }
+});
 };
 
 // ══════════════════════════════════════════════════════════════════
 //  FRIEND RIVALRY — "صاحبك فاق عليك"
 // ══════════════════════════════════════════════════════════════════
 
-let _rivalryThrottle = 0;
 async function checkFriendRivalry() {
   const d = window.gameData;
   if (!d || !window.firebaseReady || !d.friends?.length) return;
@@ -772,7 +796,7 @@ const GAME_MODES = {
       info:'بعد كل إجابة يظهر شرح. للتعلم الحقيقي.' },
     { id:'marathon', title:'ماراثون 🏃',   desc:'20 سؤالاً متواصلاً',  icon:'fa-person-running',      color:'gm-yellow',
       info:'20 سؤالاً بدون توقف. مكافأة ضخمة في النهاية!' },
-  ],
+  ]
 };
 
 let _gmCat='', _gmSub='', _gmIcon='', _gmSelected=null;
