@@ -459,10 +459,23 @@ window.close1v1 = close1v1;
 export async function create1v1() {
   if (!window.currentUser) { showToast('❌ يجب تسجيل الدخول'); return; }
   const m   = document.getElementById('modal-1v1');
-  const cat = m.dataset.cat, sub = m.dataset.sub;
+  if (!m) { showToast('❌ خطأ في الواجهة'); return; }
+  const cat = m.dataset.cat || '', sub = m.dataset.sub || '';
+  if (!cat) { showToast('❌ اختر تصنيفاً أولاً'); return; }
 
-  let pool = await _fetchPool(cat, sub);
-  _cvQs   = pool.sort(() => .5 - Math.random()).slice(0, 10);
+  showToast('⏳ جاري إنشاء التحدي...');
+
+  // جلب الأسئلة — استخدم window.fetchQuestions لو متاحة
+  let pool = [];
+  try {
+    if (typeof window.fetchQuestions === 'function') {
+      pool = await window.fetchQuestions(cat, sub);
+    } else {
+      pool = await _fetchPool(cat, sub);
+    }
+  } catch(e) { pool = []; }
+
+  _cvQs   = (pool.length >= 5 ? pool : FALLBACK_Q).sort(() => .5 - Math.random()).slice(0, 10);
   _cvId   = Math.random().toString(36).slice(2,8).toUpperCase();
   _cvRole = 'host';
 
@@ -472,7 +485,10 @@ export async function create1v1() {
       host:  { uid: window.currentUser.uid, username: window.gameData?.username||'أنت', score:0, done:false },
       guest: null, status:'waiting', ts: Date.now()
     }, false);
-  } catch(e) { showToast('❌ فشل إنشاء التحدي'); return; }
+  } catch(e) {
+    showToast('❌ فشل إنشاء التحدي — تحقق من الاتصال');
+    return;
+  }
 
   close1v1();
   _listen1v1(_cvId);
@@ -703,135 +719,4 @@ function _pop(el) {
   requestAnimationFrame(() => { el.style.animation = 'scorePopup .4s cubic-bezier(.34,1.56,.64,1)'; });
   setTimeout(() => { el.style.animation = ''; }, 400);
 }
-// ══════════════════════════════════════════════════════════════════
-// كود معالجة تحدي 1vs1 وجلب الأسئلة بالكامل (بدون أي اختصار)
-// ══════════════════════════════════════════════════════════════════
 
-/**
- * دالة جلب الأسئلة من الـ Firestore وتجهيزها للتحدي
- * تم ربطها بالـ window لحل مشكلة window.fetchQuestions is not a function
- */
-export async function fetchQuestions(category = 'عام', count = 10) {
-  try {
-    console.log(`جاري جلب ${count} سؤال من قسم: ${category}`);
-    
-    // التأكد من أن Firebase يعمل ومحدد
-    if (!db) {
-      throw new Error("قاعدة البيانات Firebase db غير معرفة في هذا الملف");
-    }
-
-    const questionsRef = collection(db, "questions");
-    // عمل استعلام بناءً على القسم المختار
-    const q = query(questionsRef, where("category", "==", category), limit(count));
-    const querySnapshot = await getDocs(q);
-    
-    const fetchedQuestions = [];
-    querySnapshot.forEach((doc) => {
-      fetchedQuestions.push({ id: doc.id, ...doc.data() });
-    });
-
-    // إذا لم يجد أسئلة في القسم، يجلب أسئلة عامة كاحتياط
-    if (fetchedQuestions.length === 0) {
-      console.warn("لم يتم العثور على أسئلة في القسم المحدد، جاري جلب أسئلة عامة");
-      const fallbackQuery = query(questionsRef, limit(count));
-      const fallbackSnapshot = await getDocs(fallbackQuery);
-      fallbackSnapshot.forEach((doc) => {
-        fetchedQuestions.push({ id: doc.id, ...doc.data() });
-      });
-    }
-
-    // حفظ الأسئلة في الـ Global Scope عشان اللعبة تقرأها
-    window.currentMatchQuestions = fetchedQuestions;
-    return fetchedQuestions;
-
-  } catch (error) {
-    console.error("خطأ أثناء جلب الأسئلة:", error);
-    if (typeof showToast === 'function') {
-      showToast("❌ فشل في تحميل الأسئلة، تحقق من الاتصال");
-    }
-    return [];
-  }
-}
-
-/**
- * دالة فتح نافذة (مودال) تحدي 1vs1 المباشر
- */
-export function openCreate1v1Modal() {
-  // البحث عن المودال في الـ HTML وتنشيطه
-  const modal = document.getElementById('1v1-modal') || document.getElementById('1v1-create-modal');
-  if (modal) {
-    modal.classList.add('active');
-    console.log("تم فتح مودال التحدي المباشر 1vs1 بنجاح");
-  } else {
-    console.error("لم يتم العثور على عنصر المودال في الـ HTML. تأكد من الـ ID المعطى للمودال");
-    if (typeof showToast === 'function') {
-      showToast("❌ عذراً، تعذر فتح نافذة التحدي حالياً");
-    }
-  }
-}
-
-/**
- * دالة إغلاق نافذة (مودال) تحدي 1vs1 المباشر
- */
-export function close1v1Modal() {
-  const modal = document.getElementById('1v1-modal') || document.getElementById('1v1-create-modal');
-  if (modal) {
-    modal.classList.remove('active');
-    console.log("تم إغلاق مودال التحدي المباشر 1vs1");
-  }
-}
-// ══════════════════════════════════════════════════════════════════
-// كود معالجة تحدي 1vs1 وجلب الأسئلة (مخصص للإضافة في نهاية modes.js)
-// ══════════════════════════════════════════════════════════════════
-
-window.fetchQuestions = async function(category = 'عام', count = 10) {
-  try {
-    console.log(`جاري جلب ${count} سؤال من قسم: ${category}`);
-    
-    // استيراد دالات الـ Firestore اللازمة ديناميكياً
-    const { collection, query, where, limit, getDocs } = await import(
-      "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js"
-    );
-
-    // التحقق من جاهزية الفايربيس (الملف مستورد db و APP_ID بالفعل في أوله)
-    if (!db) throw new Error("قاعدة البيانات Firestore غير معرفة");
-
-    // جلب الأسئلة من الهيكل الخاص بمشروعك في الفايربيس
-    const qCol = collection(db, 'artifacts', APP_ID, 'public', 'data', 'questions');
-    const q = query(qCol, where("category", "==", category), limit(count));
-    const querySnapshot = await getDocs(q);
-    
-    const fetchedQuestions = [];
-    querySnapshot.forEach((doc) => {
-      fetchedQuestions.push({ id: doc.id, ...doc.data() });
-    });
-
-    // خطوة احتياطية: لو القسم ده مفيش فيه أسئلة كافية، يجيب أي أسئلة تانية عشان اللعبة متوقفش
-    if (fetchedQuestions.length === 0) {
-      const fallbackSnapshot = await getDocs(query(qCol, limit(count)));
-      fallbackSnapshot.forEach((doc) => {
-        fetchedQuestions.push({ id: doc.id, ...doc.data() });
-      });
-    }
-
-    // حفظ الأسئلة في المتغير العام لتبدأ اللعبة بها
-    window.currentMatchQuestions = fetchedQuestions;
-    return fetchedQuestions;
-
-  } catch (error) {
-    console.error("خطأ أثناء جلب أسئلة الـ 1vs1:", error);
-    if (typeof showToast === 'function') showToast("❌ فشل في تحميل الأسئلة");
-    return [];
-  }
-};
-
-// دالات فتح وإغلاق نافذة التحدي (Modal)
-window.openCreate1v1Modal = function() {
-  const modal = document.getElementById('1v1-modal') || document.getElementById('1v1-create-modal');
-  if (modal) modal.classList.add('active');
-};
-
-window.close1v1Modal = function() {
-  const modal = document.getElementById('1v1-modal') || document.getElementById('1v1-create-modal');
-  if (modal) modal.classList.remove('active');
-};
