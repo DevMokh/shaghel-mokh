@@ -628,3 +628,64 @@ export function renderWeeklyTasksTab() {
     }
   }
 }
+
+
+// ══════════════════════════════════════════════════════════
+//  switchChallengeTab — تبديل تبويبات شاشة التحديات
+// ══════════════════════════════════════════════════════════
+export function switchChallengeTab(tab) {
+  const tabs = ['weekly', 'season', 'wtasks'];
+
+  // تحديث أزرار التبويبات
+  tabs.forEach(t => {
+    const btn = document.querySelector(`[data-ctab="${t}"]`);
+    if (!btn) return;
+    const isActive = t === tab;
+    btn.style.background  = isActive ? 'rgba(251,191,36,.12)' : 'rgba(255,255,255,.05)';
+    btn.style.color       = isActive ? 'var(--accent)'        : 'rgba(255,255,255,.4)';
+    btn.style.borderColor = isActive ? 'rgba(251,191,36,.2)'  : 'rgba(255,255,255,.07)';
+  });
+
+  // إظهار / إخفاء محتوى كل تبويب
+  tabs.forEach(t => {
+    const el = document.getElementById(`ch-tab-${t}`);
+    if (el) el.style.display = t === tab ? 'block' : 'none';
+  });
+
+  // تحميل محتوى التبويب المختار
+  if (tab === 'season') {
+    renderSeasonTab();
+  } else if (tab === 'wtasks') {
+    renderWeeklyTasksTab();
+  }
+}
+window.switchChallengeTab = switchChallengeTab;
+
+// ══════════════════════════════════════════════════════════
+//  claimWeeklyTask — استلام مكافأة مهمة أسبوعية مكتملة
+// ══════════════════════════════════════════════════════════
+export function claimWeeklyTask(id) {
+  const d = window.gameData;
+  if (!d) return;
+
+  const task = (d.weeklyTasks || []).find(t => t.id === id);
+  if (!task) { window.showToast('❌ المهمة غير موجودة'); return; }
+  if (task.claimed) { window.showToast('✅ تم استلام المكافأة مسبقاً'); return; }
+  if ((task.current || 0) < task.goal) {
+    window.showToast('❌ لم تكمل المهمة بعد');
+    return;
+  }
+
+  // استلام المكافأة
+  task.claimed     = true;
+  d.coins          = (d.coins || 0) + task.reward;
+
+  window.playSound?.('snd-buy');
+  window.updateUI?.();
+  window.saveData?.();
+  window.showToast(`🎉 +${task.reward.toLocaleString()} عملة مكافأة!`);
+
+  // إعادة رسم تبويب المهام
+  renderWeeklyTasksTab();
+}
+window.claimWeeklyTask = claimWeeklyTask;
