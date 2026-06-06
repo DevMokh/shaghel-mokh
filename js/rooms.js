@@ -60,11 +60,9 @@ async function cleanupExpiredRooms() {
     snap.forEach(d => deletes.push(deleteDoc(d.ref)));
     await Promise.all(deletes);
     if (deletes.length > 0) {
-      console.log(`[Rooms] Cleaned up ${deletes.length} expired room(s)`);
+      console.log('[Rooms] cleaned', deletes.length, 'expired room(s)');
     }
-  } catch (e) {
-    // cleanup error — not critical
-  }
+  } catch (e) { /* cleanup error — not critical */ }
 }
 
 // إنشاء غرفة جديدة
