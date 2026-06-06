@@ -18,8 +18,8 @@ body{font-family:'Tajawal',sans-serif;background:#050508;color:#fff;
 ═══════════════════════════════════════════════ */
 .screen{display:none;height:calc(100vh - 58px - 50px);padding:10px 10px 30px;
   overflow-y:auto;width:100%;-webkit-overflow-scrolling:touch}
-.screen.active{display:flex;flex-direction:column;contain:layout style;
-  animation:slideIn .2s ease}
+.screen.active{display:flex;flex-direction:column;
+  animation:slideIn .15s ease}
 @keyframes slideIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
 ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--accent);border-radius:10px;opacity:.4}
@@ -1192,4 +1192,18 @@ button, input, select, textarea { font-family: inherit; }
     transform: none !important;
     box-shadow: none !important;
   }
+}
+
+/* ══ TOUCH FIX ══ */
+button, .btn-option, .nav-link, .map-node,
+.sb-item-new, .leader-item, [onclick] {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
+  cursor: pointer;
+}
+
+/* منع أي overlay خفية تمنع الـ click */
+.screen:not(.active) {
+  pointer-events: none !important;
 }
