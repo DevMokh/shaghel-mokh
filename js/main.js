@@ -897,3 +897,107 @@ window.launchSelectedMode = () => {
 
   window.startQuiz(_gmCat, _gmSub, false);
 };
+
+
+// ══════════════════════════════════════════════════════════════════
+//  SMART NOTIFICATIONS
+// ══════════════════════════════════════════════════════════════════
+
+window.requestNotifPermission = async () => {
+  if (!('Notification' in window)) {
+    window.showToast('❌ جهازك لا يدعم الإشعارات');
+    return;
+  }
+  const perm = await Notification.requestPermission();
+  const btn  = document.getElementById('notif-btn');
+  if (perm === 'granted') {
+    window.gameData.notifications.enabled = true;
+    window.saveData?.();
+    if (btn) {
+      btn.innerText       = '✅ الإشعارات مفعّلة';
+      btn.style.background = 'rgba(34,197,94,.1)';
+      btn.style.color      = '#22c55e';
+      btn.style.borderColor = 'rgba(34,197,94,.2)';
+    }
+    window.showToast('🔔 تم تفعيل الإشعارات!');
+    scheduleNotifications();
+  } else {
+    window.showToast('❌ تم رفض الإشعارات');
+  }
+};
+
+function scheduleNotifications() {
+  if (!('serviceWorker' in navigator) || Notification.permission !== 'granted') return;
+  const n = window.gameData?.notifications;
+  if (!n?.enabled) return;
+
+  // حساب وقت التذكير اليومي
+  const now   = new Date();
+  const next  = new Date();
+  next.setHours(n.reminderHour || 20, 0, 0, 0);
+  if (next <= now) next.setDate(next.getDate() + 1);
+  const delay = next - now;
+
+  clearTimeout(window._notifTimer);
+  window._notifTimer = setTimeout(() => {
+    sendNotification(
+      '⏰ وقت شغّل مخك!',
+      'لا تنسى تحديك اليومي — سلسلتك بخطر! 🔥',
+      { icon: '/favicon.ico', badge: '/favicon.ico', tag: 'daily-reminder' }
+    );
+    // جدولة للغد
+    scheduleNotifications();
+  }, delay);
+}
+window.scheduleNotifications = scheduleNotifications;
+
+function sendNotification(title, body, opts = {}) {
+  if (Notification.permission !== 'granted') return;
+  if (document.visibilityState === 'visible') return; // لو التطبيق مفتوح — مش لازم
+  try {
+    new Notification(title, { body, icon: '/favicon.ico', ...opts });
+  } catch(e) {
+    console.warn('[Notif]', e);
+  }
+}
+window.sendNotification = sendNotification;
+
+// تحقق من انكسار السلسلة وأرسل تنبيه
+function checkStreakNotification() {
+  const d  = window.gameData;
+  if (!d?.notifications?.streakAlert) return;
+  if (Notification.permission !== 'granted') return;
+  const ls        = d.loginStreak || {};
+  const yesterday = new Date(Date.now() - 86400000).toDateString();
+  if (ls.lastDate === yesterday && ls.count >= 3) {
+    const delay = 2 * 60 * 60 * 1000; // بعد 2 ساعة من الدخول
+    setTimeout(() => {
+      if (document.visibilityState !== 'visible') {
+        sendNotification(
+          `⚠️ سلسلتك ${ls.count} يوم على وشك الانكسار!`,
+          'ادخل واعمل تحدي اليوم عشان تحافظ على سلسلتك 🔥'
+        );
+      }
+    }, delay);
+  }
+}
+
+// تشغيل الإشعارات عند تحميل البيانات
+const _origListenFn = window.listenToUserData;
+window.listenToUserData = function(...args) {
+  const result = _origListenFn?.(...args);
+  setTimeout(() => {
+    if (window.gameData?.notifications?.enabled && Notification.permission === 'granted') {
+      scheduleNotifications();
+      checkStreakNotification();
+    }
+  }, 3000);
+  return result;
+};
+
+window.updateNotifSettings = (key, val) => {
+  if (!window.gameData?.notifications) return;
+  window.gameData.notifications[key] = val;
+  if (key === 'reminderHour') scheduleNotifications();
+  window.saveData?.();
+};
