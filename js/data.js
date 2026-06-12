@@ -21,13 +21,28 @@ export const categoryConfig = {
 };
 
 export const AVATAR_FRAMES = [
-  { id: 'none',    name: 'بلا إطار', price: 0,    style: '' },
-  { id: 'gold',    name: 'ذهبي',     price: 500,  style: 'box-shadow:0 0 0 4px #fbbf24,0 0 20px rgba(251,191,36,.5)' },
-  { id: 'rainbow', name: 'قوس قزح', price: 1200, style: 'box-shadow:0 0 0 4px transparent;background:linear-gradient(#ff0080,#7928ca,#0070f3) padding-box,linear-gradient(to right,#ff0080,#7928ca,#0070f3) border-box;border:3px solid transparent' },
-  { id: 'fire',    name: 'نار 🔥',   price: 800,  style: 'box-shadow:0 0 0 4px #f97316,0 0 25px rgba(249,115,22,.6),0 0 50px rgba(239,68,68,.3)' },
-  { id: 'ice',     name: 'جليد ❄️',  price: 800,  style: 'box-shadow:0 0 0 4px #93c5fd,0 0 25px rgba(147,197,253,.5)' },
-  { id: 'star',    name: 'نجوم ⭐',  price: 1500, style: 'box-shadow:0 0 0 4px #fbbf24,0 0 20px #fbbf24,0 0 40px rgba(251,191,36,.4);animation:pulse 2s infinite' },
+  // ── أساسية ─────────────────────────────────────────────────────
+  { id: 'none',      name: 'بلا إطار',    price: 0,    rarity: 'common',    style: '',                                                                                                     unlockBy: 'default' },
+  { id: 'gold',      name: 'ذهبي',        price: 500,  rarity: 'common',    style: 'box-shadow:0 0 0 4px #fbbf24,0 0 20px rgba(251,191,36,.5)',                                            unlockBy: 'buy' },
+  { id: 'fire',      name: 'نار 🔥',      price: 800,  rarity: 'rare',      style: 'box-shadow:0 0 0 4px #f97316,0 0 25px rgba(249,115,22,.6),0 0 50px rgba(239,68,68,.3)',               unlockBy: 'buy' },
+  { id: 'ice',       name: 'جليد ❄️',     price: 800,  rarity: 'rare',      style: 'box-shadow:0 0 0 4px #93c5fd,0 0 25px rgba(147,197,253,.5)',                                           unlockBy: 'buy' },
+  { id: 'rainbow',   name: 'قوس قزح 🌈',  price: 1200, rarity: 'rare',      style: 'border:3px solid transparent;background:linear-gradient(#0a0a0a,#0a0a0a) padding-box,linear-gradient(135deg,#ff0080,#7928ca,#0070f3,#00d4aa) border-box',  unlockBy: 'buy' },
+  { id: 'star',      name: 'نجوم ⭐',     price: 1500, rarity: 'rare',      style: 'box-shadow:0 0 0 4px #fbbf24,0 0 20px #fbbf24,0 0 40px rgba(251,191,36,.4)',                           unlockBy: 'buy' },
+  // ── أطر نادرة ───────────────────────────────────────────────────
+  { id: 'diamond',   name: 'ألماسي 💎',   price: 3000, rarity: 'epic',      style: 'border:3px solid transparent;background:linear-gradient(#0a0a0a,#0a0a0a) padding-box,linear-gradient(135deg,#b9f2ff,#7928ca,#b9f2ff,#0070f3) border-box;box-shadow:0 0 20px rgba(185,242,255,.4)', unlockBy: 'buy' },
+  { id: 'champion',  name: 'بطل 🏆',      price: 0,    rarity: 'legendary', style: 'box-shadow:0 0 0 3px #ffd700,0 0 0 6px rgba(255,215,0,.3),0 0 30px rgba(255,215,0,.5);border:2px solid #ffd700', unlockBy: 'tournament' },
+  { id: 'legend',    name: 'أسطورة 👑',   price: 0,    rarity: 'legendary', style: 'border:3px solid transparent;background:linear-gradient(#0a0a0a,#0a0a0a) padding-box,conic-gradient(#ffd700,#ff6b35,#7928ca,#0070f3,#ffd700) border-box;box-shadow:0 0 25px rgba(255,215,0,.4)', unlockBy: 'level_30' },
+  { id: 'platinum',  name: 'بلاتيني 🔮',  price: 5000, rarity: 'epic',      style: 'box-shadow:0 0 0 4px #e5e4e2,0 0 20px rgba(229,228,226,.4),0 0 40px rgba(229,228,226,.15)',           unlockBy: 'buy' },
+  { id: 'galaxy',    name: 'مجرة 🌌',     price: 0,    rarity: 'legendary', style: 'border:3px solid transparent;background:linear-gradient(#0a0a0a,#0a0a0a) padding-box,linear-gradient(135deg,#667eea,#764ba2,#f093fb,#f5576c,#4facfe) border-box;box-shadow:0 0 30px rgba(102,126,234,.4)', unlockBy: 'season_diamond' },
 ];
+
+// رارية الأطر
+export const FRAME_RARITY_COLORS = {
+  common:    { color: '#9ca3af', label: 'شائع'   },
+  rare:      { color: '#60a5fa', label: 'نادر'    },
+  epic:      { color: '#a78bfa', label: 'ملحمي'  },
+  legendary: { color: '#fbbf24', label: 'أسطوري' },
+};
 
 export const ACCENT_COLORS = [
   { name: 'ذهبي',    val: '#fbbf24', val2: '#f59e0b' },
@@ -74,12 +89,17 @@ export function getDefaultData() {
       rewardClaimed: false,
     },
     dailyTasks: [
-      { id: "win_5",       text: "أجب على 5 أسئلة صحيحة",     goal: 5,   current: 0, reward: 100, claimed: false },
-      { id: "use_helper",  text: "استخدم وسيلة مساعدة",        goal: 1,   current: 0, reward: 50,  claimed: false },
-      { id: "earn_500",    text: "اجمع 500 عملة إضافية",       goal: 500, current: 0, reward: 200, claimed: false },
-      { id: "daily_ch",    text: "أكمل تحدي اليوم",            goal: 1,   current: 0, reward: 300, claimed: false },
-      { id: "play_cats",   text: "العب في تصنيفين مختلفين",    goal: 2,   current: 0, reward: 150, claimed: false },
-      { id: "streak_3",    text: "أجب 3 متتالية بدون خطأ",     goal: 3,   current: 0, reward: 80,  claimed: false }
+      // ── مهام عادية ────────────────────────────────────────────
+      { id: "win_5",       text: "أجب على 5 أسئلة صحيحة",       goal: 5,   current: 0, reward: 100, claimed: false, xpReward: 50,  icon: "✅", difficulty: "easy"   },
+      { id: "use_helper",  text: "استخدم وسيلة مساعدة",          goal: 1,   current: 0, reward: 50,  claimed: false, xpReward: 20,  icon: "🔧", difficulty: "easy"   },
+      { id: "earn_500",    text: "اجمع 500 عملة إضافية",         goal: 500, current: 0, reward: 200, claimed: false, xpReward: 80,  icon: "💰", difficulty: "medium" },
+      { id: "daily_ch",    text: "أكمل تحدي اليوم",              goal: 1,   current: 0, reward: 300, claimed: false, xpReward: 150, icon: "⚡", difficulty: "medium" },
+      { id: "play_cats",   text: "العب في تصنيفين مختلفين",      goal: 2,   current: 0, reward: 150, claimed: false, xpReward: 60,  icon: "🗺️", difficulty: "easy"   },
+      { id: "streak_3",    text: "أجب 3 متتالية بدون خطأ",       goal: 3,   current: 0, reward: 80,  claimed: false, xpReward: 40,  icon: "🔥", difficulty: "easy"   },
+      // ── مهام صعبة (تُفتح بمجرد إكمال 3 عادية) ─────────────────
+      { id: "win_10",      text: "أجب على 10 أسئلة صح في جولة", goal: 10,  current: 0, reward: 400, claimed: false, xpReward: 200, icon: "🎯", difficulty: "hard",  hidden: true },
+      { id: "no_hints",    text: "أكمل جولة كاملة بدون مساعدات",goal: 1,   current: 0, reward: 350, claimed: false, xpReward: 180, icon: "💎", difficulty: "hard",  hidden: true },
+      { id: "fast_5",      text: "أجب على 5 أسئلة في أقل من 5ث", goal: 5,  current: 0, reward: 500, claimed: false, xpReward: 250, icon: "⚡", difficulty: "epic",  hidden: true },
     ],
     weeklyTasks: [
       { id: "w_games_5",   text: "العب 5 جولات هذا الأسبوع",  goal: 5,  current: 0, reward: 500,  claimed: false, weekId: "" },
@@ -125,7 +145,30 @@ export function getDefaultData() {
     _mapProgress: [],
     _subProgress: {},
     _catsToday: [],
-    _friendsLastXP: {}
+    _friendsLastXP: {},
+    // ── بيانات التورنامنت ──────────────────────────────────────
+    tournament: {
+      current:      null,   // { id, round, score, eliminated }
+      history:      [],     // سجل البطولات السابقة
+      wins:         0,
+      champFrame:   false,  // هل فاز بإطار البطل
+    },
+    // ── إعدادات الإشعارات ─────────────────────────────────────
+    notifications: {
+      enabled:        false,
+      dailyReminder:  true,   // تذكير يومي
+      challengeAlert: true,   // تحدي جديد
+      streakAlert:    true,   // تحذير انكسار السلسلة
+      reminderHour:   20,     // 8 مساءً
+    },
+    // ── إحصائيات اليوم (تُعاد كل يوم) ────────────────────────
+    todayStats: {
+      date:       '',
+      questions:  0,
+      correct:    0,
+      coins:      0,
+      timeSpent:  0,  // ثواني
+    },
   };
 }
 
