@@ -1207,3 +1207,68 @@ button, .btn-option, .nav-link, .map-node,
 .screen:not(.active) {
   pointer-events: none !important;
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   TOURNAMENT SCREEN
+═══════════════════════════════════════════════════════════════ */
+#screen-tournament.active {
+  background: radial-gradient(ellipse 80% 60% at 50% 0%,
+    rgba(255,215,0,.06) 0%, transparent 70%);
+}
+#screen-tournament.active::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 8%; right: 8%; height: 1px;
+  background: linear-gradient(90deg, transparent,
+    rgba(255,215,0,.6) 40%, rgba(255,215,0,.8) 50%,
+    rgba(255,215,0,.6) 60%, transparent);
+  box-shadow: 0 0 12px rgba(255,215,0,.3);
+}
+#n-tournament.active {
+  color: #ffd700;
+  text-shadow: 0 0 14px rgba(255,215,0,.6);
+  background: rgba(255,215,0,.08);
+}
+#n-tournament.active i {
+  color: #000 !important;
+  background: linear-gradient(145deg,#ffd700,#ff8c00) !important;
+  box-shadow: 0 4px 14px rgba(255,215,0,.5) !important;
+}
+
+/* ── locked frames ── */
+.locked-frame {
+  opacity: .6;
+  filter: grayscale(.4);
+}
+.locked-frame:hover { opacity: .75; }
+
+/* ═══════════════════════════════════════════════════════════════
+   DAILY TASKS — difficulty colors
+═══════════════════════════════════════════════════════════════ */
+.task-difficulty-easy   { color: #22c55e; }
+.task-difficulty-medium { color: #fbbf24; }
+.task-difficulty-hard   { color: #f97316; }
+.task-difficulty-epic   { color: #a78bfa; }
+
+/* ═══════════════════════════════════════════════════════════════
+   STATS CHART
+═══════════════════════════════════════════════════════════════ */
+#stats-accuracy-chart {
+  min-height: 40px;
+}
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   FRAME RARITY GLOW
+═══════════════════════════════════════════════════════════════ */
+.frame-item.active[data-rarity="legendary"] {
+  box-shadow: 0 0 20px rgba(255,215,0,.3);
+}
+.frame-item.active[data-rarity="epic"] {
+  box-shadow: 0 0 16px rgba(167,139,250,.3);
+}
