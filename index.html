@@ -343,6 +343,20 @@
       <div id="shop-content" style="flex:1;overflow-y:auto;padding-bottom:20px"></div>
     </div>
 
+    <!-- ══ TOURNAMENT ══ -->
+    <div id="screen-tournament" class="screen">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-shrink:0">
+        <h2 style="font-size:20px;font-weight:900">🏆 بطولة الأسبوع</h2>
+        <div style="font-size:9px;font-weight:900;background:rgba(255,215,0,.1);color:#ffd700;
+          border:1px solid rgba(255,215,0,.25);padding:4px 10px;border-radius:20px">WEEKLY CUP</div>
+      </div>
+      <div id="tournament-content" style="flex:1;overflow-y:auto;padding-bottom:20px">
+        <div style="text-align:center;padding:40px;opacity:.4">
+          <i class="fas fa-circle-notch fa-spin" style="color:var(--accent);font-size:24px"></i>
+        </div>
+      </div>
+    </div>
+
     <div id="screen-stats" class="screen">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-shrink:0">
         <h2 style="font-size:19px;font-weight:900;display:flex;align-items:center;gap:8px">
@@ -389,6 +403,28 @@
             <span class="stat-card-value" id="st-xp">0</span>
             <span class="stat-card-label">مجموع XP</span>
           </div>
+          <div class="stat-card">
+            <span class="stat-card-icon"><i class="fas fa-bullseye" style="color:#22c55e"></i></span>
+            <span class="stat-card-value" id="st-accuracy">0%</span>
+            <span class="stat-card-label">دقة الإجابات</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-card-icon"><i class="fas fa-chart-line" style="color:#60a5fa"></i></span>
+            <span class="stat-card-value" id="st-avg-score">0</span>
+            <span class="stat-card-label">متوسط النقاط</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-card-icon"><i class="fas fa-crown" style="color:#ffd700"></i></span>
+            <span class="stat-card-value" id="st-tournament-wins">0</span>
+            <span class="stat-card-label">انتصارات البطولة</span>
+          </div>
+        </div>
+        <!-- رسم بياني دقة التصنيفات -->
+        <div style="background:var(--card);border:1px solid rgba(255,255,255,.05);border-radius:18px;padding:14px;margin-top:10px">
+          <div style="font-size:10px;font-weight:900;color:var(--text2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px">
+            <i class="fas fa-chart-bar" style="color:var(--accent);margin-left:5px"></i> دقة الإجابات بالتصنيف
+          </div>
+          <div id="stats-accuracy-chart"></div>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px">
           <div class="stat-card" style="padding:12px 8px">
@@ -490,7 +526,10 @@
     <div onclick="window.navTo('map')"         id="n-map"         class="nav-link"><i class="fas fa-th-large"></i><span>المجالات</span></div>
     <div onclick="window.navTo('rooms')"       id="n-rooms"       class="nav-link"><i class="fas fa-users"></i><span>غرف</span></div>
     <div onclick="window.navTo('leaderboard')" id="n-leaderboard" class="nav-link"><i class="fas fa-ranking-star"></i><span>الصدارة</span></div>
-    <div onclick="window.navTo('shop')"        id="n-shop"        class="nav-link"><i class="fas fa-bag-shopping"></i><span>المتجر</span></div>
+    <div onclick="window.navTo('shop')"       id="n-shop"       class="nav-link"><i class="fas fa-bag-shopping"></i><span>المتجر</span></div>
+    <div onclick="window.navTo('tournament')" id="n-tournament" class="nav-link" style="position:relative">
+      <i class="fas fa-crown"></i><span>بطولة</span>
+    </div>
   </div>
 </div>
 
