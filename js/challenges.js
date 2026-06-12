@@ -8,6 +8,7 @@ import { saveData, getSeasonRank, getSeasonProgress, addSeasonXP } from './data.
 import {
   collection,
   getDocs,
+  getDoc,
   query,
   where,
   doc,
@@ -630,62 +631,221 @@ export function renderWeeklyTasksTab() {
 }
 
 
-// ══════════════════════════════════════════════════════════
-//  switchChallengeTab — تبديل تبويبات شاشة التحديات
-// ══════════════════════════════════════════════════════════
-export function switchChallengeTab(tab) {
-  const tabs = ['weekly', 'season', 'wtasks'];
+// ══════════════════════════════════════════════════════════════════
+//  TOURNAMENT SYSTEM — نظام بطولات أسبوعية
+// (imports موجودة في أعلى الملف)
+// ══════════════════════════════════════════════════════════════════
 
-  // تحديث أزرار التبويبات
-  tabs.forEach(t => {
-    const btn = document.querySelector(`[data-ctab="${t}"]`);
-    if (!btn) return;
-    const isActive = t === tab;
-    btn.style.background  = isActive ? 'rgba(251,191,36,.12)' : 'rgba(255,255,255,.05)';
-    btn.style.color       = isActive ? 'var(--accent)'        : 'rgba(255,255,255,.4)';
-    btn.style.borderColor = isActive ? 'rgba(251,191,36,.2)'  : 'rgba(255,255,255,.07)';
+const TOURNAMENT_ROUNDS = ['دور 32', 'دور 16', 'ربع النهائي', 'نصف النهائي', 'النهائي'];
+const TOURNAMENT_REWARDS = {
+  'دور 32':       { coins: 100,  xp: 50  },
+  'دور 16':       { coins: 200,  xp: 100 },
+  'ربع النهائي':  { coins: 400,  xp: 200 },
+  'نصف النهائي':  { coins: 700,  xp: 350 },
+  'النهائي':      { coins: 2000, xp: 1000, frameId: 'champion' },
+};
+
+export async function registerTournament() {
+  const d   = window.gameData;
+  const uid = window.currentUser?.uid;
+  if (!uid || !window.firebaseReady) { window.showToast('❌ يلزم الاتصال بالإنترنت'); return; }
+
+  const weekId = getWeekId();
+  const tRef   = doc(db, 'artifacts', APP_ID, 'public', 'data', 'tournaments', weekId);
+  const pRef   = doc(db, 'artifacts', APP_ID, 'public', 'data', 'tournaments', weekId, 'players', uid);
+
+  const pSnap  = await getDoc(pRef);
+  if (pSnap.exists()) { window.showToast('✅ أنت مسجل بالفعل في البطولة!'); return; }
+
+  await setDoc(pRef, {
+    uid,
+    username:    d.username || 'لاعب',
+    level:       d.level    || 1,
+    avatar:      d.avatar   || '',
+    score:       0,
+    round:       TOURNAMENT_ROUNDS[0],
+    eliminated:  false,
+    registeredAt: Date.now(),
   });
 
-  // إظهار / إخفاء محتوى كل تبويب
-  tabs.forEach(t => {
-    const el = document.getElementById(`ch-tab-${t}`);
-    if (el) el.style.display = t === tab ? 'block' : 'none';
-  });
-
-  // تحميل محتوى التبويب المختار
-  if (tab === 'season') {
-    renderSeasonTab();
-  } else if (tab === 'wtasks') {
-    renderWeeklyTasksTab();
-  }
-}
-window.switchChallengeTab = switchChallengeTab;
-
-// ══════════════════════════════════════════════════════════
-//  claimWeeklyTask — استلام مكافأة مهمة أسبوعية مكتملة
-// ══════════════════════════════════════════════════════════
-export function claimWeeklyTask(id) {
-  const d = window.gameData;
-  if (!d) return;
-
-  const task = (d.weeklyTasks || []).find(t => t.id === id);
-  if (!task) { window.showToast('❌ المهمة غير موجودة'); return; }
-  if (task.claimed) { window.showToast('✅ تم استلام المكافأة مسبقاً'); return; }
-  if ((task.current || 0) < task.goal) {
-    window.showToast('❌ لم تكمل المهمة بعد');
-    return;
-  }
-
-  // استلام المكافأة
-  task.claimed     = true;
-  d.coins          = (d.coins || 0) + task.reward;
-
-  window.playSound?.('snd-buy');
-  window.updateUI?.();
+  // تحديث بيانات اللاعب المحلية
+  d.tournament.current = { id: weekId, round: TOURNAMENT_ROUNDS[0], score: 0, eliminated: false };
   window.saveData?.();
-  window.showToast(`🎉 +${task.reward.toLocaleString()} عملة مكافأة!`);
-
-  // إعادة رسم تبويب المهام
-  renderWeeklyTasksTab();
+  window.showToast('🏆 تم التسجيل في بطولة الأسبوع!');
+  renderTournamentScreen();
 }
-window.claimWeeklyTask = claimWeeklyTask;
+window.registerTournament = registerTournament;
+
+export async function renderTournamentScreen() {
+  const container = document.getElementById('tournament-content');
+  if (!container) return;
+
+  const d      = window.gameData;
+  const weekId = getWeekId();
+  const tc     = d.tournament?.current;
+  const uid    = window.currentUser?.uid;
+
+  // حساب الوقت المتبقي للبطولة
+  const now    = new Date();
+  const sunday = new Date(now);
+  sunday.setDate(now.getDate() + (7 - now.getDay()) % 7 || 7);
+  sunday.setHours(23, 59, 59, 0);
+  const diff   = sunday - now;
+  const days   = Math.floor(diff / 86400000);
+  const hours  = Math.floor((diff % 86400000) / 3600000);
+
+  // جلب عدد اللاعبين
+  let playerCount = 0;
+  let topPlayers  = [];
+  if (window.firebaseReady) {
+    try {
+      const snap = await getDocs(
+        query(
+          collection(db, 'artifacts', APP_ID, 'public', 'data', 'tournaments', weekId, 'players'),
+          orderBy('score', 'desc'),
+          limit(10)
+        )
+      );
+      playerCount = snap.size;
+      snap.forEach(d => topPlayers.push(d.data()));
+    } catch(e) {}
+  }
+
+  const isRegistered = !!tc && tc.id === weekId && !tc.eliminated;
+  const medals = ['🥇','🥈','🥉'];
+
+  container.innerHTML = `
+    <!-- بطاقة البطولة الرئيسية -->
+    <div style="background:linear-gradient(135deg,rgba(255,215,0,.1),rgba(255,140,0,.06));
+      border:1px solid rgba(255,215,0,.2);border-radius:20px;padding:18px;margin-bottom:14px;text-align:center">
+      <div style="font-size:11px;font-weight:900;color:#ffd700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">
+        🏆 بطولة الأسبوع ${weekId}
+      </div>
+      <div style="font-size:22px;font-weight:900;color:#fff;margin-bottom:4px">
+        ⏳ ${days > 0 ? days + ' يوم و ' : ''}${hours} ساعة
+      </div>
+      <div style="font-size:12px;font-weight:700;color:rgba(255,255,255,.4);margin-bottom:14px">
+        ${playerCount} لاعب مسجّل
+      </div>
+      <!-- مراحل البطولة -->
+      <div style="display:flex;justify-content:center;gap:4px;margin-bottom:16px;flex-wrap:wrap">
+        ${TOURNAMENT_ROUNDS.map((r, i) => `
+          <div style="
+            padding:4px 10px;border-radius:20px;font-size:9px;font-weight:900;
+            background:${i === 0 ? 'rgba(255,215,0,.15)' : 'rgba(255,255,255,.05)'};
+            color:${i === 0 ? '#ffd700' : 'rgba(255,255,255,.3)'};
+            border:1px solid ${i === 0 ? 'rgba(255,215,0,.3)' : 'rgba(255,255,255,.06)'}
+          ">${r}</div>
+        `).join('→')}
+      </div>
+      <!-- المكافآت -->
+      <div style="background:rgba(255,215,0,.06);border:1px solid rgba(255,215,0,.12);border-radius:14px;padding:10px;margin-bottom:14px">
+        <div style="font-size:10px;font-weight:900;color:#ffd700;margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em">🎁 مكافآت البطولة</div>
+        <div style="display:flex;justify-content:space-around">
+          ${Object.entries(TOURNAMENT_REWARDS).slice(-3).map(([round, r]) => `
+            <div style="text-align:center">
+              <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.4);margin-bottom:3px">${round}</div>
+              <div style="font-size:13px;font-weight:900;color:#ffd700">+${r.coins.toLocaleString()} 💰</div>
+              ${r.frameId ? '<div style="font-size:10px;color:#ffd700">🏆 إطار البطل</div>' : ''}
+            </div>
+          `).join('')}
+        </div>
+      </div>
+      ${isRegistered
+        ? `<div style="background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.2);
+             border-radius:14px;padding:10px;margin-bottom:12px">
+             <div style="color:#22c55e;font-weight:900;font-size:13px">✅ أنت مسجّل · المرحلة: ${tc.round}</div>
+             <div style="color:rgba(255,255,255,.4);font-size:11px;margin-top:3px">نقاطك: ${tc.score}</div>
+           </div>
+           <button onclick="window.startTournamentMatch()"
+             style="width:100%;padding:14px;background:linear-gradient(135deg,#ffd700,#ff8c00);color:#000;
+             font-weight:900;border-radius:18px;font-size:14px;border:none;cursor:pointer;
+             border-bottom:3px solid rgba(0,0,0,.2);font-family:'Tajawal',sans-serif">
+             ⚔️ العب مباراتك الآن
+           </button>`
+        : `<button onclick="window.registerTournament()"
+             style="width:100%;padding:14px;background:linear-gradient(135deg,#ffd700,#ff8c00);color:#000;
+             font-weight:900;border-radius:18px;font-size:14px;border:none;cursor:pointer;
+             border-bottom:3px solid rgba(0,0,0,.2);font-family:'Tajawal',sans-serif">
+             🏆 سجّل في البطولة
+           </button>`
+      }
+    </div>
+
+    <!-- ترتيب البطولة -->
+    ${topPlayers.length > 0 ? `
+      <div style="font-size:11px;font-weight:900;color:rgba(255,255,255,.3);
+        text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px">
+        🏅 المتصدرون
+      </div>
+      ${topPlayers.map((p, i) => `
+        <div style="background:rgba(255,255,255,.03);border:1px solid ${p.uid===uid?'rgba(255,215,0,.2)':'rgba(255,255,255,.05)'};
+          border-radius:14px;padding:11px 14px;margin-bottom:7px;
+          display:flex;align-items:center;gap:11px">
+          <div style="font-size:${i<3?'22':'13'}px;font-weight:900;width:28px;text-align:center">
+            ${i < 3 ? medals[i] : i + 1}
+          </div>
+          <div style="flex:1">
+            <div style="font-weight:900;font-size:13px;color:${p.uid===uid?'#ffd700':'#fff'}">
+              ${p.username}${p.uid===uid?' (أنت)':''}
+            </div>
+            <div style="font-size:10px;color:rgba(255,255,255,.35);margin-top:2px">${p.round}</div>
+          </div>
+          <div style="font-weight:900;color:#ffd700;font-size:14px">${p.score}</div>
+        </div>
+      `).join('')}
+    ` : '<div style="text-align:center;padding:20px;color:rgba(255,255,255,.2);font-size:13px">كن أول المتسجلين! 🚀</div>'}
+  `;
+}
+window.renderTournamentScreen = renderTournamentScreen;
+
+export async function startTournamentMatch() {
+  const d  = window.gameData;
+  const tc = d.tournament?.current;
+  if (!tc || tc.eliminated) { window.showToast('❌ لست مسجلاً في البطولة'); return; }
+  // ابدأ كويز عادي — النتيجة تُحسب في نهاية الجولة
+  window._inTournament = true;
+  window.showToast('⚔️ مباراة البطولة بدأت! العب في أي تصنيف', 3000);
+  window.navTo?.('map');
+}
+window.startTournamentMatch = startTournamentMatch;
+
+export async function recordTournamentResult(score) {
+  const d   = window.gameData;
+  const tc  = d.tournament?.current;
+  const uid = window.currentUser?.uid;
+  if (!tc || !uid || !window._inTournament) return;
+  window._inTournament = false;
+
+  const weekId = tc.id;
+  const pRef   = doc(db, 'artifacts', APP_ID, 'public', 'data', 'tournaments', weekId, 'players', uid);
+
+  // تحديث النقاط
+  const prevScore = tc.score || 0;
+  const newScore  = prevScore + score;
+  tc.score        = newScore;
+
+  const reward = TOURNAMENT_REWARDS[tc.round];
+  if (reward) {
+    d.coins = (d.coins || 0) + reward.coins;
+    window.addSeasonXP?.(reward.xp);
+    window.showToast(`🏆 ${tc.round}: +${reward.coins} عملة!`, 4000);
+
+    // إطار البطل للفائز في النهائي
+    if (reward.frameId && !d.ownedFrames?.includes(reward.frameId)) {
+      if (!d.ownedFrames) d.ownedFrames = [];
+      d.ownedFrames.push(reward.frameId);
+      d.tournament.champFrame = true;
+      d.tournament.wins       = (d.tournament.wins || 0) + 1;
+      window.showToast('👑 حصلت على إطار البطل الأسطوري!', 5000);
+    }
+  }
+
+  try {
+    await updateDoc(pRef, { score: newScore, lastMatch: Date.now() });
+  } catch(e) {}
+
+  d.tournament.current = tc;
+  window.saveData?.();
+}
+window.recordTournamentResult = recordTournamentResult;
