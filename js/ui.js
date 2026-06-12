@@ -231,6 +231,7 @@ export function navTo(id) {
   if (id === 'shop')        renderShop('helpers');
   if (id === 'stats')       { renderStats(); window.switchStatsTab('overview'); }
   if (id === 'weekly')      window.renderWeeklyChallenge();
+  if (id === 'tournament')  window.renderTournamentScreen?.();
 }
 window.navTo = navTo;
 
@@ -434,19 +435,63 @@ function freeCoinsItem() {
 }
 
 function renderFramesShop(c) {
+  const RARITY_COLORS = { common:'#9ca3af', rare:'#60a5fa', epic:'#a78bfa', legendary:'#ffd700' };
+  const RARITY_LABELS = { common:'شائع', rare:'نادر', epic:'ملحمي', legendary:'أسطوري' };
+  const UNLOCK_HINTS  = {
+    tournament:    'يُفتح بالفوز في بطولة أسبوعية 🏆',
+    level_30:      'يُفتح عند المستوى 30 👑',
+    season_diamond:'يُفتح برتبة موسمية ألماسية 💎',
+    buy:           '',
+    default:       '',
+  };
+
   c.innerHTML = '';
-  const grid = document.createElement('div');
+  const grid  = document.createElement('div');
   grid.className = 'frames-grid';
+  const d     = window.gameData;
+
   AVATAR_FRAMES.forEach(frame => {
-    const owned = frame.id === 'none' || (window.gameData.ownedFrames || []).includes(frame.id);
-    const active = window.gameData.avatarFrame === frame.id;
-    const el = document.createElement('div');
-    el.className = `frame-item${active ? ' active' : ''}`;
+    const owned   = frame.id === 'none' || (d.ownedFrames || []).includes(frame.id);
+    const active  = d.avatarFrame === frame.id;
+    const canBuy  = frame.unlockBy === 'buy' || frame.unlockBy === 'default';
+    const locked  = !owned && !canBuy;
+    const rarCol  = RARITY_COLORS[frame.rarity] || RARITY_COLORS.common;
+    const rarLbl  = RARITY_LABELS[frame.rarity] || 'شائع';
+
+    const el      = document.createElement('div');
+    el.className  = `frame-item${active ? ' active' : ''}`;
+    el.style.position = 'relative';
+    el.style.overflow = 'hidden';
+    if (active) el.style.borderColor = rarCol;
+
     el.innerHTML = `
-      <div class="frame-preview"><img src="${window.gameData.avatar}" style="width:54px;height:54px;border-radius:50%;object-fit:cover;${frame.style || ''}"></div>
-      <div class="frame-name">${frame.name}</div>
-      ${owned ? `<div class="frame-owned">${active ? '✅ مفعّل' : 'اضغط للتفعيل'}</div>` : `<div class="frame-price">${frame.price} 💰</div>`}`;
-    el.onclick = () => window.handleFrameClick(frame);
+      <!-- rarity badge -->
+      <div style="position:absolute;top:5px;right:5px;z-index:3;
+        background:${rarCol}22;border:1px solid ${rarCol}55;color:${rarCol};
+        font-size:7px;font-weight:900;padding:2px 5px;border-radius:8px;letter-spacing:.05em">
+        ${rarLbl}
+      </div>
+      <!-- preview -->
+      <div class="frame-preview" style="position:relative">
+        <img src="${d.avatar || 'https://i.postimg.cc/qqTBP312/1000061201.png'}"
+          style="width:54px;height:54px;border-radius:50%;object-fit:cover;${frame.style || ''}">
+        ${locked ? `<div style="position:absolute;inset:0;background:rgba(0,0,0,.65);
+          border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px">🔒</div>` : ''}
+      </div>
+      <div class="frame-name" style="color:${active ? rarCol : '#fff'}">${frame.name}</div>
+      <div style="font-size:10px;font-weight:900;margin-top:3px;color:${
+        active ? rarCol : owned ? '#22c55e' : locked ? 'rgba(255,255,255,.25)' : 'var(--accent)'}">
+        ${active ? '✓ مُفعّل' : owned ? '✓ مملوك' : locked ? '🔒 مقفول' : frame.price.toLocaleString() + ' 💰'}
+      </div>`;
+
+    el.onclick = () => {
+      if (locked) {
+        const hint = UNLOCK_HINTS[frame.unlockBy] || 'مقفول';
+        window.showToast('🔒 ' + hint);
+      } else {
+        window.handleFrameClick(frame);
+      }
+    };
     grid.appendChild(el);
   });
   c.appendChild(grid);
@@ -688,35 +733,80 @@ window.updateHomeStreak = updateHomeStreak;
 // الإحصائيات
 // ══════════════════════════════════════════════════════════════════
 export function renderStats() {
-  const d = window.gameData;
+  const d  = window.gameData; if (!d) return;
   const ds = d.detailedStats || {};
-  const ls = d.loginStreak || {};
+  const ls = d.loginStreak   || {};
+  const st = d.stats         || {};
   const setText = (id, val) => { const el = document.getElementById(id); if (el) el.innerText = val; };
-  setText('st-games', d.stats?.gamesPlayed || 0);
-  setText('st-correct', d.stats?.correctAnswers || 0);
-  setText('st-maxstreak', d.stats?.maxStreak || 0);
-  setText('st-daily', d.stats?.dailyChallengesWon || 0);
-  setText('st-coins', d.coins || 0);
-  setText('st-xp', d.xp || 0);
-  setText('st-speed', ds.speedAnswers || 0);
-  setText('st-nohint', ds.noHintGames || 0);
-  setText('st-avgtime', (ds.avgAnswerTime || 0) + ' ث');
+
+  // ── أرقام أساسية ──
+  setText('st-games',        (st.gamesPlayed        || 0).toLocaleString());
+  setText('st-correct',      (st.correctAnswers      || 0).toLocaleString());
+  setText('st-maxstreak',    (st.maxStreak           || 0).toLocaleString());
+  setText('st-daily',        (st.dailyChallengesWon  || 0).toLocaleString());
+  setText('st-coins',        (d.coins               || 0).toLocaleString());
+  setText('st-xp',           (d.xp                  || 0).toLocaleString());
+
+  // ── إحصائيات متقدمة ──
+  setText('st-speed',        ds.speedAnswers || 0);
+  setText('st-nohint',       ds.noHintGames  || 0);
+  setText('st-avgtime',      (ds.avgAnswerTime || 0) + ' ث');
   setText('st-login-streak', (ls.count || 0) + ' يوم');
+  setText('st-tournament-wins', (d.tournament?.wins || 0));
+
+  // دقة الإجابات
+  const totalQ   = (st.correctAnswers || 0) + (st.wrongAnswers || 0);
+  const accuracy = totalQ > 0 ? Math.round((st.correctAnswers / totalQ) * 100) : 0;
+  const avgScore = st.gamesPlayed > 0 ? (st.correctAnswers / st.gamesPlayed).toFixed(1) : '0';
+  setText('st-accuracy',     accuracy + '%');
+  setText('st-avg-score',    avgScore + ' / 10');
+
+  // أعلى سلسلة دخول
   const maxEl = document.getElementById('st-login-max');
   if (maxEl) maxEl.innerText = `أعلى: ${ls.maxCount || 0} يوم`;
+
+  // ── رسم بياني سلسلة الدخول ──
   const dotsEl = document.getElementById('login-streak-dots');
   if (dotsEl) {
     dotsEl.innerHTML = '';
-    for (let i = 6; i >= 0; i--) {
-      const active = i < (ls.count || 0);
+    for (let i = 0; i < 7; i++) {
+      const active = i < Math.min(ls.count || 0, 7);
       dotsEl.innerHTML += `<div style="
         width:28px;height:28px;border-radius:9px;
-        background:${active ? '#22c55e' : 'rgba(255,255,255,.07)'};
+        background:${active ? 'linear-gradient(135deg,#22c55e,#16a34a)' : 'rgba(255,255,255,.07)'};
         border:2px solid ${active ? '#22c55e' : 'rgba(255,255,255,.08)'};
         display:flex;align-items:center;justify-content:center;
-        font-size:13px;transition:.3s">
-        ${active ? '✓' : ''}
-      </div>`;
+        font-size:13px;box-shadow:${active ? '0 3px 10px rgba(34,197,94,.3)' : 'none'};
+        transition:.3s">${active ? '✓' : ''}</div>`;
+    }
+  }
+
+  // ── رسم بياني دقة التصنيفات ──
+  const catChartEl = document.getElementById('stats-accuracy-chart');
+  if (catChartEl) {
+    const catStats = d._catStats || {};
+    const cats     = Object.entries(catStats);
+    if (cats.length > 0) {
+      catChartEl.innerHTML = cats.slice(0, 8).map(([cat, cs]) => {
+        const acc = cs.total > 0 ? Math.round((cs.correct / cs.total) * 100) : 0;
+        const barColor = acc >= 70 ? '#22c55e' : acc >= 40 ? '#fbbf24' : '#ef4444';
+        return `
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:7px">
+            <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.45);
+              min-width:68px;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
+              ${cat}
+            </div>
+            <div style="flex:1;height:7px;background:rgba(255,255,255,.07);border-radius:10px;overflow:hidden">
+              <div style="width:${acc}%;height:100%;background:${barColor};
+                border-radius:10px;transition:width .8s cubic-bezier(.34,1.56,.64,1)"></div>
+            </div>
+            <div style="font-size:11px;font-weight:900;color:${barColor};min-width:30px;text-align:left">
+              ${acc}%
+            </div>
+          </div>`;
+      }).join('');
+    } else {
+      catChartEl.innerHTML = '<div style="text-align:center;color:rgba(255,255,255,.2);font-size:12px;padding:20px">العب لرؤية إحصائيات التصنيفات 🎯</div>';
     }
   }
 }
