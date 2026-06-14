@@ -72,6 +72,12 @@ import {
   addFriendByCode,
   removeFriend
 } from './friends.js';
+import {
+  generateDailyTasks, renderDailyTasksModal, claimTask, claimAllTasksBonus,
+  openAvatarCustomizer, closeAvatarCustomizer, selectAvatarEmoji, selectAvatarBg, saveAvatar,
+  renderDetailedStats
+} from './features.js';
+
 // modes.js — يتحمل dynamically عشان لو فيه مشكلة مش يوقف الـ app
 
 // ══════════════════════════════════════════════════════════════════
@@ -261,21 +267,14 @@ window.saveMessageDebounced = () => {
 
 window.showDailyTasksModal = () => {
   const d = window.gameData;
-  let html = '';
-  d.dailyTasks.forEach(t => {
-    const pct = Math.min((t.current / t.goal) * 100, 100);
-    html += `<div class="task-card ${t.claimed ? 'done' : ''}">
-      <div class="task-top">
-        <span class="task-text">${t.text}</span>
-        <span class="task-badge ${t.claimed ? 'done-b' : 'pend-b'}">${t.claimed ? '✅ منجزة' : `+${t.reward} 💰`}</span>
-      </div>
-      <div class="task-prog">
-        <div class="task-bar"><div class="task-fill ${t.claimed ? 'done-f' : ''}" style="width:${pct}%"></div></div>
-        <span class="task-cnt">${t.current}/${t.goal}</span>
-      </div>
-    </div>`;
-  });
-  document.getElementById('tasks-body').innerHTML = html;
+  const today = new Date().toDateString();
+  if (d.lastDailyUpdate !== today) {
+    d.dailyTasks      = generateDailyTasks(new Date().toISOString().slice(0,10));
+    d.lastDailyUpdate = today;
+    d._catsToday      = [];
+    saveData();
+  }
+  renderDailyTasksModal();
   openModal('tasks');
 };
 
@@ -961,6 +960,14 @@ function sendNotification(title, body, opts = {}) {
   }
 }
 window.sendNotification = sendNotification;
+window.openAvatarCustomizer  = openAvatarCustomizer;
+window.closeAvatarCustomizer = closeAvatarCustomizer;
+window.selectAvatarEmoji     = selectAvatarEmoji;
+window.selectAvatarBg        = selectAvatarBg;
+window.saveAvatar            = saveAvatar;
+window.renderDetailedStats   = renderDetailedStats;
+window.claimTask             = claimTask;
+window.claimAllTasksBonus    = claimAllTasksBonus;
 
 // تحقق من انكسار السلسلة وأرسل تنبيه
 function checkStreakNotification() {
