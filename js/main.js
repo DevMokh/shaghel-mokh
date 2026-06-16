@@ -72,12 +72,6 @@ import {
   addFriendByCode,
   removeFriend
 } from './friends.js';
-import {
-  generateDailyTasks, renderDailyTasksModal, claimTask, claimAllTasksBonus,
-  openAvatarCustomizer, closeAvatarCustomizer, selectAvatarEmoji, selectAvatarBg, saveAvatar,
-  renderDetailedStats
-} from './features.js';
-
 // modes.js — يتحمل dynamically عشان لو فيه مشكلة مش يوقف الـ app
 
 // ══════════════════════════════════════════════════════════════════
@@ -267,14 +261,21 @@ window.saveMessageDebounced = () => {
 
 window.showDailyTasksModal = () => {
   const d = window.gameData;
-  const today = new Date().toDateString();
-  if (d.lastDailyUpdate !== today) {
-    d.dailyTasks      = generateDailyTasks(new Date().toISOString().slice(0,10));
-    d.lastDailyUpdate = today;
-    d._catsToday      = [];
-    saveData();
-  }
-  renderDailyTasksModal();
+  let html = '';
+  d.dailyTasks.forEach(t => {
+    const pct = Math.min((t.current / t.goal) * 100, 100);
+    html += `<div class="task-card ${t.claimed ? 'done' : ''}">
+      <div class="task-top">
+        <span class="task-text">${t.text}</span>
+        <span class="task-badge ${t.claimed ? 'done-b' : 'pend-b'}">${t.claimed ? '✅ منجزة' : `+${t.reward} 💰`}</span>
+      </div>
+      <div class="task-prog">
+        <div class="task-bar"><div class="task-fill ${t.claimed ? 'done-f' : ''}" style="width:${pct}%"></div></div>
+        <span class="task-cnt">${t.current}/${t.goal}</span>
+      </div>
+    </div>`;
+  });
+  document.getElementById('tasks-body').innerHTML = html;
   openModal('tasks');
 };
 
@@ -732,6 +733,28 @@ async function checkFriendRivalry() {
   listenToUserData();
   navTo("home");
 
+  // dynamic import لـ features.js
+  import('./features.js').then(ft => {
+    window.openAvatarCustomizer  = ft.openAvatarCustomizer;
+    window.closeAvatarCustomizer = ft.closeAvatarCustomizer;
+    window.selectAvatarEmoji     = ft.selectAvatarEmoji;
+    window.selectAvatarBg        = ft.selectAvatarBg;
+    window.saveAvatar            = ft.saveAvatar;
+    window.renderDetailedStats   = ft.renderDetailedStats;
+    window.claimTask             = ft.claimTask;
+    window.claimAllTasksBonus    = ft.claimAllTasksBonus;
+    window.generateDailyTasks    = ft.generateDailyTasks;
+    window.renderDailyTasksModal = ft.renderDailyTasksModal;
+    console.log('[Features] loaded');
+  }).catch(e => {
+    console.warn('[Features] failed:', e.message);
+    window.openAvatarCustomizer = () => showToast('🎨 قريباً!');
+    window.claimTask            = () => {};
+    window.generateDailyTasks   = () => window.gameData?.dailyTasks || [];
+    window.renderDailyTasksModal= () => {};
+  });
+
+
   // بعد تحميل البيانات — تحقق من الإشعارات والمنافسة
   setTimeout(() => {
     if (Notification.permission === "granted") {
@@ -960,14 +983,6 @@ function sendNotification(title, body, opts = {}) {
   }
 }
 window.sendNotification = sendNotification;
-window.openAvatarCustomizer  = openAvatarCustomizer;
-window.closeAvatarCustomizer = closeAvatarCustomizer;
-window.selectAvatarEmoji     = selectAvatarEmoji;
-window.selectAvatarBg        = selectAvatarBg;
-window.saveAvatar            = saveAvatar;
-window.renderDetailedStats   = renderDetailedStats;
-window.claimTask             = claimTask;
-window.claimAllTasksBonus    = claimAllTasksBonus;
 
 // تحقق من انكسار السلسلة وأرسل تنبيه
 function checkStreakNotification() {
