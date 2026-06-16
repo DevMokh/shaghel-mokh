@@ -813,7 +813,7 @@ export function renderStats() {
 window.renderStats = renderStats;
 
 export function switchStatsTab(tab) {
-  ['overview', 'charts', 'achievements', 'detailed'].forEach(t => {
+  ['overview', 'charts', 'achievements'].forEach(t => {
     const el = document.getElementById(`stats-tab-${t}`);
     const btn = document.querySelector(`[data-stab="${t}"]`);
     if (el) el.style.display = t === tab ? 'block' : 'none';
@@ -825,7 +825,6 @@ export function switchStatsTab(tab) {
   });
   if (tab === 'charts') renderStatsCharts();
   if (tab === 'achievements') renderStatsAchievements();
-  if (tab === 'detailed') window.renderDetailedStats?.();
 }
 window.switchStatsTab = switchStatsTab;
 
