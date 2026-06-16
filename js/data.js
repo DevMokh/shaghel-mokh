@@ -149,9 +149,6 @@ export function getDefaultData() {
     // ── بيانات التورنامنت ──────────────────────────────────────
     tournament: {
       current:      null,   // { id, round, score, eliminated }
-    avatarEmoji: \'brain\',
-    avatarBg: \'gold\',
-    _tasksBonusToday: \'\',
       history:      [],     // سجل البطولات السابقة
       wins:         0,
       champFrame:   false,  // هل فاز بإطار البطل
