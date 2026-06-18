@@ -369,7 +369,7 @@
         <button data-stab="overview"     onclick="window.switchStatsTab('overview')"     style="padding:7px 14px;border-radius:12px;font-weight:900;font-size:11px;cursor:pointer;border:1px solid rgba(251,191,36,.2);background:rgba(251,191,36,.12);color:var(--accent)">نظرة عامة</button>
         <button data-stab="charts"       onclick="window.switchStatsTab('charts')"       style="padding:7px 14px;border-radius:12px;font-weight:900;font-size:11px;cursor:pointer;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.05);color:var(--text2)">تفاصيل</button>
         <button data-stab="achievements" onclick="window.switchStatsTab('achievements')" style="padding:7px 14px;border-radius:12px;font-weight:900;font-size:11px;cursor:pointer;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.05);color:var(--text2)">إنجازات</button>
-        <button data-stab="detailed" onclick="window.switchStatsTab(\'detailed\')" style="padding:7px 14px;border-radius:12px;font-weight:900;font-size:11px;cursor:pointer;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.05);color:var(--text2)">تفصيلي 📈</button>
+<button data-stab="detailed" onclick="window.switchStatsTab(\'detailed\')" style="padding:7px 14px;border-radius:12px;font-weight:900;font-size:11px;cursor:pointer;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.05);color:var(--text2)">تفصيلي 📈</button>
       </div>
 
       <div id="stats-tab-overview" style="overflow-y:auto;padding-bottom:20px">
@@ -474,7 +474,7 @@
       </div>
 
       <div id="stats-tab-detailed" style="display:none;overflow-y:auto;padding-bottom:90px"><div id="stats-detail-content"></div></div>
-      <div id="stats-tab-achievements" style="display:none;overflow-y:auto;padding-bottom:90px">
+<div id="stats-tab-achievements" style="display:none;overflow-y:auto;padding-bottom:90px">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
           <span style="font-size:13px;font-weight:700;color:var(--text2)">المكتسبة</span>
           <div style="display:flex;align-items:center;gap:8px">
@@ -843,18 +843,18 @@
   </div>
 </div>
 
-
+<script type="module" src="js/main.js"></script>
 <div id="modal-avatar" style="display:none;position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.82);align-items:flex-end;justify-content:center" onclick="window.closeAvatarCustomizer?.()">
   <div onclick="event.stopPropagation()" style="width:100%;max-width:500px;background:#0e0e14;border-radius:32px 32px 0 0;border:1px solid rgba(255,255,255,.08);border-bottom:none;max-height:88vh;display:flex;flex-direction:column;animation:slideUpSheet .32s cubic-bezier(.16,1,.3,1) both">
     <div style="display:flex;justify-content:center;padding:10px 0 0"><div style="width:36px;height:4px;border-radius:10px;background:rgba(255,255,255,.15)"></div></div>
     <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 18px 10px;flex-shrink:0">
-      <h3 style="font-size:16px;font-weight:900;color:#fff;display:flex;align-items:center;gap:8px"><i class="fas fa-user-pen" style="color:#ec4899"></i> تخصيص الأفاتار</h3>
+      <h3 style="font-size:16px;font-weight:900;color:#fff"><i class="fas fa-user-pen" style="color:#ec4899"></i> تخصيص الأفاتار</h3>
       <button onclick="window.closeAvatarCustomizer?.()" style="width:34px;height:34px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:11px;color:rgba(255,255,255,.6);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center">✕</button>
     </div>
     <div id="avatar-body" style="overflow-y:auto;padding:0 16px 24px;flex:1"></div>
   </div>
 </div>
-<script type="module" src="js/main.js"></script>
+
 <script type="module" src="js/features.js"></script>
 </body>
 </html>
