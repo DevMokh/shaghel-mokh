@@ -1,7 +1,7 @@
+// js/features.js — يشتغل بعد main.js
+// بيستخدم window.xxx بدل imports عشان مفيش circular dependencies
+
 // js/features.js
-import { APP_ID } from './firebase.js';
-import { showToast } from './helpers.js';
-import { saveData } from './data.js';
 
 // ══ 1. DAILY TASKS ══════════════════════════════
 export const DAILY_TASKS_POOL = [
@@ -104,9 +104,9 @@ export function claimTask(id) {
   const d=window.gameData, t=d.dailyTasks?.find(x=>x.id===id);
   if (!t||t.claimed||t.current<t.goal) return;
   t.claimed=true; d.coins+=t.reward; d.xp+=t.xp;
-  showToast(`✅ +${t.reward}💰 +${t.xp} XP`);
+  window.showToast?.(`✅ +${t.reward}💰 +${t.xp} XP`);
   if (navigator.vibrate) navigator.vibrate([20,10,20]);
-  saveData(); window.updateUI?.(); renderDailyTasksModal();
+  window.saveData?.(); window.updateUI?.(); renderDailyTasksModal();
 }
 window.claimTask = claimTask;
 
@@ -116,9 +116,9 @@ export function claimAllTasksBonus() {
   if (!d.dailyTasks?.every(t=>t.claimed)) return;
   d.coins+=500; d.xp+=150; d._tasksBonusToday=today;
   if (typeof confetti!=='undefined') confetti({particleCount:120,spread:100,origin:{y:.5}});
-  showToast('🎉 أكملت كل المهام! +500💰 +150 XP', 4000);
+  window.showToast?.('🎉 أكملت كل المهام! +500💰 +150 XP', 4000);
   if (navigator.vibrate) navigator.vibrate([30,20,50,20,80]);
-  saveData(); window.updateUI?.(); renderDailyTasksModal();
+  window.saveData?.(); window.updateUI?.(); renderDailyTasksModal();
 }
 window.claimAllTasksBonus = claimAllTasksBonus;
 
@@ -201,7 +201,7 @@ window.selectAvatarEmoji=selectAvatarEmoji;
 
 export function selectAvatarBg(id){
   const c=AVATAR_BG_COLORS.find(x=>x.id===id); if(!c)return;
-  if(c.cost>0&&(window.gameData?.coins||0)<c.cost){showToast(`❌ تحتاج ${c.cost} عملة`);return;}
+  if(c.cost>0&&(window.gameData?.coins||0)<c.cost){window.showToast?.(`❌ تحتاج ${c.cost} عملة`);return;}
   if(c.cost>0&&window.gameData) window.gameData.coins-=c.cost;
   window._pendingBg=id;
   const p=document.getElementById('av-preview');
@@ -215,8 +215,8 @@ export function saveAvatar(){
   const d=window.gameData; if(!d)return;
   if(window._pendingEmoji){d.avatarEmoji=window._pendingEmoji;delete window._pendingEmoji;}
   if(window._pendingBg){d.avatarBg=window._pendingBg;delete window._pendingBg;}
-  saveData(); window.updateUI?.(); closeAvatarCustomizer();
-  showToast('✅ تم حفظ الأفاتار!');
+  window.saveData?.(); window.updateUI?.(); closeAvatarCustomizer();
+  window.showToast?.('✅ تم حفظ الأفاتار!');
   if(navigator.vibrate) navigator.vibrate([20,10,20]);
 }
 window.saveAvatar=saveAvatar;
@@ -330,10 +330,10 @@ window.renderTournament=renderTournament;
 
 export function registerTournament(){
   const d=window.gameData;
-  if(!d||d.coins<100){showToast('❌ تحتاج 100 عملة');return;}
+  if(!d||d.coins<100){window.showToast?.('❌ تحتاج 100 عملة');return;}
   d.coins-=100; d.tournament={weekId:getWeekId(),score:d.tournament?.score||0,registered:true};
-  saveData(); window.updateUI?.(); renderTournament();
-  showToast('🏆 تم التسجيل في البطولة!',3000);
+  window.saveData?.(); window.updateUI?.(); renderTournament();
+  window.showToast?.('🏆 تم التسجيل في البطولة!',3000);
   if(typeof confetti!=='undefined') confetti({particleCount:60,spread:60,origin:{y:.6}});
 }
 window.registerTournament=registerTournament;
@@ -341,6 +341,6 @@ window.registerTournament=registerTournament;
 export function updateTournamentScore(pts){
   const d=window.gameData;
   if(!d?.tournament||d.tournament.weekId!==getWeekId())return;
-  d.tournament.score=(d.tournament.score||0)+pts; saveData();
+  d.tournament.score=(d.tournament.score||0)+pts; window.saveData?.();
 }
 window.updateTournamentScore=updateTournamentScore;
