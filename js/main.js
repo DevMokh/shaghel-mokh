@@ -733,28 +733,6 @@ async function checkFriendRivalry() {
   listenToUserData();
   navTo("home");
 
-  // dynamic import لـ features.js
-  import('./features.js').then(ft => {
-    window.openAvatarCustomizer  = ft.openAvatarCustomizer;
-    window.closeAvatarCustomizer = ft.closeAvatarCustomizer;
-    window.selectAvatarEmoji     = ft.selectAvatarEmoji;
-    window.selectAvatarBg        = ft.selectAvatarBg;
-    window.saveAvatar            = ft.saveAvatar;
-    window.renderDetailedStats   = ft.renderDetailedStats;
-    window.claimTask             = ft.claimTask;
-    window.claimAllTasksBonus    = ft.claimAllTasksBonus;
-    window.generateDailyTasks    = ft.generateDailyTasks;
-    window.renderDailyTasksModal = ft.renderDailyTasksModal;
-    console.log('[Features] loaded');
-  }).catch(e => {
-    console.warn('[Features] failed:', e.message);
-    window.openAvatarCustomizer = () => showToast('🎨 قريباً!');
-    window.claimTask            = () => {};
-    window.generateDailyTasks   = () => window.gameData?.dailyTasks || [];
-    window.renderDailyTasksModal= () => {};
-  });
-
-
   // بعد تحميل البيانات — تحقق من الإشعارات والمنافسة
   setTimeout(() => {
     if (Notification.permission === "granted") {
