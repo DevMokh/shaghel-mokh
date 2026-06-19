@@ -951,15 +951,7 @@ function scheduleNotifications() {
 }
 window.scheduleNotifications = scheduleNotifications;
 
-function sendNotification(title, body, opts = {}) {
-  if (Notification.permission !== 'granted') return;
-  if (document.visibilityState === 'visible') return; // لو التطبيق مفتوح — مش لازم
-  try {
-    new Notification(title, { body, icon: '/favicon.ico', ...opts });
-  } catch(e) {
-    console.warn('[Notif]', e);
-  }
-}
+// sendNotification defined above
 window.sendNotification = sendNotification;
 
 // تحقق من انكسار السلسلة وأرسل تنبيه
