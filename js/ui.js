@@ -1,3 +1,7 @@
+// Timer tracker
+window._activeTimers = window._activeTimers || [];
+window._safeTimeout = (fn, ms) => { const t = setTimeout(fn, ms); window._activeTimers.push(t); return t; };
+
 
 // js/ui.js
 import { ACCENT_COLORS, AVATAR_FRAMES, categoryConfig, getSeasonRank, getSeasonProgress } from './data.js';
@@ -207,6 +211,12 @@ async function checkFriendRivalry() {
 // التنقل بين الشاشات
 // ══════════════════════════════════════════════════════════════════
 export function navTo(id) {
+  window.cleanupRoomListeners?.();
+  // cleanup: إيقاف كل الـ timers عند الانتقال
+  if (window._activeTimers) {
+    window._activeTimers.forEach(t => clearTimeout(t));
+    window._activeTimers = [];
+  }
   // تنظيف كل الـ intervals
   if (window.timerInterval) { clearInterval(window.timerInterval); window.timerInterval = null; }
   if (window._dailyCountdownInterval) { clearInterval(window._dailyCountdownInterval); window._dailyCountdownInterval = null; }
@@ -226,8 +236,8 @@ export function navTo(id) {
 
   if (id === 'map')         renderMap();
   if (id === 'leaderboard') window.renderLeaderboard(window.currentLbTab || 'global');
-  if (id === 'daily')       window.renderDailyChallenge();
-  if (id === 'rooms')       window.loadRooms();
+  if (id === 'daily')       window.renderDailyChallenge?.();
+  if (id === 'rooms')       window.loadRooms?.();
   if (id === 'shop')        renderShop('helpers');
   if (id === 'stats')       { renderStats(); window.switchStatsTab('overview'); }
   if (id === 'weekly')      window.renderWeeklyChallenge();
@@ -364,19 +374,19 @@ function showSubsForMap(key, c1, ic) {
         </div>
       </div>
       <div style="display:flex;gap:6px">
-        <button onclick="event.stopPropagation();window.openFlashcards('${cat.name}','${sub}')"
+        <button onclick="event.stopPropagation();window.openFlashcards?.('${cat.name}','${sub}')"
           style="background:rgba(96,165,250,.1);color:#60a5fa;padding:8px 10px;border-radius:12px;
                  font-weight:900;border:1px solid rgba(96,165,250,.18);cursor:pointer;
                  font-family:'Tajawal',sans-serif;font-size:11px;display:flex;align-items:center;gap:4px">
           <i class="fas fa-clone" style="font-size:11px"></i>
         </button>
-        <button onclick="event.stopPropagation();window.open1v1('${cat.name}','${sub}')"
+        <button onclick="event.stopPropagation();window.open1v1?.('${cat.name}','${sub}')"
           style="background:rgba(239,68,68,.1);color:#ef4444;padding:8px 10px;border-radius:12px;
                  font-weight:900;border:1px solid rgba(239,68,68,.18);cursor:pointer;
                  font-family:'Tajawal',sans-serif;font-size:11px;display:flex;align-items:center;gap:4px">
           <i class="fas fa-swords" style="font-size:11px"></i>
         </button>
-        <button onclick="event.stopPropagation();window.openGameMode('${cat.name}','${sub}','${ic?.fa||''}')"
+        <button onclick="event.stopPropagation();window.openGameMode?.('${cat.name}','${sub}','${ic?.fa||''}')"
           style="background:${c1};color:#000;padding:8px 14px;border-radius:12px;
                  font-weight:900;border:none;border-bottom:2px solid rgba(0,0,0,.2);
                  cursor:pointer;font-family:'Tajawal',sans-serif;font-size:12px">
@@ -400,8 +410,8 @@ export function renderShop(tab) {
   const c = document.getElementById('shop-content');
   if (!c) return;
   if (tab === 'helpers') {
-    c.innerHTML = shopItem('📦', 'حزمة المساعدات', '3 من كل نوع', 300, 'window.buyHelper(300)') +
-                  shopItem('💎', 'حزمة الخبير', '10 من كل نوع', 800, 'window.buyHelper(800)') +
+    c.innerHTML = shopItem('📦', 'حزمة المساعدات', '3 من كل نوع', 300, 'window.buyHelper?.(300)') +
+                  shopItem('💎', 'حزمة الخبير', '10 من كل نوع', 800, 'window.buyHelper?.(800)') +
                   freeCoinsItem();
   } else if (tab === 'frames') {
     renderFramesShop(c);
@@ -429,7 +439,7 @@ function freeCoinsItem() {
       <div><h4 style="font-weight:900;font-size:16px;margin-bottom:2px">مكافأة مجانية</h4>
       <p style="font-size:10px;opacity:.4;font-weight:700;text-transform:uppercase;letter-spacing:.1em">+200 عملة يومياً</p></div>
     </div>
-    <button onclick="window.claimFreeCoins()" id="btn-free-coins"
+    <button onclick="window.claimFreeCoins?.()" id="btn-free-coins"
       style="background:#22c55e;color:#fff;padding:10px 18px;border-radius:14px;font-weight:900;border:none;border-bottom:3px solid #16a34a;cursor:pointer;font-family:'Tajawal',sans-serif;font-size:13px;white-space:nowrap">احصل 🎁</button>
   </div>`;
 }
@@ -489,7 +499,7 @@ function renderFramesShop(c) {
         const hint = UNLOCK_HINTS[frame.unlockBy] || 'مقفول';
         window.showToast('🔒 ' + hint);
       } else {
-        window.handleFrameClick(frame);
+        window.handleFrameClick?.(frame);
       }
     };
     grid.appendChild(el);
