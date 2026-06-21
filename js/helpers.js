@@ -2,6 +2,7 @@
 import { getCurrentSeason } from "./firebase.js";
 
 // ─── TOAST (إشعارات منبثقة) ────────────────────────────────────────
+// Safe toast — لو حاجة غلط مش بتكسر
 export function showToast(msg, dur = 2800) {
   const c = document.getElementById("toast-container");
   if (!c) return;
@@ -286,7 +287,7 @@ export async function syncOfflineQueue() {
     const queue = JSON.parse(raw);
     if (!queue.length) return;
     const last = queue[queue.length - 1];
-    await window.db_set(
+    await window.db_set?.(
       `artifacts/${window.appId}/users/${window.currentUser.uid}/profile/data`,
       last.data,
       { merge: true }
@@ -299,7 +300,7 @@ export async function syncOfflineQueue() {
 }
 window.syncOfflineQueue = syncOfflineQueue;
 
-window.addEventListener("online", () => {
+window.addEventListener?.("online", () => {
   setTimeout(syncOfflineQueue, 2000);
 });
 
