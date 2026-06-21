@@ -176,6 +176,7 @@ export function getDefaultData() {
 // حفظ البيانات في Firestore و localStorage
 // ══════════════════════════════════════════════════════════════════
 export async function saveData() {
+  try {
   if (!window.gameData) return;
   try {
     localStorage.setItem('shaghel_gamedata_backup', JSON.stringify(window.gameData));
@@ -203,6 +204,11 @@ export async function saveData() {
   } catch (e) {
     console.error("Save error:", e);
     window.queueOfflineSave?.(d);
+  }
+  } catch(e) {
+    console.error("[saveData]", e);
+    // retry after 2s
+    setTimeout(() => saveData(), 2000);
   }
 }
 window.saveData = saveData;
