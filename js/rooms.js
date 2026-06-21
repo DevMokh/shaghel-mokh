@@ -4,6 +4,19 @@ import { showToast, escapeHtml, playSound } from './helpers.js';
 import { navTo, updateUI } from './ui.js';
 import { startQuiz, currentQuestions, currentIdx, quizCorrect, quizWrong, quizCoins, quizXP, isRoomGame, selectedCategory, selectedSub } from './quiz.js';
 import { saveData, categoryConfig, updateDailyTask, updateWeeklyTask, addSeasonXP } from './data.js';
+
+// ═══ Listener Cleanup System ═══
+const _roomListeners = [];
+const _safeSnap = (path, cb, err) => {
+  const unsub = window.db_snap?.(path, cb, err);
+  if (unsub) _roomListeners.push(unsub);
+  return unsub;
+};
+export function cleanupRoomListeners() {
+  _roomListeners.forEach(u => { try { u(); } catch(e) {} });
+  _roomListeners.length = 0;
+}
+window.cleanupRoomListeners = cleanupRoomListeners;
 import {
   collection,
   addDoc,
@@ -68,7 +81,7 @@ async function cleanupExpiredRooms() {
 // إنشاء غرفة جديدة
 export function createRoom() {
   buildRoomCatSelect();
-  window.openModal('create-room');
+  window.openModal?.('create-room');
 }
 window.createRoom = createRoom;
 
@@ -121,7 +134,7 @@ export async function confirmCreateRoom() {
   try {
     const ref = await addDoc(collection(db, 'artifacts', APP_ID, 'public', 'data', 'rooms'), roomData);
     currentRoomId = ref.id;
-    window.closeModal('create-room');
+    window.closeModal?.('create-room');
     showToast(`✅ غرفة "${name}" — كود: ${code}`);
 
     // تحديث إنجاز استضافة الغرف
@@ -180,7 +193,7 @@ export async function joinRoomByCode() {
       showToast('❌ الغرفة ممتلئة');
       return;
     }
-    window.closeModal('join-room');
+    window.closeModal?.('join-room');
     await joinRoomById(roomDoc.id);
   } catch (e) {
     showToast('❌ خطأ: ' + e.message);
@@ -360,7 +373,9 @@ export async function toggleReady() {
   if (!currentRoomId || !window.currentUser) return;
   const roomRef = getRoomRef(currentRoomId);
   try {
-    const snap = await getDoc(roomRef);
+    let snap;
+    try { snap = const snap = await getDoc(roomRef);
+    } catch(e) { console.error("[Firebase]", e); return; }
     if (!snap.exists()) return;
     const currentReady = snap.data()?.players?.[window.currentUser.uid]?.ready || false;
     await updateDoc(roomRef, {
@@ -408,13 +423,13 @@ export async function startRoomGame() {
     // جلب الأسئلة (تحتاج إلى دالة fetchQuestions من quiz.js - سيتم استدعاؤها)
     let pool = [];
     if (typeof window.fetchQuestions === 'function') {
-      pool = await window.fetchQuestions(catName, subName);
+      pool = await window.fetchQuestions?.(catName, subName);
     }
     if (pool.length < 5) {
       for (const s of subs) {
         if (s === subName) continue;
         if (typeof window.fetchQuestions !== 'function') break;
-        const extra = await window.fetchQuestions(catName, s);
+        const extra = await window.fetchQuestions?.(catName, s);
         pool = [...pool, ...extra];
         if (pool.length >= 10) break;
       }
@@ -447,7 +462,7 @@ export async function startRoomGame() {
     window.selectedSub = subName;
 
     navTo('quiz');
-    window.showQuestion();
+    window.showQuestion?.();
   } catch (e) {
     showToast('❌ ' + e.message);
     if (btn) {
@@ -476,7 +491,7 @@ function startRoomGameAsPlayer(room) {
 
   showToast('🎮 اللعبة بدأت!');
   navTo('quiz');
-  window.showQuestion();
+  window.showQuestion?.();
 }
 
 // مزامنة النتيجة أثناء اللعبة
@@ -654,7 +669,7 @@ export function loadRooms() {
       });
 
       list.innerHTML += `
-        <button onclick="window.openJoinRoomModal()"
+        <button onclick="window.openJoinRoomModal?.()"
           style="width:100%;margin-top:10px;padding:14px;
           background:rgba(255,255,255,.04);color:var(--text2);
           border:1px solid rgba(255,255,255,.07);border-radius:18px;
@@ -674,5 +689,5 @@ export function loadRooms() {
 window.loadRooms = loadRooms;
 
 // فتح نافذة الانضمام (موجودة في helpers لكن نعيد تعيينها)
-window.openJoinRoomModal = () => window.openModal('join-room');
+window.openJoinRoomModal = () => window.openModal?.('join-room');
 
