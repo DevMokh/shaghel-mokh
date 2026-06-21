@@ -113,8 +113,8 @@ export function listenToUserData() {
 
         // ── بعد تحميل البيانات: بادج السلسلة + عرض جولة محفوظة ──
         setTimeout(() => {
-          if (typeof window.updateHomeStreak === 'function') window.updateHomeStreak();
-          if (typeof window.checkAndOfferResume === 'function') window.checkAndOfferResume();
+          if (typeof window.updateHomeStreak === 'function') window.updateHomeStreak?.();
+          if (typeof window.checkAndOfferResume === 'function') window.checkAndOfferResume?.();
         }, 1500);
       } else {
         // مستخدم جديد: إنشاء ملف البيانات الافتراضية
