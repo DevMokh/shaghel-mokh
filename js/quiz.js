@@ -431,7 +431,7 @@ export function selectAnswer(i, btn) {
   window.gameData.detailedStats.weeklyHistory[tod] = (window.gameData.detailedStats.weeklyHistory[tod]||0) + (i===q.c ? 1 : 0);
 
   checkLevel(); saveData(); updateUI();
-  if (typeof window.saveGameSession === 'function') window.saveGameSession();
+  if (typeof window.saveGameSession === 'function') window.saveGameSession?.();
 }
 window.selectAnswer = selectAnswer;
 
@@ -554,7 +554,7 @@ async function finishQuiz() {
     if (window.gameData.seasonData) window.gameData.seasonData.challengesDone = (window.gameData.seasonData.challengesDone||0)+1;
     if (window.firebaseReady && window.currentUser) {
       try {
-        await window.db_set(
+        (await window.db_set?.\() && (window.db_set?.
           `artifacts/${APP_ID}/public/data/daily_${new Date().toISOString().slice(0,10)}/${window.currentUser.uid}`,
           { username:window.gameData.username, avatar:window.gameData.avatar, score:quizCorrect, uid:window.currentUser.uid, ts:Date.now() },
           true
@@ -574,7 +574,7 @@ async function finishQuiz() {
     showToast(`🏆 أنهيت التحدي الأسبوعي! +${reward} عملة!`, 5000);
     if (window.firebaseReady && window.currentUser) {
       try {
-        await window.db_set(
+        (await window.db_set?.\() && (window.db_set?.
           `artifacts/${APP_ID}/public/data/weekly_${weekId}/${window.currentUser.uid}`,
           { username:window.gameData.username, score:quizCorrect, level:window.gameData.level, uid:window.currentUser.uid, ts:Date.now() },
           true
@@ -605,7 +605,7 @@ async function finishQuiz() {
   window._hadBadStreak       = false;
 
   if (isRoomGame) await window.finishRoomGame?.();
-  if (typeof window.clearGameSession === 'function') window.clearGameSession();
+  if (typeof window.clearGameSession === 'function') window.clearGameSession?.();
 
   saveData();
   playSound('snd-win');
