@@ -1,6 +1,21 @@
 // js/main.js
 import './firebase.js';                // تهيئة Firebase والمتغيرات العامة
 import { initAuth, listenToUserData } from './auth.js';
+
+// ═══ GLOBAL ERROR HANDLER ═══
+window.__appErrors = [];
+window.onerror = function(msg, src, line, col, err) {
+  const info = { msg, src: (src||'').split('/').pop(), line, time: Date.now() };
+  window.__appErrors.push(info);
+  console.error('[AppError]', info);
+  return false;
+};
+window.addEventListener('unhandledrejection', e => {
+  const info = { msg: String(e.reason), type: 'promise', time: Date.now() };
+  window.__appErrors.push(info);
+  console.error('[UnhandledPromise]', info);
+});
+window.getAppErrors = () => window.__appErrors;
 import {
   updateUI,
   navTo,
@@ -731,6 +746,12 @@ async function checkFriendRivalry() {
 
   await initAuth();
   listenToUserData();
+
+  // ═══ HEALTH CHECK ═══
+  const REQUIRED = ['navTo','updateUI','showToast','saveData','startQuiz','openModal'];
+  const missing = REQUIRED.filter(f => typeof window[f] !== 'function');
+  if (missing.length) console.warn('[HealthCheck] Missing:', missing);
+  else console.log('[HealthCheck] ✅ All critical functions ready');
   navTo("home");
 
   // بعد تحميل البيانات — تحقق من الإشعارات والمنافسة
@@ -820,7 +841,7 @@ window.openGameMode = (cat, sub, icon) => {
   s('gm-start-label').innerText = 'اختر وضعًا';
   const _disBtn = s('gm-start-btn');
   _disBtn.style.cssText = 'width:100%;padding:16px;background:rgba(255,255,255,.06);color:rgba(255,255,255,.3);font-weight:900;border-radius:24px;font-size:15px;border:1.5px dashed rgba(255,255,255,.12);cursor:default;font-family:Tajawal,sans-serif;display:flex;align-items:center;justify-content:center;gap:10px;transition:all .25s;pointer-events:none';
-  window.switchGameModeTab('popular');
+  window.switchGameModeTab?.('popular');
   s('modal-gamemode').style.display = 'flex';
   document.body.style.overflow = 'hidden';
 };
@@ -875,7 +896,7 @@ function _selectMode(mode) {
 window.launchSelectedMode = () => {
   if (!_gmSelected) return;
   const mode = _gmSelected;
-  window.closeGameMode();
+  window.closeGameMode?.();
 
   // reset all flags
   window._gameModeId    = mode.id;
@@ -895,7 +916,7 @@ window.launchSelectedMode = () => {
   const badge = document.getElementById('q-mode-badge');
   if (badge) { badge.innerText=mode.title; badge.style.display='inline-flex'; }
 
-  window.startQuiz(_gmCat, _gmSub, false);
+  window.startQuiz?.(_gmCat, _gmSub, false);
 };
 
 
@@ -952,7 +973,6 @@ function scheduleNotifications() {
 window.scheduleNotifications = scheduleNotifications;
 
 // sendNotification defined above
-window.sendNotification = sendNotification;
 
 // تحقق من انكسار السلسلة وأرسل تنبيه
 function checkStreakNotification() {
