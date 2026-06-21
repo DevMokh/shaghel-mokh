@@ -103,7 +103,7 @@ export async function startDailyChallenge() {
   window.selectedCategory = 'تحدي اليوم';
   window.selectedSub = 'عام';
   navTo('quiz');
-  window.showQuestion();
+  window.showQuestion?.();
 }
 window.startDailyChallenge = startDailyChallenge;
 
@@ -146,7 +146,7 @@ export async function renderDailyChallenge() {
       : `<div class="daily-date">تحدي ${todayISO}</div>
          <div class="daily-countdown" id="daily-countdown-timer">${hh}:${mm}:${ss}</div>
          <div class="daily-desc">نفس الأسئلة لجميع اللاعبين اليوم</div>
-         <button onclick="window.startDailyChallenge()"
+         <button onclick="window.startDailyChallenge?.()"
            style="margin-top:14px;background:var(--grad);color:#000;border:none;border-radius:18px;
            padding:13px 32px;font-weight:900;font-size:15px;cursor:pointer;
            font-family:'Tajawal',sans-serif;border-bottom:3px solid rgba(0,0,0,.2)">ابدأ التحدي 🎯</button>`;
@@ -231,12 +231,12 @@ export async function startWeeklyChallenge() {
   window.selectedCategory = 'التحدي الأسبوعي';
   window.selectedSub = 'عام';
   navTo('quiz');
-  window.showQuestion();
+  window.showQuestion?.();
 }
 window.startWeeklyChallenge = startWeeklyChallenge;
 
 export async function renderWeeklyChallenge() {
-  window.switchChallengeTab('weekly');
+  window.switchChallengeTab?.('weekly');
   const weekId = getWeekId();
   const d = window.gameData;
   const wc = d.weeklyChallenge || {};
@@ -298,7 +298,7 @@ export async function renderWeeklyChallenge() {
             🏆 إنجاز خاص
           </div>
         </div>
-        <button onclick="window.startWeeklyChallenge()"
+        <button onclick="window.startWeeklyChallenge?.()"
           style="background:var(--grad);color:#000;border:none;border-radius:18px;
           padding:14px 36px;font-weight:900;font-size:15px;cursor:pointer;
           font-family:'Tajawal',sans-serif;border-bottom:3px solid rgba(0,0,0,.2);
@@ -560,7 +560,7 @@ export function renderWeeklyTasksTab() {
             ${isDone
               ? `<span style="font-size:11px;font-weight:900;padding:4px 12px;border-radius:20px;
                   background:rgba(34,197,94,.12);color:#22c55e;white-space:nowrap">✅ منجزة</span>`
-              : `<button onclick="window.claimWeeklyTask('${t.id}')" ${t.current < t.goal ? 'disabled' : ''}
+              : `<button onclick="window.claimWeeklyTask?.('${t.id}')" ${t.current < t.goal ? 'disabled' : ''}
                   style="font-size:11px;font-weight:900;padding:5px 13px;border-radius:14px;
                   background:${t.current >= t.goal ? 'var(--grad)' : 'rgba(255,255,255,.06)'};
                   color:${t.current >= t.goal ? '#000' : 'var(--text2)'};
@@ -757,13 +757,13 @@ export async function renderTournamentScreen() {
              <div style="color:#22c55e;font-weight:900;font-size:13px">✅ أنت مسجّل · المرحلة: ${tc.round}</div>
              <div style="color:rgba(255,255,255,.4);font-size:11px;margin-top:3px">نقاطك: ${tc.score}</div>
            </div>
-           <button onclick="window.startTournamentMatch()"
+           <button onclick="window.startTournamentMatch?.()"
              style="width:100%;padding:14px;background:linear-gradient(135deg,#ffd700,#ff8c00);color:#000;
              font-weight:900;border-radius:18px;font-size:14px;border:none;cursor:pointer;
              border-bottom:3px solid rgba(0,0,0,.2);font-family:'Tajawal',sans-serif">
              ⚔️ العب مباراتك الآن
            </button>`
-        : `<button onclick="window.registerTournament()"
+        : `<button onclick="window.registerTournament?.()"
              style="width:100%;padding:14px;background:linear-gradient(135deg,#ffd700,#ff8c00);color:#000;
              font-weight:900;border-radius:18px;font-size:14px;border:none;cursor:pointer;
              border-bottom:3px solid rgba(0,0,0,.2);font-family:'Tajawal',sans-serif">
