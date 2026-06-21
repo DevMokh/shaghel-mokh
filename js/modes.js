@@ -469,7 +469,7 @@ export async function create1v1() {
   let pool = [];
   try {
     if (typeof window.fetchQuestions === 'function') {
-      pool = await window.fetchQuestions(cat, sub);
+      pool = await window.fetchQuestions?.(cat, sub);
     } else {
       pool = await _fetchPool(cat, sub);
     }
@@ -480,7 +480,7 @@ export async function create1v1() {
   _cvRole = 'host';
 
   try {
-    await window.db_set(`artifacts/${APP_ID}/public/data/challenges/${_cvId}`, {
+    await window.db_set?.(`artifacts/${APP_ID}/public/data/challenges/${_cvId}`, {
       cat, sub, questions: _cvQs,
       host:  { uid: window.currentUser.uid, username: window.gameData?.username||'أنت', score:0, done:false },
       guest: null, status:'waiting', ts: Date.now()
@@ -502,14 +502,14 @@ export async function join1v1() {
   if (!window.currentUser) { showToast('❌ يجب تسجيل الدخول'); return; }
 
   try {
-    const snap = await window.db_get(`artifacts/${APP_ID}/public/data/challenges/${code}`);
+    const snap = await window.db_get?.(`artifacts/${APP_ID}/public/data/challenges/${code}`);
     if (!snap || !snap.exists()) { showToast('❌ كود غير موجود'); return; }
     const d = snap.data();
     if (d.status !== 'waiting') { showToast('❌ التحدي بدأ بالفعل'); return; }
 
     _cvId = code; _cvRole = 'guest'; _cvQs = d.questions;
 
-    await window.db_set(`artifacts/${APP_ID}/public/data/challenges/${code}`, {
+    await window.db_set?.(`artifacts/${APP_ID}/public/data/challenges/${code}`, {
       guest: { uid: window.currentUser.uid, username: window.gameData?.username||'ضيف', score:0, done:false },
       status:'ready'
     }, true);
@@ -523,7 +523,7 @@ window.join1v1 = join1v1;
 
 function _listen1v1(code) {
   if (_cvListener) { _cvListener(); _cvListener = null; }
-  _cvListener = window.db_snap(`artifacts/${APP_ID}/public/data/challenges/${code}`, snap => {
+  _cvListener = window.db_snap?.(`artifacts/${APP_ID}/public/data/challenges/${code}`, snap => {
     if (!snap?.exists()) return;
     const d = snap.data();
     const myK    = _cvRole === 'host' ? 'host' : 'guest';
@@ -628,7 +628,7 @@ export function _1v1Answer(i) {
     _cvMyScore++;
     if (navigator.vibrate) navigator.vibrate([12,8,12]);
     const myK = _cvRole === 'host' ? 'host' : 'guest';
-    window.db_set(`artifacts/${APP_ID}/public/data/challenges/${_cvId}`,
+    window.db_set?.(`artifacts/${APP_ID}/public/data/challenges/${_cvId}`,
       {[`${myK}.score`]: _cvMyScore}, true).catch(()=>{});
     const el = document.getElementById('1v1-my-score');
     if (el) { el.innerText = _cvMyScore; _pop(el); }
@@ -643,7 +643,7 @@ window._1v1Answer = _1v1Answer;
 
 async function _submitDone() {
   const myK = _cvRole === 'host' ? 'host' : 'guest';
-  await window.db_set(`artifacts/${APP_ID}/public/data/challenges/${_cvId}`,
+  await window.db_set?.(`artifacts/${APP_ID}/public/data/challenges/${_cvId}`,
     {[`${myK}.done`]:true,[`${myK}.score`]:_cvMyScore}, true).catch(()=>{});
   const area = document.getElementById('1v1-q-area');
   if (area) area.innerHTML = `
