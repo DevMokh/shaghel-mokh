@@ -39,22 +39,12 @@
     }, 6000);
   });
 
-  // On-screen error reporter
+  // Global error logger
   window.addEventListener('error', (e) => {
     console.error('[AppError]', e.message, e.filename, e.lineno);
-    const d = document.createElement('div');
-    d.style.cssText = 'position:fixed;bottom:80px;left:10px;right:10px;background:#1a0000;color:#ff6b6b;padding:10px 14px;border-radius:12px;font-size:11px;font-weight:700;z-index:99999;border:1px solid #ff000055;direction:ltr;word-break:break-all';
-    d.textContent = '❌ ' + (e.filename||'').split('/').pop() + ':' + (e.lineno||0) + ' — ' + e.message;
-    document.body.appendChild(d);
-    setTimeout(() => d.remove(), 8000);
   });
   window.addEventListener('unhandledrejection', (e) => {
     console.error('[UnhandledPromise]', e.reason);
-    const d = document.createElement('div');
-    d.style.cssText = 'position:fixed;bottom:80px;left:10px;right:10px;background:#1a0800;color:#ffa500;padding:10px 14px;border-radius:12px;font-size:11px;font-weight:700;z-index:99999;border:1px solid #ff880055;direction:ltr;word-break:break-all';
-    d.textContent = '⚠️ ' + String(e.reason).slice(0,200);
-    document.body.appendChild(d);
-    setTimeout(() => d.remove(), 8000);
   });
 </script>
 </head>
@@ -851,7 +841,6 @@
   </div>
 </div>
 
-<script type="module" src="js/main.js"></script>
-<script type="module" src="js/features.js"></script>
+<script type="module" src="js/main.js?v=1782011398"></script>
 </body>
 </html>
