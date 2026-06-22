@@ -97,8 +97,9 @@
     <div id="screen-home" class="screen active" style="justify-content:center;align-items:center;text-align:center">
       <div style="position:relative;margin-bottom:22px;display:inline-block">
         
-        <img id="home-avatar" src="https://i.postimg.cc/qqTBP312/1000061201.png"
-          style="width:100px;height:100px;border-radius:30px;object-fit:cover;border:4px solid var(--accent);box-shadow:0 8px 24px rgba(251,191,36,.15);position:relative;z-index:10;display:block">
+        <div id="home-avatar" style="width:100px;height:100px;border-radius:30px;background:#fbbf24;display:flex;align-items:center;justify-content:center;border:4px solid var(--accent);box-shadow:0 8px 24px rgba(251,191,36,.15);position:relative;z-index:10">
+          <i id="home-avatar-icon" class="fas fa-brain" style="font-size:42px;color:#000"></i>
+        </div>
         <div id="home-avatar-frame" style="position:absolute;inset:-4px;border-radius:48px;pointer-events:none;z-index:11"></div>
         <div id="home-lvl-badge" style="position:absolute;bottom:-13px;left:50%;transform:translateX(-50%);background:var(--grad);color:#000;font-weight:900;font-size:12px;padding:5px 18px;border-radius:20px;z-index:20;border:3px solid var(--bg);white-space:nowrap;box-shadow:0 4px 15px rgba(251,191,36,.4)">المستوى 1</div>
       </div>
@@ -542,11 +543,19 @@
   </div>
 
   <div class="sb-center" style="padding:8px 16px 10px">
-    <div class="sb-avatar-ring" onclick="window.changeUsername()" style="width:76px;height:76px;margin-bottom:10px">
+    <div class="sb-avatar-ring" onclick="window.changeUsername()" style="width:76px;height:76px;margin-bottom:10px;position:relative">
       <div class="sb-avatar-inner" style="width:76px;height:76px;border-radius:24px">
-        <img id="side-avatar" src="https://i.postimg.cc/qqTBP312/1000061201.png" alt="avatar" style="width:76px;height:76px;border-radius:22px">
+        <div id="side-avatar" style="width:76px;height:76px;border-radius:22px;background:#fbbf24;display:flex;align-items:center;justify-content:center">
+          <i id="side-avatar-icon" class="fas fa-brain" style="font-size:32px;color:#000"></i>
+        </div>
         <div id="side-avatar-frame" class="sb-avatar-frame"></div>
       </div>
+      <button onclick="window.openAvatarCustomizer(); event.stopPropagation();"
+        style="position:absolute;bottom:-2px;left:-2px;width:26px;height:26px;border-radius:50%;background:var(--accent);
+        border:2px solid var(--bg);color:#000;font-size:11px;display:flex;align-items:center;justify-content:center;
+        cursor:pointer;z-index:5">
+        <i class="fas fa-pen"></i>
+      </button>
     </div>
     <h3 id="side-name" class="sb-username" style="font-size:16px;margin-bottom:4px">لاعب</h3>
     <span id="side-rank" class="sb-rank-pill" style="font-size:10px;padding:3px 10px">باحث عن المعرفة</span>
@@ -675,6 +684,12 @@
   <div class="m-sheet" onclick="event.stopPropagation()">
     <div class="m-handle"></div><div class="m-head"><span class="m-title">📅 مهام اليوم</span><button class="m-x" onclick="window.closeModal('tasks')">✕</button></div>
     <div class="m-body" id="tasks-body"></div>
+  </div>
+</div>
+<div id="modal-avatar" class="m-overlay" onclick="window.closeModal('avatar')">
+  <div class="m-sheet" onclick="event.stopPropagation()">
+    <div class="m-handle"></div><div class="m-head"><span class="m-title">🎨 تخصيص الأفاتار</span><button class="m-x" onclick="window.closeModal('avatar')">✕</button></div>
+    <div class="m-body" id="avatar-body"></div>
   </div>
 </div>
 <div id="modal-achv" class="m-overlay" onclick="window.closeModal('achv')">
