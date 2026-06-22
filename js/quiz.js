@@ -554,7 +554,7 @@ async function finishQuiz() {
     if (window.gameData.seasonData) window.gameData.seasonData.challengesDone = (window.gameData.seasonData.challengesDone||0)+1;
     if (window.firebaseReady && window.currentUser) {
       try {
-        (await window.db_set?.\() && (window.db_set?.
+        await window.db_set?.(
           `artifacts/${APP_ID}/public/data/daily_${new Date().toISOString().slice(0,10)}/${window.currentUser.uid}`,
           { username:window.gameData.username, avatar:window.gameData.avatar, score:quizCorrect, uid:window.currentUser.uid, ts:Date.now() },
           true
@@ -574,7 +574,7 @@ async function finishQuiz() {
     showToast(`🏆 أنهيت التحدي الأسبوعي! +${reward} عملة!`, 5000);
     if (window.firebaseReady && window.currentUser) {
       try {
-        (await window.db_set?.\() && (window.db_set?.
+        await window.db_set?.(
           `artifacts/${APP_ID}/public/data/weekly_${weekId}/${window.currentUser.uid}`,
           { username:window.gameData.username, score:quizCorrect, level:window.gameData.level, uid:window.currentUser.uid, ts:Date.now() },
           true
