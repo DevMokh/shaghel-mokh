@@ -63,6 +63,8 @@ export function getDefaultData() {
     username: "العبقري المجهول",
     avatar: "https://i.postimg.cc/qqTBP312/1000061201.png",
     avatarFrame: "none",
+    avatarIcon: "brain",
+    avatarBg: "gold",
     accentColor: "#fbbf24",
     message: "",
     inventory: { delete: 5, skip: 5, hint: 5 },
