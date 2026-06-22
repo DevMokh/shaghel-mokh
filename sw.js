@@ -75,6 +75,9 @@ self.addEventListener('activate', event => {
 
 // ── FETCH ────────────────────────────────────────────────────
 self.addEventListener('fetch', event => {
+  const { request } = event;
+  const url = new URL(request.url);
+
   // JS files — network first دايماً (بدون cache عشان نضمن أحدث نسخة)
   if (url.pathname.endsWith('.js')) {
     event.respondWith(
@@ -86,9 +89,6 @@ self.addEventListener('fetch', event => {
     );
     return;
   }
-
-  const { request } = event;
-  const url = new URL(request.url);
 
   // 1. Firebase / Firestore → Network Only
   if (
