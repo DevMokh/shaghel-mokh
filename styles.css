@@ -1,3 +1,55 @@
+/* ════════════════════════════════════════════════════
+   DESIGN SYSTEM — شغل مخك v4.0
+   كل القيم من هنا بس — مش هنكتب أرقام hard-coded تاني
+════════════════════════════════════════════════════ */
+:root {
+  /* ── Spacing ── */
+  --sp-1: 4px;   --sp-2: 8px;   --sp-3: 12px;
+  --sp-4: 16px;  --sp-5: 20px;  --sp-6: 24px;
+
+  /* ── Border Radius ── */
+  --r-sm: 10px;  --r-md: 16px;  --r-lg: 22px;
+  --r-xl: 28px;  --r-pill: 99px;
+
+  /* ── Font Sizes ── */
+  --fs-xs: 9px;   --fs-sm: 11px;  --fs-md: 13px;
+  --fs-lg: 16px;  --fs-xl: 20px;  --fs-2xl: 26px;
+
+  /* ── Font Weights ── */
+  --fw-regular: 400;  --fw-bold: 700;  --fw-black: 900;
+
+  /* ── Colors ── */
+  --c-gold:    #fbbf24;
+  --c-gold-dk: #d97706;
+  --c-green:   #22c55e;
+  --c-red:     #ef4444;
+  --c-blue:    #3b82f6;
+  --c-purple:  #8b5cf6;
+  --c-cyan:    #06b6d4;
+  --c-orange:  #f97316;
+
+  /* ── Surfaces ── */
+  --s-card:    rgba(255,255,255,.05);
+  --s-overlay: rgba(0,0,0,.82);
+  --s-subtle:  rgba(255,255,255,.04);
+
+  /* ── Borders ── */
+  --b-subtle: 1px solid rgba(255,255,255,.06);
+  --b-gold:   1px solid rgba(251,191,36,.2);
+  --b-green:  1px solid rgba(34,197,94,.2);
+  --b-red:    1px solid rgba(239,68,68,.2);
+
+  /* ── Shadows ── */
+  --shadow-sm: 0 2px 8px rgba(0,0,0,.2);
+  --shadow-md: 0 4px 16px rgba(0,0,0,.3);
+  --shadow-gold: 0 4px 16px rgba(251,191,36,.2);
+
+  /* ── Transitions ── */
+  --t-fast: .12s ease;
+  --t-base: .22s ease;
+  --t-slow: .35s cubic-bezier(.4,0,.2,1);
+}
+
 /* ═══════════════════════════════════════════════
    VARIABLES & RESET
 ═══════════════════════════════════════════════ */
@@ -1272,3 +1324,52 @@ button, .btn-option, .nav-link, .map-node,
 .frame-item.active[data-rarity="epic"] {
   box-shadow: 0 0 16px rgba(167,139,250,.3);
 }
+
+/* ════ UTILITIES — استخدم بدل inline styles ════ */
+.u-card  { background:var(--card); border-radius:var(--r-lg); border:var(--b-subtle); }
+.u-gold  { color:var(--c-gold); }
+.u-green { color:var(--c-green); }
+.u-red   { color:var(--c-red); }
+.u-dim   { color:var(--text2); }
+.u-bold  { font-weight:var(--fw-bold); }
+.u-black { font-weight:var(--fw-black); }
+.u-sm    { font-size:var(--fs-sm); }
+.u-md    { font-size:var(--fs-md); }
+.u-lg    { font-size:var(--fs-lg); }
+.u-gap-1 { gap:var(--sp-1); } .u-gap-2{gap:var(--sp-2);}
+.u-gap-3 { gap:var(--sp-3); } .u-gap-4{gap:var(--sp-4);}
+.u-p-3   { padding:var(--sp-3); }
+.u-p-4   { padding:var(--sp-4); }
+.u-mb-3  { margin-bottom:var(--sp-3); }
+.u-mb-4  { margin-bottom:var(--sp-4); }
+.u-r-md  { border-radius:var(--r-md); }
+.u-r-lg  { border-radius:var(--r-lg); }
+
+/* ════ BUTTON BASE ════ */
+.btn { display:inline-flex;align-items:center;justify-content:center;gap:var(--sp-2);
+  cursor:pointer;border:none;font-weight:var(--fw-black);
+  transition:transform var(--t-fast),opacity var(--t-fast);
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;}
+.btn:active { transform:scale(.95); }
+.btn-gold   { background:var(--grad);color:#000;border-bottom:3px solid rgba(0,0,0,.2);
+  box-shadow:var(--shadow-gold);}
+.btn-ghost  { background:var(--s-subtle);color:var(--text2);border:var(--b-subtle);}
+.btn-danger { background:rgba(239,68,68,.1);color:var(--c-red);border:var(--b-red);}
+.btn-green  { background:rgba(34,197,94,.1);color:var(--c-green);border:var(--b-green);}
+
+/* ════ CARD BASE ════ */
+.card-base { background:var(--card);border-radius:var(--r-lg);border:var(--b-subtle);
+  padding:var(--sp-4);}
+
+/* ════ BADGE ════ */
+.badge { display:inline-flex;align-items:center;gap:4px;padding:3px 8px;
+  border-radius:var(--r-pill);font-size:var(--fs-xs);font-weight:var(--fw-black);}
+.badge-gold  { background:rgba(251,191,36,.1);color:var(--c-gold);border:var(--b-gold);}
+.badge-green { background:rgba(34,197,94,.1);color:var(--c-green);border:var(--b-green);}
+.badge-red   { background:rgba(239,68,68,.1);color:var(--c-red);border:var(--b-red);}
+
+/* ════ SECTION LABEL ════ */
+.section-label {
+  font-size:var(--fs-xs);font-weight:var(--fw-black);
+  color:var(--text2);text-transform:uppercase;letter-spacing:.1em;
+  margin-bottom:var(--sp-2);}
