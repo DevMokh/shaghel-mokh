@@ -5,6 +5,7 @@ window._safeTimeout = (fn, ms) => { const t = setTimeout(fn, ms); window._active
 
 // js/ui.js
 import { ACCENT_COLORS, AVATAR_FRAMES, categoryConfig, getSeasonRank, getSeasonProgress } from './data.js';
+import { AVATAR_BG_COLORS, AVATAR_ICONS } from './features.js';
 import { showToast, playSound, openModal, closeModal, showConfirmDialog } from './helpers.js';
 import { saveData } from './data.js';
 import { db, APP_ID, getCurrentSeason, getWeekId } from './firebase.js';
@@ -55,10 +56,15 @@ function _doUpdateUI() {
   const xpFill = document.getElementById('side-xp-fill');
   if (xpFill) xpFill.style.width = Math.min(((d.xp || 0) / ((d.level || 1) * 1500)) * 100, 100) + '%';
 
-  const avatarSrc = d.avatar || 'https://i.postimg.cc/qqTBP312/1000061201.png';
-  ['home-avatar', 'side-avatar'].forEach(id => {
-    const img = document.getElementById(id);
-    if (img) img.src = avatarSrc;
+  const iconId = d.avatarIcon || 'brain';
+  const bgId   = d.avatarBg   || 'gold';
+  const iconClass = AVATAR_ICONS.find(i => i.id === iconId)?.icon || 'fa-brain';
+  const bgColor    = AVATAR_BG_COLORS.find(c => c.id === bgId)?.color || '#fbbf24';
+  [['home-avatar', 'home-avatar-icon'], ['side-avatar', 'side-avatar-icon']].forEach(([boxId, iconElId]) => {
+    const box = document.getElementById(boxId);
+    if (box) box.style.background = bgColor;
+    const i = document.getElementById(iconElId);
+    if (i) i.className = `fas ${iconClass}`;
   });
 
   const frameData = AVATAR_FRAMES.find(f => f.id === (d.avatarFrame || 'none')) || AVATAR_FRAMES[0];
