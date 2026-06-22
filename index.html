@@ -205,7 +205,7 @@
         <div class="timer-bar" style="margin-bottom:14px;flex-shrink:0"><div id="timer-bar-fill"></div></div>
 
         <div style="background:var(--card);padding:14px;border-radius:22px;border:1px solid rgba(255,255,255,.05);margin-bottom:14px;text-align:center;min-height:100px;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;position:relative">
-          <div id="q-cat-badge" style="background:rgba(251,191,36,.1);color:var(--accent);font-size:10px;font-weight:900;padding:3px 12px;border-radius:20px;margin-bottom:10px;letter-spacing:.05em">فئة</div>
+          <div id="q-cat-badge" class="badge badge-gold" style="font-size:10px;font-weight:900;padding:3px 12px;border-radius:20px;margin-bottom:10px;letter-spacing:.05em">فئة</div>
           <h3 id="q-text" style="font-size:16px;font-weight:700;line-height:1.5">جاري التحضير...</h3>
           <button id="btn-analyze" onclick="window.askAIAnalysis()" style="position:absolute;bottom:-14px;left:50%;transform:translateX(-50%);background:#2563eb;color:#fff;padding:7px 18px;border-radius:18px;font-size:11px;font-weight:900;border:none;cursor:pointer;z-index:10;display:none;white-space:nowrap">تحليل ذكي 🤖</button>
         </div>
@@ -362,7 +362,7 @@
         <h2 style="font-size:19px;font-weight:900;display:flex;align-items:center;gap:8px">
           <i class="fas fa-chart-bar" style="color:#f97316;font-size:20px"></i> إحصائياتي
         </h2>
-        <button onclick="window.showPlayerCard()" style="background:rgba(251,191,36,.1);color:var(--accent);border:1px solid rgba(251,191,36,.2);border-radius:14px;padding:8px 14px;font-weight:900;font-size:12px;cursor:pointer">بطاقتي 🪪</button>
+        <button onclick="window.showPlayerCard()" class="badge badge-gold" style="border:1px solid rgba(251,191,36,.2);border-radius:14px;padding:8px 14px;font-weight:900;font-size:12px;cursor:pointer">بطاقتي 🪪</button>
       </div>
 
       <div style="display:flex;gap:7px;margin-bottom:14px;flex-shrink:0">
@@ -421,7 +421,7 @@
         </div>
         <!-- رسم بياني دقة التصنيفات -->
         <div style="background:var(--card);border:1px solid rgba(255,255,255,.05);border-radius:18px;padding:14px;margin-top:10px">
-          <div style="font-size:10px;font-weight:900;color:var(--text2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px">
+          <div class="section-label" style="margin-bottom:0;margin-bottom:12px">
             <i class="fas fa-chart-bar" style="color:var(--accent);margin-left:5px"></i> دقة الإجابات بالتصنيف
           </div>
           <div id="stats-accuracy-chart"></div>
@@ -841,6 +841,6 @@
   </div>
 </div>
 
-<script type="module" src="js/main.js?v=1782011398"></script>
+<script type="module" src="js/main.js"></script>
 </body>
 </html>
