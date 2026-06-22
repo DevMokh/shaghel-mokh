@@ -374,7 +374,7 @@ export async function toggleReady() {
   const roomRef = getRoomRef(currentRoomId);
   try {
     let snap;
-    try { snap = const snap = await getDoc(roomRef);
+    try { snap = await getDoc(roomRef);
     } catch(e) { console.error("[Firebase]", e); return; }
     if (!snap.exists()) return;
     const currentReady = snap.data()?.players?.[window.currentUser.uid]?.ready || false;
