@@ -3,7 +3,7 @@
 //  !! غيّر رقم VERSION كل ما ترفع تحديث جديد !!
 // ═══════════════════════════════════════════════════════════
 
-const VERSION = 'v50';
+const VERSION = 'v51';
 const CACHE_VERSION   = `shaghel-mokh-${VERSION}`;
 const STATIC_CACHE    = `${CACHE_VERSION}-static`;
 const DYNAMIC_CACHE   = `${CACHE_VERSION}-dynamic`;
@@ -75,6 +75,18 @@ self.addEventListener('activate', event => {
 
 // ── FETCH ────────────────────────────────────────────────────
 self.addEventListener('fetch', event => {
+  // JS files — network first دايماً (بدون cache عشان نضمن أحدث نسخة)
+  if (url.pathname.endsWith('.js')) {
+    event.respondWith(
+      fetch(request).then(r => {
+        const clone = r.clone();
+        caches.open(STATIC_CACHE).then(c => c.put(request, clone));
+        return r;
+      }).catch(() => caches.match(request))
+    );
+    return;
+  }
+
   const { request } = event;
   const url = new URL(request.url);
 
