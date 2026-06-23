@@ -235,6 +235,26 @@ export async function startWeeklyChallenge() {
 }
 window.startWeeklyChallenge = startWeeklyChallenge;
 
+// ══════════════════════════════════════════════════════════════════
+// التبديل بين تابات شاشة التحديات (أسبوعي / الموسم / المهام)
+// ══════════════════════════════════════════════════════════════════
+export function switchChallengeTab(tab) {
+  document.querySelectorAll('.ch-tab-btn').forEach(btn => {
+    const active = btn.dataset.ctab === tab;
+    btn.style.background  = active ? 'rgba(251,191,36,.12)' : 'rgba(255,255,255,.05)';
+    btn.style.color       = active ? 'var(--accent)'         : 'var(--text2)';
+    btn.style.borderColor = active ? 'rgba(251,191,36,.2)'   : 'rgba(255,255,255,.07)';
+  });
+  const panelDisplay = { weekly: 'flex', season: 'block', wtasks: 'block' };
+  Object.keys(panelDisplay).forEach(t => {
+    const panel = document.getElementById(`ch-tab-${t}`);
+    if (panel) panel.style.display = (t === tab) ? panelDisplay[t] : 'none';
+  });
+  if (tab === 'season') renderSeasonTab();
+  if (tab === 'wtasks') renderWeeklyTasksTab();
+}
+window.switchChallengeTab = switchChallengeTab;
+
 export async function renderWeeklyChallenge() {
   window.switchChallengeTab?.('weekly');
   const weekId = getWeekId();
@@ -629,6 +649,24 @@ export function renderWeeklyTasksTab() {
     }
   }
 }
+
+// ══════════════════════════════════════════════════════════════════
+// استلام مكافأة مهمة أسبوعية بعد اكتمالها
+// ══════════════════════════════════════════════════════════════════
+export function claimWeeklyTask(id) {
+  const d = window.gameData;
+  if (!d) return;
+  const task = (d.weeklyTasks || []).find(t => t.id === id);
+  if (!task || task.claimed || task.current < task.goal) return;
+  task.claimed = true;
+  d.coins += task.reward;
+  window.saveData?.();
+  window.showToast?.(`✅ تم استلام ${task.reward} عملة!`);
+  if (navigator.vibrate) navigator.vibrate([20, 10, 20]);
+  renderWeeklyTasksTab();
+  window.updateUI?.();
+}
+window.claimWeeklyTask = claimWeeklyTask;
 
 
 // ══════════════════════════════════════════════════════════════════
