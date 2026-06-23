@@ -94,12 +94,6 @@ import {
 // ══════════════════════════════════════════════════════════════════
 
 // UI والتنقل
-window.navTo = navTo;
-window.updateUI = updateUI;
-window.renderMap = renderMap;
-window.renderShop = renderShop;
-window.renderLeaderboard = renderLeaderboard;
-
 // ── cache بسيط للـ leaderboard لتجنب re-fetch غير ضروري ──
 window._lbCache = {};
 window._lbCacheTime = {};
@@ -124,16 +118,6 @@ window.renderLeaderboard = async (tab = 'global') => {
     window._lbCacheTime[cacheKey] = Date.now();
   }
 };
-window.renderDailyChallenge = renderDailyChallenge;
-window.renderWeeklyChallenge = renderWeeklyChallenge;
-window.renderSeasonTab = renderSeasonTab;
-window.renderStats = renderStats;
-window.switchStatsTab = switchStatsTab;
-window.switchChallengeTab = switchChallengeTab;
-window.switchLeaderboard = (tab) => renderLeaderboard(tab);
-window.showShopTab = showShopTab;
-window.renderColorPicker = renderColorPicker;
-window.updateHomeStreak = updateHomeStreak;
 
 // أوضاع اللعب الجديدة — dynamic import
 import('./modes.js').then(m => {
