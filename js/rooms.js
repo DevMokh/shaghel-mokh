@@ -2,7 +2,7 @@
 import { db, APP_ID } from './firebase.js';
 import { showToast, escapeHtml, playSound } from './helpers.js';
 import { navTo, updateUI } from './ui.js';
-import { startQuiz, currentQuestions, currentIdx, quizCorrect, quizWrong, quizCoins, quizXP, isRoomGame, selectedCategory, selectedSub } from './quiz.js';
+import { startQuiz } from './quiz.js';
 import { saveData, categoryConfig, updateDailyTask, updateWeeklyTask, addSeasonXP } from './data.js';
 
 // ═══ Listener Cleanup System ═══
@@ -450,19 +450,7 @@ export async function startRoomGame() {
       subName,
     });
 
-    window.currentQuestions = qs;
-    window.currentIdx = 0;
-    window.quizCorrect = 0;
-    window.quizWrong = 0;
-    window.quizCoins = 0;
-    window.quizXP = 0;
-    window.isRoomGame = true;
-    window.isDailyChallenge = false;
-    window.selectedCategory = catName;
-    window.selectedSub = subName;
-
-    navTo('quiz');
-    window.showQuestion?.();
+    startQuiz(catName, subName, false, true, false, qs);
   } catch (e) {
     showToast('❌ ' + e.message);
     if (btn) {
@@ -478,20 +466,8 @@ function startRoomGameAsPlayer(room) {
   if (window._roomGameStarted) return;
   window._roomGameStarted = true;
 
-  window.currentQuestions = room.questions;
-  window.currentIdx = 0;
-  window.quizCorrect = 0;
-  window.quizWrong = 0;
-  window.quizCoins = 0;
-  window.quizXP = 0;
-  window.isRoomGame = true;
-  window.isDailyChallenge = false;
-  window.selectedCategory = room.catName || 'غرفة';
-  window.selectedSub = room.subName || '';
-
   showToast('🎮 اللعبة بدأت!');
-  navTo('quiz');
-  window.showQuestion?.();
+  startQuiz(room.catName || 'غرفة', room.subName || '', false, true, false, room.questions);
 }
 
 // مزامنة النتيجة أثناء اللعبة
