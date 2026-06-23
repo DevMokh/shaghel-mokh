@@ -4,7 +4,7 @@ import { showToast, playSound } from './helpers.js';
 import { startQuiz } from './quiz.js';
 import { navTo, updateUI } from './ui.js';
 import { db, APP_ID, getCurrentSeason, getWeekId } from './firebase.js';
-import { saveData, getSeasonRank, getSeasonProgress, addSeasonXP } from './data.js';
+import { saveData, getSeasonRank, getSeasonProgress, addSeasonXP, categoryConfig } from './data.js';
 import {
   collection,
   getDocs,
@@ -16,23 +16,7 @@ import {
   updateDoc,
 } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-// ── تصنيفات اللعبة الكاملة — يشمل الـ 4 المحلية الجديدة ──────────
-// ملاحظة: يُستخدم محلياً هنا فقط للـ seed، البيانات الحقيقية في data.js
-const categoryConfig = {
-  islamic: { name: "إسلاميات",        subs: ["قصص الأنبياء", "القرآن الكريم", "السيرة النبوية", "الفقه الميسر"] },
-  egypt:   { name: "تاريخ مصر",       subs: ["الفراعنة", "مصر الحديثة", "آثار النوبة", "ثورات مصر"] },
-  tech:    { name: "تقنية",           subs: ["برمجة", "ذكاء اصطناعي", "أمن سيبراني", "تاريخ الحواسيب"] },
-  science: { name: "علوم وفضاء",      subs: ["الفضاء", "جسم الإنسان", "الكيمياء", "الفيزياء الكمية"] },
-  geo:     { name: "جغرافيا",         subs: ["عواصم", "أعلام", "عجائب الدنيا", "تضاريس الأرض"] },
-  sports:  { name: "رياضة",           subs: ["كرة قدم", "أساطير", "الأولمبياد", "كأس العالم"] },
-  puzzles: { name: "ألغاز",           subs: ["منطق", "أحجيات", "رياضيات", "ذكاء بصري"] },
-  food:    { name: "طعام",            subs: ["أطباق عالمية", "حلويات", "توابل", "فواكه نادرة"] },
-  // ── التصنيفات المحلية الجديدة ──────────────────────────────────
-  cairo:   { name: "أحياء القاهرة",   subs: ["وسط البلد", "المعادي والزمالك", "الإسكندرية", "مدن جديدة"] },
-  words:   { name: "كلمات مصرية",     subs: ["أمثال شعبية", "كلمات قبطية", "عامية قديمة", "ألقاب ومسميات"] },
-  music:   { name: "موسيقى وأغاني",   subs: ["أغاني الزمن الجميل", "فيروز وأم كلثوم", "نجوم الـ 80s", "مهرجانات"] },
-  cinema:  { name: "سينما وتليفزيون", subs: ["أفلام الـ 90s", "نجوم الشاشة", "مسلسلات رمضان", "كلاكيت زمان"] },
-};
+// ── تصنيفات اللعبة الكاملة — مصدر واحد دلوقتي من data.js (مش نسخة محلية) ──
 
 // قائمة التصنيفات والأقسام الكاملة — بتُستخدم في الـ seed للاختيار اليومي والأسبوعي
 const ALL_CATS      = Object.keys(categoryConfig);
@@ -92,7 +76,18 @@ export async function startDailyChallenge() {
     const hb = (parseInt(seed + b.t?.slice(0, 2) || '0', 36) || 1) % 100;
     return ha - hb;
   }).slice(0, 10);
-  startQuiz('تحدي اليوم', 'عام', true, false, false, seeded);
+  window.currentQuestions = seeded;
+  window.currentIdx = 0;
+  window.quizCorrect = 0;
+  window.quizWrong = 0;
+  window.quizCoins = 0;
+  window.quizXP = 0;
+  window.isDailyChallenge = true;
+  window.isRoomGame = false;
+  window.selectedCategory = 'تحدي اليوم';
+  window.selectedSub = 'عام';
+  navTo('quiz');
+  window.showQuestion?.();
 }
 window.startDailyChallenge = startDailyChallenge;
 
@@ -208,7 +203,19 @@ export async function startWeeklyChallenge() {
     const hb = (parseInt(weekSeed + b.t?.slice(0, 2) || '0', 36) || 1) % 100;
     return ha - hb;
   }).slice(0, 10);
-  startQuiz('التحدي الأسبوعي', 'عام', false, false, true, seeded);
+  window.currentQuestions = seeded;
+  window.currentIdx = 0;
+  window.quizCorrect = 0;
+  window.quizWrong = 0;
+  window.quizCoins = 0;
+  window.quizXP = 0;
+  window.isWeeklyChallenge = true;
+  window.isDailyChallenge = false;
+  window.isRoomGame = false;
+  window.selectedCategory = 'التحدي الأسبوعي';
+  window.selectedSub = 'عام';
+  navTo('quiz');
+  window.showQuestion?.();
 }
 window.startWeeklyChallenge = startWeeklyChallenge;
 
