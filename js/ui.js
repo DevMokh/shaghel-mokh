@@ -513,30 +513,7 @@ function renderFramesShop(c) {
   c.appendChild(grid);
 }
 
-window.handleFrameClick = frame => {
-  const owned = frame.id === 'none' || (window.gameData.ownedFrames || []).includes(frame.id);
-  if (owned) {
-    window.gameData.avatarFrame = frame.id;
-    updateUI(); saveData(); renderShop('frames');
-    showToast(`✅ تم تفعيل إطار: ${frame.name}`);
-  } else {
-    if (window.gameData.coins < frame.price) { showToast('❌ رصيدك غير كافٍ'); return; }
-    showConfirmDialog({
-      icon: '🖼️', title: 'شراء الإطار', msg: `${frame.name}\nالسعر: ${frame.price} 💰`,
-      okText: 'شراء', okClass: 'ok',
-      onOk: () => {
-        window.gameData.coins -= frame.price;
-        if (!window.gameData.ownedFrames) window.gameData.ownedFrames = [];
-        window.gameData.ownedFrames.push(frame.id);
-        window.gameData.avatarFrame = frame.id;
-        playSound('snd-buy');
-        try { confetti({ particleCount: 40, spread: 50 }); } catch(e) {}
-        updateUI(); saveData(); renderShop('frames');
-        showToast(`✅ تم شراء وتفعيل: ${frame.name}`);
-      }
-    });
-  }
-};
+// handleFrameClick الفعلية موجودة في main.js
 
 function renderThemesShop(c) {
   c.innerHTML = `
@@ -900,53 +877,11 @@ function renderStatsAchievements() {
 }
 
 // ══════════════════════════════════════════════════════════════════
-// Sidebar & Settings
+// Sidebar & Settings & بطاقة اللاعب — الدوال الفعلية موجودة في main.js
+// (toggleSidebar, toggleSettings, toggleTheme, toggleSound, changeUsername,
+//  saveMessageDebounced, showDailyTasksModal, showAchievementsModal,
+//  showPlayerCard, sharePlayerCard)
 // ══════════════════════════════════════════════════════════════════
-window.toggleSidebar = () => {
-  const s = document.getElementById('sidebar');
-  const o = document.getElementById('sb-overlay');
-  const open = s.classList.toggle('open');
-  o.style.display = open ? 'block' : 'none';
-  if (open) { updateUI(); renderColorPicker(); }
-};
-
-window.toggleSettings = () => {
-  const panel = document.getElementById('settings-panel');
-  const arrow = document.getElementById('settings-arrow');
-  const dot = document.getElementById('settings-dot');
-  const open = panel.classList.toggle('open');
-  if (arrow) arrow.style.transform = open ? 'rotate(90deg)' : '';
-  if (dot) dot.style.opacity = open ? '1' : '0';
-};
-
-window.toggleTheme = () => {
-  window.gameData.theme = window.gameData.theme === 'dark' ? 'light' : 'dark';
-  updateUI(); saveData();
-};
-
-window.toggleSound = () => {
-  window.gameData.soundEnabled = !(window.gameData.soundEnabled !== false);
-  updateUI(); saveData();
-  showToast(window.gameData.soundEnabled ? '🔊 الصوت مفعّل' : '🔇 الصوت مكتوم');
-};
-
-window.changeUsername = async () => {
-  const name = await window.showInputDialog(window.gameData.username);
-  if (name === null) return;
-  if (name.length >= 3 && name.length <= 15) {
-    window.gameData.username = name;
-    await saveData(); updateUI();
-    showToast('✅ تم تغيير الاسم!');
-  } else if (name.length > 0) showToast('❌ الاسم يجب 3-15 حرفاً');
-};
-
-window.saveMessageDebounced = () => {
-  clearTimeout(window._msgDebounce);
-  window._msgDebounce = setTimeout(() => {
-    window.gameData.message = document.getElementById('my-message-input').value.trim();
-    saveData();
-  }, 800);
-};
 
 export function renderColorPicker() {
   const container = document.getElementById('theme-color-picker');
@@ -980,75 +915,3 @@ export function showShopTab(tab) {
   renderShop(tab);
 }
 window.showShopTab = showShopTab;
-window.showDailyTasksModal = () => {
-  const d = window.gameData;
-  let html = '';
-  d.dailyTasks.forEach(t => {
-    const pct = Math.min((t.current / t.goal) * 100, 100);
-    html += `<div class="task-card ${t.claimed ? 'done' : ''}">
-      <div class="task-top">
-        <span class="task-text">${t.text}</span>
-        <span class="task-badge ${t.claimed ? 'done-b' : 'pend-b'}">${t.claimed ? '✅ منجزة' : `+${t.reward} 💰`}</span>
-      </div>
-      <div class="task-prog">
-        <div class="task-bar"><div class="task-fill ${t.claimed ? 'done-f' : ''}" style="width:${pct}%"></div></div>
-        <span class="task-cnt">${t.current}/${t.goal}</span>
-      </div>
-    </div>`;
-  });
-  document.getElementById('tasks-body').innerHTML = html;
-  openModal('tasks');
-};
-
-window.showAchievementsModal = () => {
-  const d = window.gameData;
-  const earned = d.achievements.filter(a => a.earned).length;
-  let html = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;padding:0 2px">
-    <span style="font-size:13px;font-weight:700;color:var(--text2)">المفتوح</span>
-    <span style="font-size:13px;font-weight:900;color:var(--accent)">${earned}/${d.achievements.length}</span>
-  </div><div class="achv-grid">`;
-  d.achievements.forEach(a => {
-    html += `<div class="achv-card ${a.earned ? 'unlocked' : ''}">
-      <div class="achv-icon ${a.earned ? 'earned' : 'locked'}">${a.earned ? a.icon : '🔒'}</div>
-      <div><div class="achv-name">${a.text}</div>
-      <div class="achv-status ${a.earned ? 'done' : 'locked'}">${a.earned ? '✦ مكتسب' : 'مغلق'}</div></div>
-    </div>`;
-  });
-  document.getElementById('achv-body').innerHTML = html + '</div>';
-  openModal('achv');
-};
-
-window.showPlayerCard = () => {
-  const d = window.gameData;
-  const season = getCurrentSeason();
-  const frame = AVATAR_FRAMES.find(f => f.id === (d.avatarFrame || 'none')) || AVATAR_FRAMES[0];
-  document.getElementById('player-card-content').innerHTML = `
-    <div class="player-card">
-      <div class="card-bg-glow"></div>
-      <img src="${d.avatar}" class="card-avatar" style="${frame.style || ''}">
-      <div class="card-name">${d.username}</div>
-      <div style="text-align:center;margin-bottom:14px"><span class="card-rank">${d.rank}</span></div>
-      <div class="card-stats">
-        <div class="card-stat"><span class="card-stat-val">${d.level}</span><span class="card-stat-lbl">المستوى</span></div>
-        <div class="card-stat"><span class="card-stat-val">${d.stats?.correctAnswers || 0}</span><span class="card-stat-lbl">صحيحة</span></div>
-        <div class="card-stat"><span class="card-stat-val">${d.stats?.maxStreak || 0}</span><span class="card-stat-lbl">أعلى سلسلة</span></div>
-      </div>
-      <div class="card-season">
-        <span class="card-season-label">🏅 موسم ${season}</span>
-        <span class="card-season-val">${d.xp || 0} XP</span>
-      </div>
-      <div style="text-align:center;margin-top:12px;font-size:11px;font-weight:700;color:rgba(255,255,255,.3)">شغل مخك · Ultra 4.0</div>
-    </div>`;
-  openModal('card');
-};
-
-window.sharePlayerCard = async () => {
-  const d = window.gameData;
-  const text = `🧠 شغل مخك\n👤 ${d.username} · المستوى ${d.level}\n🏆 ${d.rank}\n⭐ ${d.xp} XP\n✅ ${d.stats?.correctAnswers || 0} إجابة صحيحة\n🔥 أعلى سلسلة: ${d.stats?.maxStreak || 0}`;
-  if (navigator.share) {
-    try { await navigator.share({ title: 'بطاقتي في شغل مخك', text }); } catch(e) {}
-  } else {
-    await navigator.clipboard.writeText(text).catch(() => {});
-    showToast('📋 تم نسخ البطاقة!');
-  }
-};
