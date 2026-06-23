@@ -1,22 +1,7 @@
 // js/modes.js — أوضاع اللعب الجديدة: روليت + بطاقات + 1vs1
 import { db, APP_ID } from './firebase.js';
 import { showToast, playSound } from './helpers.js';
-
-
-const categoryConfig = {
-  islamic: { name:'إسلاميات',      fa:'fa-mosque',       color:'#f59e0b', icon:'🕌', subs:['فقه وعبادات','سيرة نبوية','قرآن كريم','أحاديث شريفة'] },
-  egypt:   { name:'تاريخ مصر',     fa:'fa-landmark',     color:'#ef4444', icon:'🏛️', subs:['فراعنة','العصر الإسلامي','مصر الحديثة','ثورات مصر'] },
-  tech:    { name:'تقنية',          fa:'fa-laptop-code',  color:'#3b82f6', icon:'💻', subs:['برمجة','ذكاء اصطناعي','شبكات','أجهزة'] },
-  science: { name:'علوم وفضاء',    fa:'fa-atom',         color:'#8b5cf6', icon:'🔬', subs:['فيزياء','كيمياء','أحياء','فلك'] },
-  geo:     { name:'جغرافيا',        fa:'fa-earth-africa', color:'#10b981', icon:'🌍', subs:['عواصم','أنهار وجبال','دول العالم','خرائط'] },
-  sports:  { name:'رياضة',          fa:'fa-futbol',       color:'#f97316', icon:'⚽', subs:['كرة قدم','كرة سلة','رياضات أخرى','أبطال'] },
-  puzzles: { name:'ألغاز',          fa:'fa-puzzle-piece', color:'#ec4899', icon:'🧩', subs:['ألغاز منطقية','رياضيات','معادلات','ألغاز لغوية'] },
-  food:    { name:'طعام',           fa:'fa-utensils',     color:'#84cc16', icon:'🍽️', subs:['مطبخ مصري','مطبخ عربي','مطبخ عالمي','مشروبات'] },
-  cairo:   { name:'أحياء القاهرة', fa:'fa-city',         color:'#06b6d4', icon:'🏙️', subs:['القاهرة القديمة','القاهرة الحديثة','ضواحي','شوارع'] },
-  words:   { name:'كلمات مصرية',   fa:'fa-comment-dots', color:'#a855f7', icon:'💬', subs:['أصول الكلمات','أمثال شعبية','لهجات','معاني'] },
-  music:   { name:'موسيقى وأغاني', fa:'fa-music',        color:'#f43f5e', icon:'🎵', subs:['كلاسيكيات','أغاني حديثة','موسيقيون','فرق'] },
-  cinema:  { name:'سينما وتليفزيون',fa:'fa-clapperboard', color:'#eab308', icon:'🎬', subs:['أفلام مصرية','مسلسلات','ممثلون','مخرجون'] },
-};
+import { categoryConfig } from './data.js';
 
 const COLORS = ['#f97316','#fbbf24','#22c55e','#60a5fa','#a78bfa','#f472b6',
                 '#34d399','#fb923c','#818cf8','#38bdf8','#4ade80','#e879f9'];
