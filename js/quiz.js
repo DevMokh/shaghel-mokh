@@ -41,19 +41,24 @@ const categoryConfig = {
 };
 
 // ── حالة الكويز ────────────────────────────────────────────────
-export let currentQuestions  = [];
-export let currentIdx        = 0;
-export let quizCorrect       = 0;
-export let quizWrong         = 0;
-export let quizCoins         = 0;
-export let quizXP            = 0;
-export let isDailyChallenge  = false;
-export let isRoomGame        = false;
-export let isWeeklyChallenge = false;
-export let selectedCategory  = '';
-export let selectedSub       = '';
-export let timerInterval     = null;
-export let timeLeft          = 15;
+// ملاحظة: الحالة دي بقت على window بدل module-scoped variables، عشان
+// ملفات تانية (challenges.js, rooms.js, main.js) بتقرأ/تكتب فيها عن طريق
+// window.currentQuestions وغيرها — قبل كده كانت بتكتب على window بس quiz.js
+// كان بيقرأ من متغير محلي مختلف تماماً، فكل التحديات اليومية/الأسبوعية/الغرف
+// وميزة استكمال الجولة المحفوظة كانت بتفشل بصمت.
+if (typeof window.currentQuestions  === 'undefined') window.currentQuestions  = [];
+if (typeof window.currentIdx        === 'undefined') window.currentIdx        = 0;
+if (typeof window.quizCorrect       === 'undefined') window.quizCorrect       = 0;
+if (typeof window.quizWrong         === 'undefined') window.quizWrong         = 0;
+if (typeof window.quizCoins         === 'undefined') window.quizCoins         = 0;
+if (typeof window.quizXP            === 'undefined') window.quizXP            = 0;
+if (typeof window.isDailyChallenge  === 'undefined') window.isDailyChallenge  = false;
+if (typeof window.isRoomGame        === 'undefined') window.isRoomGame        = false;
+if (typeof window.isWeeklyChallenge === 'undefined') window.isWeeklyChallenge = false;
+if (typeof window.selectedCategory  === 'undefined') window.selectedCategory  = '';
+if (typeof window.selectedSub       === 'undefined') window.selectedSub       = '';
+if (typeof window.timerInterval     === 'undefined') window.timerInterval     = null;
+if (typeof window.timeLeft          === 'undefined') window.timeLeft          = 15;
 let _TOTAL_TIME              = 15;
 
 // ══════════════════════════════════════════════
@@ -109,10 +114,10 @@ function getCachedQuestions(cat, sub) {
 // ══════════════════════════════════════════════
 // بدء الكويز
 // ══════════════════════════════════════════════
-export async function startQuiz(cat, sub, isDaily=false, isRoom=false, isWeekly=false) {
-  selectedCategory=cat; selectedSub=sub;
-  isDailyChallenge=isDaily; isRoomGame=isRoom; isWeeklyChallenge=isWeekly;
-  currentIdx=0; quizCorrect=0; quizWrong=0; quizCoins=0; quizXP=0;
+export async function startQuiz(cat, sub, isDaily=false, isRoom=false, isWeekly=false, presetQuestions=null) {
+  window.selectedCategory=cat; window.selectedSub=sub;
+  window.isDailyChallenge=isDaily; window.isRoomGame=isRoom; window.isWeeklyChallenge=isWeekly;
+  window.currentIdx=0; window.quizCorrect=0; window.quizWrong=0; window.quizCoins=0; window.quizXP=0;
 
   window._modeHeartsLeft = window._modeHearts || null;
   window._modeLevel = 1;
@@ -153,16 +158,20 @@ export async function startQuiz(cat, sub, isDaily=false, isRoom=false, isWeekly=
     modeBadge.style.display = modeBadge.innerText ? 'inline-flex' : 'none';
   }
 
-  // جلب الأسئلة
-  let pool = await fetchQuestions(cat, sub);
-  if (!pool.length) { showToast('❌ لم يتم العثور على أسئلة'); navTo('map'); return; }
-
-  const count = window._modeCustom?.questions || (window._modeEndless ? 50 : 10);
-  if (window._modeEndless) {
-    const rep = []; while(rep.length < 50) rep.push(...pool);
-    currentQuestions = rep.sort(() => 0.5 - Math.random()).slice(0, 50);
+  // جلب الأسئلة — أو استخدام مجموعة جاهزة (تحدي يومي/أسبوعي بـ seed موحّد لكل اللاعبين)
+  if (presetQuestions && presetQuestions.length) {
+    window.currentQuestions = presetQuestions;
   } else {
-    currentQuestions = pool.sort(() => 0.5 - Math.random()).slice(0, Math.min(count, pool.length));
+    let pool = await fetchQuestions(cat, sub);
+    if (!pool.length) { showToast('❌ لم يتم العثور على أسئلة'); navTo('map'); return; }
+
+    const count = window._modeCustom?.questions || (window._modeEndless ? 50 : 10);
+    if (window._modeEndless) {
+      const rep = []; while(rep.length < 50) rep.push(...pool);
+      window.currentQuestions = rep.sort(() => 0.5 - Math.random()).slice(0, 50);
+    } else {
+      window.currentQuestions = pool.sort(() => 0.5 - Math.random()).slice(0, Math.min(count, pool.length));
+    }
   }
   showQuestion();
 }
@@ -196,15 +205,15 @@ window.showQuestion = showQuestion;
 // رندر السؤال الفعلي
 // ══════════════════════════════════════════════
 function _renderQuestion() {
-  if (currentIdx >= currentQuestions.length) { finishQuiz(); return; }
+  if (window.currentIdx >= window.currentQuestions.length) { finishQuiz(); return; }
   startTimer();
 
-  const q = currentQuestions[currentIdx];
-  const total = currentQuestions.length;
+  const q = window.currentQuestions[window.currentIdx];
+  const total = window.currentQuestions.length;
 
-  document.getElementById('q-counter').innerText  = `السؤال ${currentIdx+1}/${total}`;
-  document.getElementById('q-progress').style.width = ((currentIdx+1)/total*100) + '%';
-  document.getElementById('q-percent').innerText  = Math.round((currentIdx+1)/total*100) + '%';
+  document.getElementById('q-counter').innerText  = `السؤال ${window.currentIdx+1}/${total}`;
+  document.getElementById('q-progress').style.width = ((window.currentIdx+1)/total*100) + '%';
+  document.getElementById('q-percent').innerText  = Math.round((window.currentIdx+1)/total*100) + '%';
   document.getElementById('q-text').innerText     = q.t;
   document.getElementById('analysis-container').style.display = 'none';
   document.getElementById('btn-analyze').style.display = 'none';
@@ -251,7 +260,7 @@ function startTimer() {
   _TOTAL_TIME = window._modeBlitz      ? 7
               : window._modeCustom?.time
               || (window._modeAscending ? Math.max(5, 15-((window._modeLevel||1)-1)*2) : 15);
-  timeLeft = _TOTAL_TIME;
+  window.timeLeft = _TOTAL_TIME;
 
   const tb   = document.getElementById('timer-box');
   const tf   = document.getElementById('timer-bar-fill');
@@ -259,18 +268,18 @@ function startTimer() {
   const CIRCUMFERENCE = 138; // 2π×22
 
   // إعادة التعيين
-  if (tb)   { tb.innerText = timeLeft; tb.classList.remove('warning'); tb.style.color = '#60a5fa'; }
+  if (tb)   { tb.innerText = window.timeLeft; tb.classList.remove('warning'); tb.style.color = '#60a5fa'; }
   if (tf)   { tf.style.transition='none'; tf.style.width='100%'; tf.style.background='linear-gradient(90deg,#22c55e,#fbbf24)'; }
   if (ring) { ring.style.strokeDashoffset='0'; ring.style.stroke='#f97316'; }
 
-  clearInterval(timerInterval);
-  timerInterval = setInterval(() => {
-    timeLeft--;
-    const pct = timeLeft / _TOTAL_TIME;
+  clearInterval(window.timerInterval);
+  window.timerInterval = setInterval(() => {
+    window.timeLeft--;
+    const pct = window.timeLeft / _TOTAL_TIME;
 
     if (tb) {
-      tb.innerText = timeLeft;
-      if (timeLeft <= 5) {
+      tb.innerText = window.timeLeft;
+      if (window.timeLeft <= 5) {
         tb.classList.add('warning');
         tb.style.color = '#ef4444';
       }
@@ -279,8 +288,8 @@ function startTimer() {
     // حلقة SVG
     if (ring) {
       ring.style.strokeDashoffset = String(CIRCUMFERENCE * (1 - pct));
-      ring.style.stroke = timeLeft <= 5 ? '#ef4444'
-                        : timeLeft <= Math.floor(_TOTAL_TIME*.4) ? '#fbbf24'
+      ring.style.stroke = window.timeLeft <= 5 ? '#ef4444'
+                        : window.timeLeft <= Math.floor(_TOTAL_TIME*.4) ? '#fbbf24'
                         : '#f97316';
     }
 
@@ -288,14 +297,14 @@ function startTimer() {
     if (tf) {
       tf.style.transition = 'width .9s linear';
       tf.style.width      = (pct * 100) + '%';
-      if (timeLeft <= 5)                   tf.style.background = 'linear-gradient(90deg,#dc2626,#ef4444)';
-      else if (timeLeft <= Math.floor(_TOTAL_TIME*.5)) tf.style.background = 'linear-gradient(90deg,#f59e0b,#fbbf24)';
+      if (window.timeLeft <= 5)                   tf.style.background = 'linear-gradient(90deg,#dc2626,#ef4444)';
+      else if (window.timeLeft <= Math.floor(_TOTAL_TIME*.5)) tf.style.background = 'linear-gradient(90deg,#f59e0b,#fbbf24)';
     }
 
-    if (timeLeft === 5) playSound('snd-warn');
+    if (window.timeLeft === 5) playSound('snd-warn');
 
-    if (timeLeft <= 0) {
-      clearInterval(timerInterval);
+    if (window.timeLeft <= 0) {
+      clearInterval(window.timerInterval);
       playSound('snd-timeout');
       if (navigator.vibrate) navigator.vibrate([80,40,80]);
       autoWrong();
@@ -304,10 +313,10 @@ function startTimer() {
 }
 
 function autoWrong() {
-  quizWrong++;
+  window.quizWrong++;
   const btns = document.querySelectorAll('.btn-option');
   btns.forEach(b => b.disabled = true);
-  const q = currentQuestions[currentIdx];
+  const q = window.currentQuestions[window.currentIdx];
   if (btns[q.c]) btns[q.c].classList.add('correct');
 
   // إيقاف حلقة التايمر بصريًا
@@ -339,14 +348,14 @@ function _loseHeart() {
 // اختيار الإجابة
 // ══════════════════════════════════════════════
 export function selectAnswer(i, btn) {
-  clearInterval(timerInterval);
+  clearInterval(window.timerInterval);
 
   const tf   = document.getElementById('timer-bar-fill');
   const ring = document.getElementById('timer-ring-fill');
   if (tf)   { tf.style.transition='none'; tf.style.width='0%'; }
   if (ring) { ring.style.strokeDashoffset='138'; }
 
-  const q = currentQuestions[currentIdx];
+  const q = window.currentQuestions[window.currentIdx];
   document.querySelectorAll('.btn-option').forEach(b => b.disabled = true);
 
   if (i === q.c) {
@@ -361,8 +370,8 @@ export function selectAnswer(i, btn) {
 
     playSound('snd-correct');
 
-    const earned = 20 + (timeLeft * 2);
-    quizCoins += earned; quizXP += 50; quizCorrect++;
+    const earned = 20 + (window.timeLeft * 2);
+    window.quizCoins += earned; window.quizXP += 50; window.quizCorrect++;
     window.gameData.coins      += earned;
     window.gameData.xp         += 50;
     window.gameData.stats.correctAnswers++;
@@ -382,14 +391,14 @@ export function selectAnswer(i, btn) {
     // تفاصيل إضافية
     if (!window.gameData.detailedStats) window.gameData.detailedStats = {};
     const ds = window.gameData.detailedStats;
-    if (timeLeft >= 12) ds.speedAnswers = (ds.speedAnswers||0)+1;
-    const answerTime = _TOTAL_TIME - timeLeft;
+    if (window.timeLeft >= 12) ds.speedAnswers = (ds.speedAnswers||0)+1;
+    const answerTime = _TOTAL_TIME - window.timeLeft;
     ds.totalAnswerTime = (ds.totalAnswerTime||0) + answerTime;
     ds.totalAnswers    = (ds.totalAnswers||0) + 1;
     ds.avgAnswerTime   = parseFloat((ds.totalAnswerTime/ds.totalAnswers).toFixed(1));
     if (!ds.categoriesPlayed) ds.categoriesPlayed = [];
-    if (selectedCategory && !ds.categoriesPlayed.includes(selectedCategory))
-      ds.categoriesPlayed.push(selectedCategory);
+    if (window.selectedCategory && !ds.categoriesPlayed.includes(window.selectedCategory))
+      ds.categoriesPlayed.push(window.selectedCategory);
 
     // Toast سلاسل
     const s = window.gameData.stats.currentStreak;
@@ -399,7 +408,7 @@ export function selectAnswer(i, btn) {
     if (s===10) showToast('👑 10 متتالية! أسطورة!', 4000);
     if (s===15) showToast('🌟 15 متتالية! لا يُصدق!', 4000);
 
-    if (isRoomGame && window.currentRoomId) window.syncRoomScore?.();
+    if (window.isRoomGame && window.currentRoomId) window.syncRoomScore?.();
 
   } else {
     // ── إجابة خاطئة ──
@@ -414,9 +423,9 @@ export function selectAnswer(i, btn) {
     document.querySelectorAll('.btn-option')[q.c]?.classList.add('correct');
     playSound('snd-wrong');
     document.getElementById('btn-analyze').style.display = '';
-    quizWrong++;
+    window.quizWrong++;
     window.gameData.stats.currentStreak = 0;
-    if (quizWrong >= 3) window._hadBadStreak = true;
+    if (window.quizWrong >= 3) window._hadBadStreak = true;
 
     _loseHeart();
   }
@@ -462,7 +471,7 @@ window._miniConfetti = _miniConfetti;
 // السؤال التالي
 // ══════════════════════════════════════════════
 export function nextQuestion() {
-  currentIdx++;
+  window.currentIdx++;
   showQuestion();
 }
 window.nextQuestion = nextQuestion;
@@ -477,7 +486,7 @@ export function useHelper(type) {
     return;
   }
   window._usedHelperThisGame = true;
-  const q = currentQuestions[currentIdx];
+  const q = window.currentQuestions[window.currentIdx];
   if (!q) return;
 
   if (document.getElementById('analysis-container').style.display !== 'none' && type !== 'skip') {
@@ -495,11 +504,11 @@ export function useHelper(type) {
     if (!rm) { showToast('لا خيارات للحذف'); return; }
     showToast('✂️ تم حذف خيارَين');
   } else if (type === 'skip') {
-    clearInterval(timerInterval);
+    clearInterval(window.timerInterval);
     window.gameData.inventory[inv]--;
     updateDailyTask('use_helper', 1);
     updateUI(); saveData();
-    currentIdx++; showQuestion();
+    window.currentIdx++; showQuestion();
     showToast('⏩ تم التخطي');
     return;
   } else {
@@ -516,17 +525,17 @@ window.useHelper = useHelper;
 // إنهاء الكويز
 // ══════════════════════════════════════════════
 async function finishQuiz() {
-  clearInterval(timerInterval);
+  clearInterval(window.timerInterval);
 
   window.gameData.stats.gamesPlayed++;
   addSeasonXP(50);
   updateWeeklyTask('w_games_5', 1);
 
   // تتبع التصنيفات
-  if (selectedCategory && selectedCategory !== 'التحدي الأسبوعي' && selectedCategory !== 'تحدي اليوم') {
+  if (window.selectedCategory && window.selectedCategory !== 'التحدي الأسبوعي' && window.selectedCategory !== 'تحدي اليوم') {
     const catsToday = window.gameData._catsToday || [];
-    if (!catsToday.includes(selectedCategory)) {
-      catsToday.push(selectedCategory);
+    if (!catsToday.includes(window.selectedCategory)) {
+      catsToday.push(window.selectedCategory);
       window.gameData._catsToday = catsToday;
       updateDailyTask('play_cats', catsToday.length);
     }
@@ -534,7 +543,7 @@ async function finishQuiz() {
 
   // تقدم الخريطة
   const catKeys = Object.keys(categoryConfig);
-  const curKey  = catKeys.find(k => categoryConfig[k].name === selectedCategory);
+  const curKey  = catKeys.find(k => categoryConfig[k].name === window.selectedCategory);
   if (curKey) {
     if (!window.gameData._mapProgress) window.gameData._mapProgress = [];
     if (!window.gameData._mapProgress.includes(curKey)) window.gameData._mapProgress.push(curKey);
@@ -544,9 +553,9 @@ async function finishQuiz() {
   }
 
   // تحدي اليوم
-  if (isDailyChallenge) {
+  if (window.isDailyChallenge) {
     window.gameData.dailyChallengeDate  = new Date().toDateString();
-    window.gameData.dailyChallengeScore = quizCorrect;
+    window.gameData.dailyChallengeScore = window.quizCorrect;
     window.gameData.stats.dailyChallengesWon = (window.gameData.stats.dailyChallengesWon||0)+1;
     updateDailyTask('daily_ch', 1);
     updateWeeklyTask('w_daily_3', 1);
@@ -556,7 +565,7 @@ async function finishQuiz() {
       try {
         await window.db_set?.(
           `artifacts/${APP_ID}/public/data/daily_${new Date().toISOString().slice(0,10)}/${window.currentUser.uid}`,
-          { username:window.gameData.username, avatar:window.gameData.avatar, score:quizCorrect, uid:window.currentUser.uid, ts:Date.now() },
+          { username:window.gameData.username, avatar:window.gameData.avatar, score:window.quizCorrect, uid:window.currentUser.uid, ts:Date.now() },
           true
         );
       } catch(e) {}
@@ -564,10 +573,10 @@ async function finishQuiz() {
   }
 
   // تحدي أسبوعي
-  if (isWeeklyChallenge) {
+  if (window.isWeeklyChallenge) {
     const weekId = window.getWeekId?.() || '';
-    const reward = 1000 + (quizCorrect * 50);
-    window.gameData.weeklyChallenge = { weekId, score:quizCorrect, completed:true, reward };
+    const reward = 1000 + (window.quizCorrect * 50);
+    window.gameData.weeklyChallenge = { weekId, score:window.quizCorrect, completed:true, reward };
     window.gameData.coins += reward;
     addSeasonXP(200);
     if (window.gameData.seasonData) window.gameData.seasonData.weeklyDone = (window.gameData.seasonData.weeklyDone||0)+1;
@@ -576,18 +585,18 @@ async function finishQuiz() {
       try {
         await window.db_set?.(
           `artifacts/${APP_ID}/public/data/weekly_${weekId}/${window.currentUser.uid}`,
-          { username:window.gameData.username, score:quizCorrect, level:window.gameData.level, uid:window.currentUser.uid, ts:Date.now() },
+          { username:window.gameData.username, score:window.quizCorrect, level:window.gameData.level, uid:window.currentUser.uid, ts:Date.now() },
           true
         );
       } catch(e) {}
     }
     const wAchv = window.gameData.achievements?.find(a => a.id==='weekly_win');
     if (wAchv && !wAchv.earned) { wAchv.earned=true; showToast('🏆 إنجاز: فاز بتحدي أسبوعي!',4000); }
-    isWeeklyChallenge = false;
+    window.isWeeklyChallenge = false;
   }
 
   // إنجازات
-  if (quizWrong===0 && quizCorrect>=10) {
+  if (window.quizWrong===0 && window.quizCorrect>=10) {
     const p = window.gameData.achievements?.find(a => a.id==='perfect');
     if (p && !p.earned) { p.earned=true; showToast('⭐ إنجاز: 10/10 مثالي!'); }
   }
@@ -595,7 +604,7 @@ async function finishQuiz() {
     if (!window.gameData.detailedStats) window.gameData.detailedStats = {};
     window.gameData.detailedStats.noHintGames = (window.gameData.detailedStats.noHintGames||0)+1;
   }
-  if (window._hadBadStreak && quizCorrect>=7) {
+  if (window._hadBadStreak && window.quizCorrect>=7) {
     if (!window.gameData.detailedStats) window.gameData.detailedStats = {};
     window.gameData.detailedStats.comebackWins = (window.gameData.detailedStats.comebackWins||0)+1;
     showToast('💪 Comeback! إنجاز رائع!');
@@ -604,14 +613,14 @@ async function finishQuiz() {
   window._usedHelperThisGame = false;
   window._hadBadStreak       = false;
 
-  if (isRoomGame) await window.finishRoomGame?.();
+  if (window.isRoomGame) await window.finishRoomGame?.();
   if (typeof window.clearGameSession === 'function') window.clearGameSession?.();
 
   saveData();
   playSound('snd-win');
 
   // Confetti النهاية
-  const pct = Math.round((quizCorrect / currentQuestions.length) * 100);
+  const pct = Math.round((window.quizCorrect / window.currentQuestions.length) * 100);
   if (typeof confetti !== 'undefined' && pct >= 40) {
     confetti({ particleCount: pct>=80?200:100, spread:110, origin:{y:.5}, colors:['#fbbf24','#f59e0b','#fff','#22c55e'] });
   }
@@ -628,10 +637,10 @@ async function finishQuiz() {
   document.getElementById('result-emoji').innerText     = emoji;
   document.getElementById('result-title').innerText     = title;
   document.getElementById('result-subtitle').innerText  = `${pct}% إجابات صحيحة`;
-  document.getElementById('res-correct').innerText      = quizCorrect;
-  document.getElementById('res-wrong').innerText        = quizWrong;
-  document.getElementById('res-coins').innerText        = `+${quizCoins} 💰`;
-  document.getElementById('res-xp').innerText           = `+${quizXP} XP`;
+  document.getElementById('res-correct').innerText      = window.quizCorrect;
+  document.getElementById('res-wrong').innerText        = window.quizWrong;
+  document.getElementById('res-coins').innerText        = `+${window.quizCoins} 💰`;
+  document.getElementById('res-xp').innerText           = `+${window.quizXP} XP`;
 
   navTo('result');
 }
