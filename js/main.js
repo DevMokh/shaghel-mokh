@@ -379,7 +379,7 @@ window.handleFrameClick = (frame) => {
       return;
     }
     showConfirmDialog({
-      icon: '🖼️', title: 'شراء الإطار', msg: `${frame.name}\nالسعر: ${frame.price} 💰`,
+      icon: 'fa-image', title: 'شراء الإطار', msg: `${frame.name}\nالسعر: ${frame.price} 💰`,
       okText: 'شراء', okClass: 'ok',
       onOk: () => {
         window.gameData.coins -= frame.price;
@@ -399,7 +399,7 @@ window.handleFrameClick = (frame) => {
 
 window.resetGame = () => {
   showConfirmDialog({
-    icon: '🗑️', title: 'مسح البيانات', msg: 'سيتم تصفير كل شيء نهائياً\nهل أنت متأكد؟',
+    icon: 'fa-trash', title: 'مسح البيانات', msg: 'سيتم تصفير كل شيء نهائياً\nهل أنت متأكد؟',
     okText: 'امسح كل شيء', okClass: 'danger',
     onOk: async () => {
       if (window.currentUser && window.db && window.firebaseReady) {
@@ -608,7 +608,7 @@ window.checkAndOfferResume = () => {
   const s = getSavedSession();
   if (!s) return;
   showConfirmDialog({
-    icon:    "▶️",
+    icon:    "fa-play",
     title:   "جولة محفوظة!",
     msg:     `${s.category} — ${s.sub}\nالسؤال ${s.idx + 1}/10\n✅ ${s.correct} | ❌ ${s.wrong}`,
     okText:  "استكمل",
