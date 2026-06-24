@@ -719,7 +719,7 @@ $('bulk-auto').addEventListener('change', e => {
 // ══════════════════════════════════════════════════════════════════
 window.loginAdmin = async function () {
   const email = $('admin-email').value.trim();
-  const pass  = $('admin-password').value;
+  const pass  = $('admin-password').value.trim();
   const btn   = $('login-btn');
   const err   = $('pass-error');
   err.style.display = 'none';
@@ -729,9 +729,10 @@ window.loginAdmin = async function () {
     await signInWithEmailAndPassword(auth, email, pass);
     // باقي الإجراءات بتتم في onAuthStateChanged تحت
   } catch (e) {
-    err.textContent = '❌ بيانات الدخول غير صحيحة';
+    err.textContent = `❌ ${e.code || e.message}`;
     err.style.display = 'block';
     $('admin-password').value = '';
+    console.error('[Admin Login]', e.code, e.message);
   } finally {
     btn.disabled = false; btn.textContent = 'دخول';
   }
