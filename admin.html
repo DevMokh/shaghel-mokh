@@ -226,40 +226,17 @@
         <div class="login-logo"><i class="fas fa-brain" style="color:var(--accent);font-size:44px"></i></div>
         <h1 class="login-title">لوحة تحكم المسؤول</h1>
         <p class="login-sub">شغل مخك — Ultra Edition</p>
-        <input type="password" id="pass-input" class="pass-input" placeholder="كلمة المرور"
-               onkeydown="if(event.key==='Enter') checkPassword()">
-        <button class="login-btn" onclick="checkPassword()">دخول</button>
-        <p class="pass-error" id="pass-error">❌ كلمة المرور غير صحيحة</p>
+        <input type="email" id="admin-email" class="pass-input" style="text-align:right;letter-spacing:0;margin-bottom:12px" placeholder="البريد الإلكتروني" autocomplete="username">
+        <input type="password" id="admin-password" class="pass-input" placeholder="كلمة المرور" autocomplete="current-password"
+               onkeydown="if(event.key==='Enter') window.loginAdmin()">
+        <button class="login-btn" id="login-btn" onclick="window.loginAdmin()">دخول</button>
+        <p class="pass-error" id="pass-error">❌ بيانات الدخول غير صحيحة</p>
     </div>
 </div>
 
-<!-- بوابة كلمة المرور — سكريبت عادي (غير module) عشان يشتغل فوراً من غير انتظار -->
-<script>
-  var ADMIN_PASS = 'admin2025';
-  function showMainPanel() {
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('main-content').style.display = 'block';
-  }
-  function checkPassword() {
-    var v = document.getElementById('pass-input').value;
-    if (v === ADMIN_PASS) {
-      try { sessionStorage.setItem('adminAuth', '1'); } catch (e) {}
-      showMainPanel();
-    } else {
-      document.getElementById('pass-error').style.display = 'block';
-      document.getElementById('pass-input').value = '';
-      document.getElementById('pass-input').focus();
-    }
-  }
-  document.addEventListener('DOMContentLoaded', function () {
-    try {
-      if (sessionStorage.getItem('adminAuth') === '1') showMainPanel();
-    } catch (e) {}
-  });
-</script>
-
 <!-- MAIN -->
 <div id="main-content">
+
     <div class="topbar">
         <div class="topbar-brand">
             <span class="topbar-logo"><i class="fas fa-brain" style="color:var(--accent)"></i></span>
@@ -270,6 +247,7 @@
             <button class="btn-secondary" onclick="window.loadQs()"><i class="fas fa-rotate"></i><span>تحديث</span></button>
             <button class="btn-secondary" onclick="window.exportAll()"><i class="fas fa-download"></i><span>تصدير الكل</span></button>
             <button class="btn-danger" onclick="window.clearAllConfirm()"><i class="fas fa-fire"></i><span>مسح الكل</span></button>
+            <button class="btn-secondary" onclick="window.logoutAdmin()"><i class="fas fa-right-from-bracket"></i><span>خروج</span></button>
         </div>
     </div>
 
