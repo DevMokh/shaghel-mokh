@@ -148,20 +148,20 @@
           style="flex:1;padding:13px 0;background:rgba(251,191,36,.1);color:var(--accent);border:1px solid rgba(251,191,36,.22);border-radius:22px;font-weight:900;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px"
           onmousedown="this.style.transform='scale(.95)'" onmouseup="this.style.transform=''"
           ontouchstart="this.style.transform='scale(.95)'" ontouchend="this.style.transform=''">
-          <i class="fas fa-rotate"></i> روليت 🎰
+          <i class="fas fa-rotate"></i> روليت
         </button>
         <button onclick="window.open1v1('عام','عام')"
           style="flex:1;padding:13px 0;background:rgba(239,68,68,.1);color:#ef4444;border:1px solid rgba(239,68,68,.2);border-radius:22px;font-weight:900;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px"
           onmousedown="this.style.transform='scale(.95)'" onmouseup="this.style.transform=''"
           ontouchstart="this.style.transform='scale(.95)'" ontouchend="this.style.transform=''">
-          <i class="fas fa-swords"></i> 1vs1 ⚔️
+          <i class="fas fa-swords"></i> 1vs1
         </button>
       </div>
     </div>
 
     <div id="screen-map" class="screen">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-shrink:0">
-        <h2 style="font-size:20px;font-weight:900">اختر المجال 🗺️</h2>
+        <h2 style="font-size:20px;font-weight:900"><i class="fas fa-map"></i> اختر المجال</h2>
         <span id="map-progress-badge" style="font-size:12px;font-weight:900;color:var(--accent);background:rgba(251,191,36,.1);padding:5px 14px;border-radius:20px;border:1px solid rgba(251,191,36,.15)">8/8</span>
       </div>
       <div id="map-grid" class="map-grid"></div>
@@ -175,7 +175,7 @@
     <div id="screen-quiz" class="screen" style="padding:0">
       <div style="padding:16px;display:flex;flex-direction:column;height:100%;overflow:hidden">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-shrink:0">
-          <button onclick="window.confirmExit()" style="width:46px;height:46px;background:rgba(239,68,68,.1);color:#ef4444;border-radius:18px;font-size:18px;border:1px solid rgba(239,68,68,.2);cursor:pointer;display:flex;align-items:center;justify-content:center" onmousedown="this.style.transform='scale(.88)'" onmouseup="this.style.transform=''">✕</button>
+          <button onclick="window.confirmExit()" style="width:46px;height:46px;background:rgba(239,68,68,.1);color:#ef4444;border-radius:18px;font-size:18px;border:1px solid rgba(239,68,68,.2);cursor:pointer;display:flex;align-items:center;justify-content:center" onmousedown="this.style.transform='scale(.88)'" onmouseup="this.style.transform=''"><i class="fas fa-xmark"></i></button>
           <div style="flex:1;padding:0 14px">
             <div style="display:flex;justify-content:space-between;font-size:11px;font-weight:900;margin-bottom:7px;color:var(--text2);text-transform:uppercase;letter-spacing:.08em">
               <span id="q-counter">السؤال 1/10</span>
@@ -208,7 +208,7 @@
         <div style="background:var(--card);padding:14px;border-radius:22px;border:1px solid rgba(255,255,255,.05);margin-bottom:14px;text-align:center;min-height:100px;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;position:relative">
           <div id="q-cat-badge" class="badge badge-gold" style="font-size:10px;font-weight:900;padding:3px 12px;border-radius:20px;margin-bottom:10px;letter-spacing:.05em">فئة</div>
           <h3 id="q-text" style="font-size:16px;font-weight:700;line-height:1.5">جاري التحضير...</h3>
-          <button id="btn-analyze" onclick="window.askAIAnalysis()" style="position:absolute;bottom:-14px;left:50%;transform:translateX(-50%);background:#2563eb;color:#fff;padding:7px 18px;border-radius:18px;font-size:11px;font-weight:900;border:none;cursor:pointer;z-index:10;display:none;white-space:nowrap">تحليل ذكي 🤖</button>
+          <button id="btn-analyze" onclick="window.askAIAnalysis()" style="position:absolute;bottom:-14px;left:50%;transform:translateX(-50%);background:#2563eb;color:#fff;padding:7px 18px;border-radius:18px;font-size:11px;font-weight:900;border:none;cursor:pointer;z-index:10;display:none;white-space:nowrap"><i class="fas fa-robot"></i> تحليل ذكي</button>
         </div>
 
         <div id="skeleton-loading" style="display:none;flex-direction:column;gap:10px;flex-shrink:0">
@@ -222,16 +222,16 @@
 
         <div id="analysis-container" style="display:none;flex-shrink:0;margin-top:10px">
           <div style="background:rgba(251,191,36,.07);border:1px solid rgba(251,191,36,.2);border-radius:18px;padding:12px;margin-bottom:10px;text-align:right">
-            <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px"><span style="font-size:16px">💡</span><span style="color:var(--accent);font-weight:900;font-size:12px;text-transform:uppercase">هل تعلم؟</span></div>
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px"><span style="font-size:16px"><i class="fas fa-lightbulb"></i></span><span style="color:var(--accent);font-weight:900;font-size:12px;text-transform:uppercase">هل تعلم؟</span></div>
             <p id="analysis-text" style="color:#cbd5e1;font-size:12px;font-weight:700;line-height:1.65"></p>
           </div>
-          <button id="btn-next" onclick="window.nextQuestion()" style="width:100%;padding:14px;background:var(--grad);color:#000;font-weight:900;border-radius:22px;font-size:15px;border:none;border-bottom:3px solid rgba(0,0,0,.2);cursor:pointer">السؤال التالي ➜</button>
+          <button id="btn-next" onclick="window.nextQuestion()" style="width:100%;padding:14px;background:var(--grad);color:#000;font-weight:900;border-radius:22px;font-size:15px;border:none;border-bottom:3px solid rgba(0,0,0,.2);cursor:pointer">السؤال التالي <i class="fas fa-arrow-left"></i></button>
         </div>
 
         <div style="display:flex;gap:10px;padding-top:12px;flex-shrink:0">
           <button onclick="window.useHelper('skip')"   id="btn-skip" class="helper-btn h-skip"><span class="h-cnt" id="h-skip">5</span><span class="h-emoji">⏩</span><span class="h-label">تخطي</span></button>
-          <button onclick="window.useHelper('hint')"   id="btn-hint" class="helper-btn h-hint"><span class="h-cnt" id="h-hint">5</span><span class="h-emoji">💡</span><span class="h-label">تلميح</span></button>
-          <button onclick="window.useHelper('delete')" id="btn-del"  class="helper-btn h-del" ><span class="h-cnt" id="h-del">5</span><span class="h-emoji">✂️</span><span class="h-label">حذف</span></button>
+          <button onclick="window.useHelper('hint')"   id="btn-hint" class="helper-btn h-hint"><span class="h-cnt" id="h-hint">5</span><span class="h-emoji"><i class="fas fa-lightbulb"></i></span><span class="h-label">تلميح</span></button>
+          <button onclick="window.useHelper('delete')" id="btn-del"  class="helper-btn h-del" ><span class="h-cnt" id="h-del">5</span><span class="h-emoji"><i class="fas fa-scissors"></i></span><span class="h-label">حذف</span></button>
         </div>
       </div>
     </div>
@@ -246,8 +246,8 @@
         <div class="result-stat"><span class="result-stat-label"><i class="fas fa-coins" style="color:#fbbf24"></i> عملات</span><span class="result-stat-value" id="res-coins">0</span></div>
         <div class="result-stat"><span class="result-stat-label"><i class="fas fa-star" style="color:#a78bfa"></i> XP</span><span class="result-stat-value" id="res-xp">0</span></div>
       </div>
-      <button onclick="window.navTo('map')" style="width:100%;max-width:300px;padding:17px;background:var(--grad);color:#000;font-weight:900;border-radius:28px;font-size:17px;border:none;border-bottom:4px solid rgba(0,0,0,.2);cursor:pointer;margin-bottom:10px">العب مجدداً 🔄</button>
-      <button onclick="window.navTo('home')" style="width:100%;max-width:300px;padding:13px;background:rgba(255,255,255,.05);color:var(--text2);font-weight:700;border-radius:22px;font-size:14px;border:1px solid rgba(255,255,255,.08);cursor:pointer">الرئيسية 🏠</button>
+      <button onclick="window.navTo('map')" style="width:100%;max-width:300px;padding:17px;background:var(--grad);color:#000;font-weight:900;border-radius:28px;font-size:17px;border:none;border-bottom:4px solid rgba(0,0,0,.2);cursor:pointer;margin-bottom:10px"><i class="fas fa-rotate-right"></i> العب مجدداً</button>
+      <button onclick="window.navTo('home')" style="width:100%;max-width:300px;padding:13px;background:rgba(255,255,255,.05);color:var(--text2);font-weight:700;border-radius:22px;font-size:14px;border:1px solid rgba(255,255,255,.08);cursor:pointer"><i class="fas fa-house"></i> الرئيسية</button>
     </div>
 
     <div id="screen-daily" class="screen">
@@ -301,7 +301,7 @@
         <button onclick="window.createRoom()" style="background:var(--grad);color:#000;font-weight:900;font-size:13px;border:none;border-radius:14px;padding:10px 18px;cursor:pointer;border-bottom:3px solid rgba(0,0,0,.2)">+ إنشاء غرفة</button>
       </div>
       <div id="rooms-list" style="flex:1;overflow-y:auto"></div>
-      <button onclick="window.openJoinRoomModal()" style="width:100%;margin-top:10px;padding:14px;background:rgba(255,255,255,.05);color:var(--text2);border:1px solid rgba(255,255,255,.08);border-radius:18px;font-weight:900;font-size:14px;cursor:pointer;flex-shrink:0">🔑 الانضمام بكود</button>
+      <button onclick="window.openJoinRoomModal()" style="width:100%;margin-top:10px;padding:14px;background:rgba(255,255,255,.05);color:var(--text2);border:1px solid rgba(255,255,255,.08);border-radius:18px;font-weight:900;font-size:14px;cursor:pointer;flex-shrink:0"><i class="fas fa-key"></i> الانضمام بكود</button>
     </div>
 
     <div id="screen-lobby" class="screen" style="padding:0">
@@ -313,7 +313,7 @@
         </div>
         <div id="waiting-players" style="flex:1;overflow-y:auto"></div>
         <div style="flex-shrink:0;padding-top:14px">
-          <button id="start-room-btn" onclick="window.startRoomGame()" style="width:100%;padding:18px;background:var(--grad);color:#000;font-weight:900;border-radius:28px;font-size:17px;border:none;border-bottom:4px solid rgba(0,0,0,.2);cursor:pointer;display:none">ابدأ اللعبة 🎮</button>
+          <button id="start-room-btn" onclick="window.startRoomGame()" style="width:100%;padding:18px;background:var(--grad);color:#000;font-weight:900;border-radius:28px;font-size:17px;border:none;border-bottom:4px solid rgba(0,0,0,.2);cursor:pointer;display:none"><i class="fas fa-gamepad"></i> ابدأ اللعبة</button>
           <div id="waiting-msg" style="text-align:center;color:var(--text2);font-weight:700;font-size:14px;padding:14px"><i class="fas fa-circle-notch fa-spin"></i> في انتظار مزيد من اللاعبين...</div>
         </div>
       </div>
@@ -324,9 +324,9 @@
         <i class="fas fa-ranking-star" style="color:#fbbf24;font-size:22px"></i> قاعة المشاهير
       </h2>
       <div style="display:flex;gap:8px;margin-bottom:14px;overflow-x:auto;padding-bottom:4px;flex-shrink:0">
-        <button class="lb-tab" onclick="window.switchLeaderboard('global')" data-tab="global">🌍 عام</button>
-        <button class="lb-tab" onclick="window.switchLeaderboard('season')" data-tab="season">🏅 الموسم</button>
-        <button class="lb-tab" onclick="window.switchLeaderboard('daily')"  data-tab="daily">📅 اليوم</button>
+        <button class="lb-tab" onclick="window.switchLeaderboard('global')" data-tab="global"><i class="fas fa-globe"></i> عام</button>
+        <button class="lb-tab" onclick="window.switchLeaderboard('season')" data-tab="season"><i class="fas fa-medal"></i> الموسم</button>
+        <button class="lb-tab" onclick="window.switchLeaderboard('daily')"  data-tab="daily"><i class="fas fa-calendar-days"></i> اليوم</button>
       </div>
       <div id="lb-season-badge" style="font-size:11px;font-weight:700;color:var(--text2);margin-bottom:10px;flex-shrink:0"></div>
       <div id="leader-list" style="flex:1;overflow-y:auto;padding-bottom:20px"></div>
@@ -337,9 +337,9 @@
         <i class="fas fa-bag-shopping" style="color:#22c55e;font-size:22px"></i> المتجر
       </h2>
       <div style="display:flex;gap:8px;margin-bottom:14px;flex-shrink:0">
-        <button class="shop-tab" onclick="window.showShopTab('helpers')" data-stab="helpers">مساعدات</button>
-        <button class="shop-tab" onclick="window.showShopTab('frames')"  data-stab="frames">أطر الأفاتار</button>
-        <button class="shop-tab" onclick="window.showShopTab('themes')"  data-stab="themes">ثيمات</button>
+        <button class="shop-tab" onclick="window.showShopTab('helpers')" data-stab="helpers"><i class="fas fa-bolt"></i> مساعدات</button>
+        <button class="shop-tab" onclick="window.showShopTab('frames')"  data-stab="frames"><i class="fas fa-image"></i> أطر الأفاتار</button>
+        <button class="shop-tab" onclick="window.showShopTab('themes')"  data-stab="themes"><i class="fas fa-palette"></i> ثيمات</button>
       </div>
       <div id="shop-content" style="flex:1;overflow-y:auto;padding-bottom:20px"></div>
     </div>
@@ -347,7 +347,7 @@
     <!-- ══ TOURNAMENT ══ -->
     <div id="screen-tournament" class="screen">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-shrink:0">
-        <h2 style="font-size:20px;font-weight:900">🏆 بطولة الأسبوع</h2>
+        <h2 style="font-size:20px;font-weight:900"><i class="fas fa-trophy"></i> بطولة الأسبوع</h2>
         <div style="font-size:9px;font-weight:900;background:rgba(255,215,0,.1);color:#ffd700;
           border:1px solid rgba(255,215,0,.25);padding:4px 10px;border-radius:20px">WEEKLY CUP</div>
       </div>
@@ -363,7 +363,7 @@
         <h2 style="font-size:19px;font-weight:900;display:flex;align-items:center;gap:8px">
           <i class="fas fa-chart-bar" style="color:#f97316;font-size:20px"></i> إحصائياتي
         </h2>
-        <button onclick="window.showPlayerCard()" class="badge badge-gold" style="border:1px solid rgba(251,191,36,.2);border-radius:14px;padding:8px 14px;font-weight:900;font-size:12px;cursor:pointer">بطاقتي 🪪</button>
+        <button onclick="window.showPlayerCard()" class="badge badge-gold" style="border:1px solid rgba(251,191,36,.2);border-radius:14px;padding:8px 14px;font-weight:900;font-size:12px;cursor:pointer"><i class="fas fa-id-card"></i> بطاقتي</button>
       </div>
 
       <div style="display:flex;gap:7px;margin-bottom:14px;flex-shrink:0">
@@ -497,8 +497,8 @@
         <div style="font-size:10px;font-weight:700;color:var(--text2)" id="fc-counter">0 / 0</div>
       </div>
       <div style="margin-right:auto;display:flex;gap:10px">
-        <span id="fc-known-cnt" style="font-size:11px;font-weight:900;color:#22c55e">✅ 0</span>
-        <span id="fc-review-cnt" style="font-size:11px;font-weight:900;color:#f97316">🔁 0</span>
+        <span id="fc-known-cnt" style="font-size:11px;font-weight:900;color:#22c55e"><i class="fas fa-check"></i> 0</span>
+        <span id="fc-review-cnt" style="font-size:11px;font-weight:900;color:#f97316"><i class="fas fa-rotate"></i> 0</span>
       </div>
     </div>
     <div style="height:5px;background:rgba(255,255,255,.06);border-radius:10px;overflow:hidden;margin-bottom:14px;flex-shrink:0">
@@ -511,9 +511,9 @@
       </div>
     </div>
     <div style="display:flex;gap:10px;flex-shrink:0">
-      <button id="fc-review-btn" onclick="window.markFC(false)" style="display:none;flex:1;padding:14px;background:rgba(239,68,68,.1);color:#ef4444;border:1px solid rgba(239,68,68,.2);border-radius:20px;font-weight:900;font-size:14px;cursor:pointer;align-items:center;justify-content:center;gap:6px">🔁 للمراجعة</button>
+      <button id="fc-review-btn" onclick="window.markFC(false)" style="display:none;flex:1;padding:14px;background:rgba(239,68,68,.1);color:#ef4444;border:1px solid rgba(239,68,68,.2);border-radius:20px;font-weight:900;font-size:14px;cursor:pointer;align-items:center;justify-content:center;gap:6px"><i class="fas fa-rotate"></i> للمراجعة</button>
       <button id="fc-flip-btn" onclick="window.flipFC()" style="flex:1;padding:14px;background:rgba(96,165,250,.1);color:#60a5fa;border:1px solid rgba(96,165,250,.2);border-radius:20px;font-weight:900;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px"><i class="fas fa-rotate"></i> اقلب البطاقة</button>
-      <button id="fc-known-btn" onclick="window.markFC(true)" style="display:none;flex:1;padding:14px;background:rgba(34,197,94,.1);color:#22c55e;border:1px solid rgba(34,197,94,.2);border-radius:20px;font-weight:900;font-size:14px;cursor:pointer;align-items:center;justify-content:center;gap:6px">✅ عارفها</button>
+      <button id="fc-known-btn" onclick="window.markFC(true)" style="display:none;flex:1;padding:14px;background:rgba(34,197,94,.1);color:#22c55e;border:1px solid rgba(34,197,94,.2);border-radius:20px;font-weight:900;font-size:14px;cursor:pointer;align-items:center;justify-content:center;gap:6px"><i class="fas fa-check"></i> عارفها</button>
     </div>
     <button id="fc-restart-btn" onclick="window.restartFC()" style="display:none;width:100%;margin-top:10px;padding:15px;background:var(--grad);color:#000;font-weight:900;border-radius:24px;font-size:15px;border:none;border-bottom:4px solid rgba(0,0,0,.2);cursor:pointer;align-items:center;justify-content:center;gap:8px"><i class="fas fa-rotate-right"></i> ابدأ من جديد</button>
   </div>
@@ -537,7 +537,7 @@
 <div id="sb-overlay" class="sb-overlay" onclick="window.toggleSidebar()"></div>
 <div id="sidebar" class="sidebar">
   <div class="sb-header" style="padding:16px 16px 10px">
-    <button onclick="window.toggleSidebar()" class="sb-close" style="width:34px;height:34px;font-size:14px">✕</button>
+    <button onclick="window.toggleSidebar()" class="sb-close" style="width:34px;height:34px;font-size:14px"><i class="fas fa-xmark"></i></button>
     <h2 class="sb-title" style="font-size:15px">الملف الشخصي</h2>
     <div style="width:34px"></div>
   </div>
@@ -588,12 +588,12 @@
   <div class="sb-section-label">الأنشطة</div>
   <div class="sb-item-new" onclick="window.openRoulette();window.toggleSidebar()">
     <div class="sb-item-icon" style="background:rgba(251,191,36,.14);border:1px solid rgba(251,191,36,.2)"><i class="fas fa-rotate" style="color:#fbbf24"></i></div>
-    <span class="sb-item-text">عجلة الروليت 🎰</span>
+    <span class="sb-item-text"><i class="fas fa-rotate"></i> عجلة الروليت</span>
     <i class="fas fa-chevron-left sb-item-arrow"></i>
   </div>
   <div class="sb-item-new" onclick="window.toggleSidebar();window.navTo('map')">
     <div class="sb-item-icon" style="background:rgba(96,165,250,.14);border:1px solid rgba(96,165,250,.2)"><i class="fas fa-th-large" style="color:#60a5fa"></i></div>
-    <span class="sb-item-text">المجالات 🗺️</span>
+    <span class="sb-item-text"><i class="fas fa-map"></i> المجالات</span>
     <i class="fas fa-chevron-left sb-item-arrow"></i>
   </div>
   <div class="sb-item-new" onclick="window.toggleSidebar();window.navTo('rooms')">
@@ -627,12 +627,12 @@
   </div>
   <div class="sb-item-new" onclick="window.showAchievementsModal()">
     <div class="sb-item-icon" style="background:rgba(251,191,36,.14);border:1px solid rgba(251,191,36,.2)"><i class="fas fa-medal" style="color:#fbbf24"></i></div>
-    <span class="sb-item-text">الإنجازات 🏅</span>
+    <span class="sb-item-text"><i class="fas fa-medal"></i> الإنجازات</span>
     <i class="fas fa-chevron-left sb-item-arrow"></i>
   </div>
   <div class="sb-item-new" onclick="window.showPlayerCard()">
     <div class="sb-item-icon" style="background:rgba(96,165,250,.14);border:1px solid rgba(96,165,250,.2)"><i class="fas fa-id-card" style="color:#60a5fa"></i></div>
-    <span class="sb-item-text">بطاقتي 🪪</span>
+    <span class="sb-item-text"><i class="fas fa-id-card"></i> بطاقتي</span>
     <i class="fas fa-chevron-left sb-item-arrow"></i>
   </div>
 
@@ -650,24 +650,24 @@
     <div id="theme-toggle" class="toggle on" onclick="event.stopPropagation();window.toggleTheme()" style="margin-right:auto"><div class="toggle-knob"></div></div>
   </div>
   <div class="sb-item-new" onclick="window.toggleSound()">
-    <div class="sb-item-icon" style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1)"><span id="sound-icon-sb" style="font-size:15px">🔊</span></div>
+    <div class="sb-item-icon" style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1)"><i id="sound-icon-sb" class="fas fa-volume-high" style="font-size:15px"></i></div>
     <span class="sb-item-text">الأصوات</span>
     <div id="sound-toggle-sb" class="toggle on" onclick="event.stopPropagation();window.toggleSound()" style="margin-right:auto"><div class="toggle-knob"></div></div>
   </div>
   <div style="padding:10px 16px 6px">
-    <div style="font-size:10px;font-weight:700;color:var(--text2);margin-bottom:8px">🎨 لون التطبيق</div>
+    <div style="font-size:10px;font-weight:700;color:var(--text2);margin-bottom:8px"><i class="fas fa-palette"></i> لون التطبيق</div>
     <div class="theme-colors" id="theme-color-picker"></div>
   </div>
   <div style="padding:6px 16px 10px">
-    <div style="font-size:10px;font-weight:700;color:var(--text2);margin-bottom:7px">💬 رسالتي في اللوحة</div>
+    <div style="font-size:10px;font-weight:700;color:var(--text2);margin-bottom:7px"><i class="fas fa-comment"></i> رسالتي في اللوحة</div>
     <input id="my-message-input" type="text" maxlength="40" placeholder="رسالة تظهر للاعبين..." style="width:100%;background:#111;border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:10px 12px;color:#fff;font-size:12px;font-weight:700;outline:none;text-align:right" oninput="window.saveMessageDebounced()" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='rgba(255,255,255,.1)'">
   </div>
   <div style="padding:0 16px 16px">
-    <button onclick="window.requestNotifPermission()" id="notif-btn" style="width:100%;background:rgba(96,165,250,.08);color:#60a5fa;border:1px solid rgba(96,165,250,.15);border-radius:12px;padding:10px;font-weight:900;font-size:12px;cursor:pointer">🔔 تفعيل الإشعارات</button>
+    <button onclick="window.requestNotifPermission()" id="notif-btn" style="width:100%;background:rgba(96,165,250,.08);color:#60a5fa;border:1px solid rgba(96,165,250,.15);border-radius:12px;padding:10px;font-weight:900;font-size:12px;cursor:pointer"><i class="fas fa-bell"></i> تفعيل الإشعارات</button>
   </div>
 
   <div class="sb-footer" style="margin-top:auto">
-    <button onclick="window.resetGame()" class="sb-del-btn" style="font-size:12px;padding:10px">🗑️ مسح البيانات</button>
+    <button onclick="window.resetGame()" class="sb-del-btn" style="font-size:12px;padding:10px"><i class="fas fa-trash"></i> مسح البيانات</button>
   </div>
 </div>
 
@@ -676,58 +676,58 @@
 <div id="modal-hint" class="m-overlay" onclick="window.closeModal('hint')">
   <div class="m-sheet" onclick="event.stopPropagation()" style="border-top:2px solid rgba(96,165,250,.3)">
     <div class="m-handle"></div>
-    <div class="m-head"><span class="m-title">💡 تلميح</span><button class="m-x" onclick="window.closeModal('hint')">✕</button></div>
+    <div class="m-head"><span class="m-title"><i class="fas fa-lightbulb"></i> تلميح</span><button class="m-x" onclick="window.closeModal('hint')"><i class="fas fa-xmark"></i></button></div>
     <div class="m-body"><div style="background:rgba(96,165,250,.07);border:1px solid rgba(96,165,250,.2);border-radius:18px;padding:18px"><p id="hint-text" style="color:#cbd5e1;font-size:15px;font-weight:700;line-height:1.7"></p></div></div>
   </div>
 </div>
 <div id="modal-tasks" class="m-overlay" onclick="window.closeModal('tasks')">
   <div class="m-sheet" onclick="event.stopPropagation()">
-    <div class="m-handle"></div><div class="m-head"><span class="m-title">📅 مهام اليوم</span><button class="m-x" onclick="window.closeModal('tasks')">✕</button></div>
+    <div class="m-handle"></div><div class="m-head"><span class="m-title"><i class="fas fa-calendar-days"></i> مهام اليوم</span><button class="m-x" onclick="window.closeModal('tasks')"><i class="fas fa-xmark"></i></button></div>
     <div class="m-body" id="tasks-body"></div>
   </div>
 </div>
 <div id="modal-avatar" class="m-overlay" onclick="window.closeModal('avatar')">
   <div class="m-sheet" onclick="event.stopPropagation()">
-    <div class="m-handle"></div><div class="m-head"><span class="m-title">🎨 تخصيص الأفاتار</span><button class="m-x" onclick="window.closeModal('avatar')">✕</button></div>
+    <div class="m-handle"></div><div class="m-head"><span class="m-title"><i class="fas fa-palette"></i> تخصيص الأفاتار</span><button class="m-x" onclick="window.closeModal('avatar')"><i class="fas fa-xmark"></i></button></div>
     <div class="m-body" id="avatar-body"></div>
   </div>
 </div>
 <div id="modal-achv" class="m-overlay" onclick="window.closeModal('achv')">
   <div class="m-sheet" onclick="event.stopPropagation()">
-    <div class="m-handle"></div><div class="m-head"><span class="m-title">🏅 الإنجازات</span><button class="m-x" onclick="window.closeModal('achv')">✕</button></div>
+    <div class="m-handle"></div><div class="m-head"><span class="m-title"><i class="fas fa-medal"></i> الإنجازات</span><button class="m-x" onclick="window.closeModal('achv')"><i class="fas fa-xmark"></i></button></div>
     <div class="m-body" id="achv-body"></div>
   </div>
 </div>
 <div id="modal-card" class="m-overlay" onclick="window.closeModal('card')">
   <div class="m-sheet" onclick="event.stopPropagation()">
-    <div class="m-handle"></div><div class="m-head"><span class="m-title">🪪 بطاقتي</span><button class="m-x" onclick="window.closeModal('card')">✕</button></div>
+    <div class="m-handle"></div><div class="m-head"><span class="m-title"><i class="fas fa-id-card"></i> بطاقتي</span><button class="m-x" onclick="window.closeModal('card')"><i class="fas fa-xmark"></i></button></div>
     <div class="m-body"><div id="player-card-content"></div>
-      <button onclick="window.sharePlayerCard()" style="width:100%;margin-top:14px;padding:15px;background:rgba(96,165,250,.12);color:#60a5fa;border:1px solid rgba(96,165,250,.2);border-radius:18px;font-weight:900;font-size:15px;cursor:pointer">📤 مشاركة البطاقة</button>
+      <button onclick="window.sharePlayerCard()" style="width:100%;margin-top:14px;padding:15px;background:rgba(96,165,250,.12);color:#60a5fa;border:1px solid rgba(96,165,250,.2);border-radius:18px;font-weight:900;font-size:15px;cursor:pointer"><i class="fas fa-share-nodes"></i> مشاركة البطاقة</button>
     </div>
   </div>
 </div>
 <div id="modal-create-room" class="m-overlay" onclick="window.closeModal('create-room')">
   <div class="m-sheet" onclick="event.stopPropagation()">
-    <div class="m-handle"></div><div class="m-head"><span class="m-title">🎮 إنشاء غرفة</span><button class="m-x" onclick="window.closeModal('create-room')">✕</button></div>
+    <div class="m-handle"></div><div class="m-head"><span class="m-title"><i class="fas fa-gamepad"></i> إنشاء غرفة</span><button class="m-x" onclick="window.closeModal('create-room')"><i class="fas fa-xmark"></i></button></div>
     <div class="m-body">
       <div style="margin-bottom:14px"><label style="display:block;font-size:11px;font-weight:900;color:var(--text2);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px">اسم الغرفة</label>
-        <input id="room-name-input" type="text" maxlength="20" placeholder="غرفة التحدي 🎮" style="width:100%;background:#111;border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:14px;color:#fff;font-size:15px;font-weight:700;outline:none;text-align:right" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='rgba(255,255,255,.1)'">
+        <input id="room-name-input" type="text" maxlength="20" placeholder="غرفة التحدي" style="width:100%;background:#111;border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:14px;color:#fff;font-size:15px;font-weight:700;outline:none;text-align:right" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='rgba(255,255,255,.1)'">
       </div>
       <div style="margin-bottom:16px"><label style="display:block;font-size:11px;font-weight:900;color:var(--text2);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px">التصنيف</label>
         <select id="room-cat-select" style="width:100%;background:#111;border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:14px;color:#fff;font-size:15px;font-weight:700;outline:none;cursor:pointer"></select>
       </div>
-      <button onclick="window.confirmCreateRoom()" style="width:100%;padding:16px;background:var(--grad);color:#000;font-weight:900;border-radius:24px;font-size:16px;border:none;border-bottom:4px solid rgba(0,0,0,.2);cursor:pointer">إنشاء الغرفة 🚀</button>
+      <button onclick="window.confirmCreateRoom()" style="width:100%;padding:16px;background:var(--grad);color:#000;font-weight:900;border-radius:24px;font-size:16px;border:none;border-bottom:4px solid rgba(0,0,0,.2);cursor:pointer">إنشاء الغرفة <i class="fas fa-rocket"></i></button>
     </div>
   </div>
 </div>
 <div id="modal-join-room" class="m-overlay" onclick="window.closeModal('join-room')">
   <div class="m-sheet" onclick="event.stopPropagation()">
-    <div class="m-handle"></div><div class="m-head"><span class="m-title">🔑 انضمام بكود</span><button class="m-x" onclick="window.closeModal('join-room')">✕</button></div>
+    <div class="m-handle"></div><div class="m-head"><span class="m-title"><i class="fas fa-key"></i> انضمام بكود</span><button class="m-x" onclick="window.closeModal('join-room')"><i class="fas fa-xmark"></i></button></div>
     <div class="m-body">
       <div style="margin-bottom:16px"><label style="display:block;font-size:11px;font-weight:900;color:var(--text2);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px">كود الغرفة</label>
         <input id="join-code-input" type="text" maxlength="6" placeholder="ABC123" style="width:100%;background:#111;border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:14px;color:#fff;font-size:22px;font-weight:900;outline:none;text-align:center;letter-spacing:.2em;text-transform:uppercase" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='rgba(255,255,255,.1)'">
       </div>
-      <button onclick="window.joinRoomByCode()" style="width:100%;padding:16px;background:var(--grad);color:#000;font-weight:900;border-radius:24px;font-size:16px;border:none;border-bottom:4px solid rgba(0,0,0,.2);cursor:pointer">انضمام 🎮</button>
+      <button onclick="window.joinRoomByCode()" style="width:100%;padding:16px;background:var(--grad);color:#000;font-weight:900;border-radius:24px;font-size:16px;border:none;border-bottom:4px solid rgba(0,0,0,.2);cursor:pointer">انضمام <i class="fas fa-gamepad"></i></button>
     </div>
   </div>
 </div>
@@ -750,7 +750,7 @@
         <div id="gm-cat-name" style="font-size:16px;font-weight:900;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></div>
         <div id="gm-sub-name" style="font-size:12px;font-weight:700;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></div>
       </div>
-      <button onclick="window.closeGameMode()" style="width:36px;height:36px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.08);border-radius:12px;color:rgba(255,255,255,.6);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0">✕</button>
+      <button onclick="window.closeGameMode()" style="width:36px;height:36px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.08);border-radius:12px;color:rgba(255,255,255,.6);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fas fa-xmark"></i></button>
     </div>
     <div style="display:flex;gap:6px;padding:0 16px 12px;flex-shrink:0;overflow-x:auto">
       <button class="gm-tab" data-gmtab="popular"   onclick="window.switchGameModeTab('popular')"   style="padding:7px 16px;border-radius:12px;font-weight:900;font-size:11px;cursor:pointer;white-space:nowrap;border:1px solid rgba(251,191,36,.28);background:rgba(251,191,36,.14);color:var(--accent)"><i class="fas fa-fire-flame-curved" style="margin-left:4px"></i>شائع</button>
@@ -781,13 +781,13 @@
 
 <div id="cmod-confirm" class="cmod-overlay" onclick="window._cancelConfirm()">
   <div class="cmod-box" onclick="event.stopPropagation()">
-    <div class="cmod-icon" id="cmod-ico">⚠️</div><div class="cmod-title" id="cmod-ttl">هل أنت متأكد؟</div><div class="cmod-msg" id="cmod-msg"></div>
+    <div class="cmod-icon" id="cmod-ico"><i class="fas fa-triangle-exclamation"></i></div><div class="cmod-title" id="cmod-ttl">هل أنت متأكد؟</div><div class="cmod-msg" id="cmod-msg"></div>
     <div class="cmod-btns"><button class="cmod-btn cancel" onclick="window._cancelConfirm()">إلغاء</button><button class="cmod-btn danger" id="cmod-yes">تأكيد</button></div>
   </div>
 </div>
 <div id="cmod-input" class="cmod-overlay" onclick="window._cancelInput()">
   <div class="cmod-box" onclick="event.stopPropagation()">
-    <div class="cmod-icon">✏️</div><div class="cmod-title">تغيير الاسم</div><div class="cmod-msg">اكتب اسمك الجديد</div>
+    <div class="cmod-icon"><i class="fas fa-pen"></i></div><div class="cmod-title">تغيير الاسم</div><div class="cmod-msg">اكتب اسمك الجديد</div>
     <div class="cmod-inp-wrap">
       <input id="cmod-inp-field" class="cmod-inp" type="text" maxlength="15" placeholder="اسمك..."
         oninput="document.getElementById('cmod-inp-hint').innerText=this.value.length+' / 15 حرف'"
@@ -799,8 +799,8 @@
 </div>
 <div id="cmod-exit" class="cmod-overlay" onclick="window._cancelExit()">
   <div class="cmod-box" onclick="event.stopPropagation()">
-    <div class="cmod-icon">🚪</div><div class="cmod-title">الخروج من الجولة؟</div><div class="cmod-msg">سيُفقد تقدمك في هذه الجولة</div>
-    <div class="cmod-btns"><button class="cmod-btn cancel" onclick="window._cancelExit()">استمر 💪</button><button class="cmod-btn danger" onclick="window._confirmExit()">خروج</button></div>
+    <div class="cmod-icon"><i class="fas fa-door-open"></i></div><div class="cmod-title">الخروج من الجولة؟</div><div class="cmod-msg">سيُفقد تقدمك في هذه الجولة</div>
+    <div class="cmod-btns"><button class="cmod-btn cancel" onclick="window._cancelExit()">استمر</button><button class="cmod-btn danger" onclick="window._confirmExit()">خروج</button></div>
   </div>
 </div>
 
@@ -811,7 +811,7 @@
       <h3 style="font-size:17px;font-weight:900;color:#fff;display:flex;align-items:center;gap:8px">
         <i class="fas fa-rotate" style="color:var(--accent)"></i> عجلة التصنيفات
       </h3>
-      <button onclick="window.closeRoulette()" style="width:34px;height:34px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.08);border-radius:11px;color:rgba(255,255,255,.6);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center">✕</button>
+      <button onclick="window.closeRoulette()" style="width:34px;height:34px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.08);border-radius:11px;color:rgba(255,255,255,.6);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center"><i class="fas fa-xmark"></i></button>
     </div>
     <div id="roulette-pointer"></div>
     <div style="padding:10px 16px;display:flex;justify-content:center">
@@ -821,7 +821,7 @@
     <div style="padding:12px 16px 22px;display:flex;flex-direction:column;gap:10px">
       <button id="roulette-spin-btn" onclick="window.spinRoulette()"
         style="width:100%;padding:15px;background:var(--grad);color:#000;font-weight:900;border-radius:24px;font-size:15px;border:none;border-bottom:4px solid rgba(0,0,0,.2);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">
-        <i class="fas fa-rotate"></i> دوّر 🎰</button>
+        <i class="fas fa-rotate"></i> دوّر</button>
       <button id="roulette-start-btn" onclick="window.startRouletteGame()"
         style="display:none;width:100%;padding:14px;background:rgba(251,191,36,.12);color:var(--accent);border:1px solid rgba(251,191,36,.25);border-radius:22px;font-size:14px;font-weight:900;cursor:pointer;align-items:center;justify-content:center;gap:8px">
         <i class="fas fa-play"></i></button>
@@ -836,7 +836,7 @@
       <h3 style="font-size:17px;font-weight:900;color:#fff;display:flex;align-items:center;gap:8px">
         <i class="fas fa-swords" style="color:#ef4444"></i> تحدي مباشر 1vs1
       </h3>
-      <button onclick="window.close1v1()" style="width:34px;height:34px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.08);border-radius:11px;color:rgba(255,255,255,.6);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center">✕</button>
+      <button onclick="window.close1v1()" style="width:34px;height:34px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.08);border-radius:11px;color:rgba(255,255,255,.6);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center"><i class="fas fa-xmark"></i></button>
     </div>
     <div id="1v1-cat-lbl" style="text-align:center;font-size:12px;font-weight:700;color:var(--text2);padding-bottom:14px"></div>
     <div style="padding:0 16px 8px">
@@ -850,7 +850,7 @@
       </div>
       <div style="display:flex;gap:8px;margin-bottom:20px">
         <input id="1v1-join-input" type="text" maxlength="6" placeholder="كود التحدي" style="flex:1;background:#111;border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:13px;color:#fff;font-size:16px;font-weight:900;outline:none;text-align:center;letter-spacing:.15em;text-transform:uppercase" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='rgba(255,255,255,.1)'" onkeydown="if(event.key==='Enter') window.join1v1()">
-        <button onclick="window.join1v1()" style="padding:13px 18px;background:rgba(239,68,68,.12);color:#ef4444;border:1px solid rgba(239,68,68,.2);border-radius:14px;font-weight:900;font-size:13px;cursor:pointer;white-space:nowrap">انضم ⚔️</button>
+        <button onclick="window.join1v1()" style="padding:13px 18px;background:rgba(239,68,68,.12);color:#ef4444;border:1px solid rgba(239,68,68,.2);border-radius:14px;font-weight:900;font-size:13px;cursor:pointer;white-space:nowrap">انضم <i class="fas fa-swords"></i></button>
       </div>
     </div>
   </div>
