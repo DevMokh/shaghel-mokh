@@ -1,5 +1,5 @@
 // js/admin.js
-import { db, APP_ID } from './firebase.js';
+import { db, auth, APP_ID } from './firebase.js';
 import { showToast } from './helpers.js';
 import { categoryConfig } from './data.js';
 import {
@@ -13,11 +13,18 @@ import {
   where,
   writeBatch,
 } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+import {
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut,
+} from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
 // ══════════════════════════════════════════════════════════════════
-// تهيئة Firebase (خاص بلوحة التحكم)
+// تسجيل دخول الأدمن — Firebase Authentication حقيقي
+// (لازم تنشئ حساب Email/Password واحد من Firebase Console → Authentication،
+//  وتحدد نفس الإيميل ده في Firestore Security Rules كـ "الأدمن")
 // ══════════════════════════════════════════════════════════════════
-const AID = 'shaghel-mokh-ultra-full';
+const AID = APP_ID;
 const QCOL = () => collection(db, 'artifacts', AID, 'public', 'data', 'questions');
 
 // التصنيفات والأقسام (كما في admin.html الأصلي)
@@ -707,6 +714,42 @@ $('bulk-auto').addEventListener('change', e => {
   $('bulk-manual-wrap').style.display = e.target.checked ? 'none' : 'block';
 });
 
-// تحميل الأسئلة عند فتح الصفحة
-window.loadQs();
+// ══════════════════════════════════════════════════════════════════
+// تسجيل الدخول/الخروج — Firebase Auth حقيقي (مش password في الكود)
+// ══════════════════════════════════════════════════════════════════
+window.loginAdmin = async function () {
+  const email = $('admin-email').value.trim();
+  const pass  = $('admin-password').value;
+  const btn   = $('login-btn');
+  const err   = $('pass-error');
+  err.style.display = 'none';
+  if (!email || !pass) { err.textContent = '❌ اكتب البريد الإلكتروني وكلمة المرور'; err.style.display = 'block'; return; }
+  btn.disabled = true; btn.textContent = '... جاري الدخول';
+  try {
+    await signInWithEmailAndPassword(auth, email, pass);
+    // باقي الإجراءات بتتم في onAuthStateChanged تحت
+  } catch (e) {
+    err.textContent = '❌ بيانات الدخول غير صحيحة';
+    err.style.display = 'block';
+    $('admin-password').value = '';
+  } finally {
+    btn.disabled = false; btn.textContent = 'دخول';
+  }
+};
+
+window.logoutAdmin = async function () {
+  try { await signOut(auth); } catch (e) {}
+};
+
+onAuthStateChanged(auth, user => {
+  if (user) {
+    $('login-screen').style.display = 'none';
+    $('main-content').style.display = 'block';
+    window.loadQs();
+  } else {
+    $('login-screen').style.display = 'flex';
+    $('main-content').style.display = 'none';
+  }
+});
+
 
