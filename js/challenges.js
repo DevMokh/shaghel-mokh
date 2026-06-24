@@ -76,18 +76,7 @@ export async function startDailyChallenge() {
     const hb = (parseInt(seed + b.t?.slice(0, 2) || '0', 36) || 1) % 100;
     return ha - hb;
   }).slice(0, 10);
-  window.currentQuestions = seeded;
-  window.currentIdx = 0;
-  window.quizCorrect = 0;
-  window.quizWrong = 0;
-  window.quizCoins = 0;
-  window.quizXP = 0;
-  window.isDailyChallenge = true;
-  window.isRoomGame = false;
-  window.selectedCategory = 'تحدي اليوم';
-  window.selectedSub = 'عام';
-  navTo('quiz');
-  window.showQuestion?.();
+  startQuiz('تحدي اليوم', 'عام', true, false, false, seeded);
 }
 window.startDailyChallenge = startDailyChallenge;
 
@@ -203,19 +192,7 @@ export async function startWeeklyChallenge() {
     const hb = (parseInt(weekSeed + b.t?.slice(0, 2) || '0', 36) || 1) % 100;
     return ha - hb;
   }).slice(0, 10);
-  window.currentQuestions = seeded;
-  window.currentIdx = 0;
-  window.quizCorrect = 0;
-  window.quizWrong = 0;
-  window.quizCoins = 0;
-  window.quizXP = 0;
-  window.isWeeklyChallenge = true;
-  window.isDailyChallenge = false;
-  window.isRoomGame = false;
-  window.selectedCategory = 'التحدي الأسبوعي';
-  window.selectedSub = 'عام';
-  navTo('quiz');
-  window.showQuestion?.();
+  startQuiz('التحدي الأسبوعي', 'عام', false, false, true, seeded);
 }
 window.startWeeklyChallenge = startWeeklyChallenge;
 
