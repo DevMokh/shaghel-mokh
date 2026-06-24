@@ -99,7 +99,7 @@ function _doUpdateUI() {
   const st = document.getElementById('sound-toggle-sb');
   if (st) st.classList.toggle('on', isSoundOn);
   const si = document.getElementById('sound-icon-sb');
-  if (si) si.innerText = isSoundOn ? '🔊' : '🔇';
+  if (si) si.className = isSoundOn ? 'fas fa-volume-high' : 'fas fa-volume-xmark';
 
   ['skip', 'hint', 'del'].forEach(t => {
     const inv = t === 'del' ? 'delete' : t;
