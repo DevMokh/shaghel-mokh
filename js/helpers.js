@@ -186,7 +186,7 @@ window.closeModal = closeModal;
 let _confirmResolve = null;
 export function showConfirmDialog(opts) {
   const modal = document.getElementById("cmod-confirm");
-  document.getElementById("cmod-ico").innerText = opts.icon || "⚠️";
+  document.getElementById("cmod-ico").innerHTML = `<i class="fas ${opts.icon || 'fa-triangle-exclamation'}"></i>`;
   document.getElementById("cmod-ttl").innerText = opts.title || "هل أنت متأكد؟";
   document.getElementById("cmod-msg").innerText = opts.msg || "";
   const btn = document.getElementById("cmod-yes");
