@@ -128,11 +128,13 @@ export function getDefaultData() {
       { id: "rich_5k",   text: "جمع 5000 عملة",             earned: false, icon: "💎" },
       { id: "lvl_20",    text: "الوصول للمستوى 20",         earned: false, icon: "🌟" },
       { id: "master_200",text: "200 إجابة صحيحة",           earned: false, icon: "🏅" },
-      { id: "all_cats",  text: "لعب في كل التصنيفات الـ 8", earned: false, icon: "🌍" },
+      { id: "all_cats",  text: "لعب في كل التصنيفات الـ 12", earned: false, icon: "🌍" },
       { id: "weekly_win",text: "فاز بتحدي أسبوعي",          earned: false, icon: "🏆" },
       { id: "friend_3",  text: "أضف 3 أصدقاء",              earned: false, icon: "🤝" },
       { id: "host_5",    text: "استضف 5 غرف لعب",           earned: false, icon: "🏰" },
-      { id: "chatty",    text: "أرسل 20 رسالة في الغرف",    earned: false, icon: "💬" }
+      { id: "chatty",    text: "أرسل 20 رسالة في الغرف",    earned: false, icon: "💬" },
+      { id: "classic_8", text: "لعب في كل التصنيفات الكلاسيكية الـ 8", earned: false, icon: "📚" },
+      { id: "egypt_native", text: "لعب في كل التصنيفات المصرية المحلية", earned: false, icon: "🇪🇬" }
     ],
     weeklyChallenge: { weekId: "", score: 0, completed: false, reward: 1000 },
     loginStreak: { count: 0, lastDate: "", maxCount: 0 },
@@ -348,6 +350,16 @@ export function checkLevel() {
   const allCats = Object.values(categoryConfig).map(c => c.name);
   if (allCats.length > 0 && allCats.every(c => played.includes(c))) {
     unlk("all_cats", "🌍 إنجاز: لعبت في كل التصنيفات!");
+  }
+
+  // ── إنجازات جديدة مرتبطة بالتصنيفات المصرية الأربعة الجديدة ──
+  const egyptLocalCats = ["أحياء القاهرة", "كلمات مصرية", "موسيقى وأغاني", "سينما وتليفزيون"];
+  const classicCats    = allCats.filter(c => !egyptLocalCats.includes(c));
+  if (classicCats.length > 0 && classicCats.every(c => played.includes(c))) {
+    unlk("classic_8", "📚 إنجاز: خبير في كل التصنيفات الكلاسيكية!");
+  }
+  if (egyptLocalCats.every(c => played.includes(c))) {
+    unlk("egypt_native", "🇪🇬 إنجاز: ابن البلد الأصيل!");
   }
 }
 window.checkLevel = checkLevel;
