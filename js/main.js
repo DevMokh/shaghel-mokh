@@ -633,6 +633,8 @@ window.checkAndOfferResume = () => {
       if (_rsub) { _rsub.innerText = s.sub || ''; _rsub.style.display = s.sub ? 'inline-flex' : 'none'; }
       const _rmode = document.getElementById("q-mode-badge");
       if (_rmode) { _rmode.innerText = 'كلاسيكي'; _rmode.style.display = 'inline-flex'; }
+      const _rstar = document.getElementById("q-star-num");
+      if (_rstar) _rstar.innerText = s.correct || 0;
       showToast(`▶️ استكمال الجولة — السؤال ${s.idx + 1}/10`, 3000);
       window.showQuestion?.();
     }
