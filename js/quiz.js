@@ -116,6 +116,7 @@ export async function startQuiz(cat, sub, isDaily=false, isRoom=false, isWeekly=
   window._modeLevel = 1;
 
   navTo('quiz');
+  updateUI();
 
   // إعادة تعيين عناصر الشاشة
   const qText = document.getElementById('q-text');
