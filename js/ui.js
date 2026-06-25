@@ -44,6 +44,8 @@ function _doUpdateUI() {
   setText('top-lvl', d.level);
   setText('side-coins', d.coins);
   setText('side-lvl', d.level);
+  setText('q-coins-display', d.coins);
+  setText('q-level-display', d.level);
   setText('side-name', d.username);
   setText('side-rank', d.rank);
   setText('side-sections', d.stats?.completedSections || 0);
