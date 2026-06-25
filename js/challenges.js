@@ -42,7 +42,7 @@ const FALLBACK = [
 // تحدي اليوم
 // ══════════════════════════════════════════════════════════════════
 export async function startDailyChallenge() {
-  document.getElementById('q-cat-badge').innerText = '📅 تحدي اليوم';
+  document.getElementById('q-cat-badge').innerText = 'تحدي اليوم';
   let pool = [];
 
   if (window.firebaseReady) {
@@ -160,7 +160,7 @@ export async function renderDailyChallenge() {
 // ══════════════════════════════════════════════════════════════════
 export async function startWeeklyChallenge() {
   const weekId = getWeekId();
-  document.getElementById('q-cat-badge').innerText = `🏆 أسبوع ${weekId}`;
+  document.getElementById('q-cat-badge').innerText = `التحدي الأسبوعي`;
   let pool = [];
 
   if (window.firebaseReady) {
