@@ -128,6 +128,8 @@ export async function startQuiz(cat, sub, isDaily=false, isRoom=false, isWeekly=
   if (anaBox)   anaBox.style.display = 'none';
   if (catBadge) catBadge.innerText = cat || '';
   if (subBadge) { subBadge.innerText = sub || ''; subBadge.style.display = sub ? 'inline-flex' : 'none'; }
+  const starNum0 = document.getElementById('q-star-num');
+  if (starNum0) starNum0.innerText = '0';
 
   // شريط القلوب
   const hb = document.getElementById('hearts-bar');
@@ -367,6 +369,8 @@ export function selectAnswer(i, btn) {
 
     const earned = 20 + (window.timeLeft * 2);
     window.quizCoins += earned; window.quizXP += 50; window.quizCorrect++;
+    const starNum = document.getElementById('q-star-num');
+    if (starNum) starNum.innerText = window.quizCorrect;
     window.gameData.coins      += earned;
     window.gameData.xp         += 50;
     window.gameData.stats.correctAnswers++;
