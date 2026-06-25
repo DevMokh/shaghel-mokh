@@ -122,10 +122,12 @@ export async function startQuiz(cat, sub, isDaily=false, isRoom=false, isWeekly=
   const optBox = document.getElementById('options-box');
   const anaBox = document.getElementById('analysis-container');
   const catBadge = document.getElementById('q-cat-badge');
+  const subBadge = document.getElementById('q-sub-badge');
   if (qText)    qText.innerText = 'جاري تحضير الأسئلة...';
   if (optBox)   optBox.innerHTML = '';
   if (anaBox)   anaBox.style.display = 'none';
-  if (catBadge) catBadge.innerText = `${cat} • ${sub}`;
+  if (catBadge) catBadge.innerText = cat || '';
+  if (subBadge) { subBadge.innerText = sub || ''; subBadge.style.display = sub ? 'inline-flex' : 'none'; }
 
   // شريط القلوب
   const hb = document.getElementById('hearts-bar');
@@ -139,16 +141,16 @@ export async function startQuiz(cat, sub, isDaily=false, isRoom=false, isWeekly=
     }
   }
 
-  // مؤشر وضع اللعب
+  // مؤشر وضع اللعب — يظهر دايماً، الوضع الافتراضي "كلاسيكي"
   const modeBadge = document.getElementById('q-mode-badge');
-  if (modeBadge && window._gameModeId) {
+  if (modeBadge) {
     const modeNames = {
       classic:'كلاسيكي', blitz:'برق⚡', hearts:'قلوب❤️', endless:'لا نهاية∞',
       perfect:'الكمال✨', ascending:'تصاعد📈', sudden:'ضربة واحدة', memory:'ذاكرة🧠',
       easy:'سهل🌱', hard:'صعب🔥', study:'مذاكرة📖', marathon:'ماراثون🏃',
     };
-    modeBadge.innerText = modeNames[window._gameModeId] || '';
-    modeBadge.style.display = modeBadge.innerText ? 'inline-flex' : 'none';
+    modeBadge.innerText = modeNames[window._gameModeId] || modeNames.classic;
+    modeBadge.style.display = 'inline-flex';
   }
 
   // جلب الأسئلة — أو استخدام مجموعة جاهزة (تحدي يومي/أسبوعي بـ seed موحّد لكل اللاعبين)
