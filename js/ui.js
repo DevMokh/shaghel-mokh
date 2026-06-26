@@ -418,7 +418,12 @@ export function renderShop(tab) {
   const c = document.getElementById('shop-content');
   if (!c) return;
   if (tab === 'helpers') {
-    c.innerHTML = shopItem('📦', 'حزمة المساعدات', '3 من كل نوع', 300, 'window.buyHelper?.(300)') +
+    c.innerHTML = `<div style="font-size:11px;font-weight:900;color:var(--text2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px">شراء نوع واحد بس</div>` +
+                  shopItem('<i class="fas fa-lightbulb"></i>', '5 تلميحات', 'يعرض شرح يساعدك في السؤال', 200, "window.buyHelperType?.('hint',5,200)") +
+                  shopItem('<i class="fas fa-forward"></i>', '5 تخطّي', 'تخطّي السؤال بدون خسارة وقت', 200, "window.buyHelperType?.('skip',5,200)") +
+                  shopItem('<i class="fas fa-scissors"></i>', '5 حذف إجابتين', 'يحذف إجابتين غلط من الأربعة', 200, "window.buyHelperType?.('delete',5,200)") +
+                  `<div style="font-size:11px;font-weight:900;color:var(--text2);text-transform:uppercase;letter-spacing:.08em;margin:18px 0 10px">حزم (وفّر أكتر)</div>` +
+                  shopItem('📦', 'حزمة المساعدات', '3 من كل نوع', 300, 'window.buyHelper?.(300)') +
                   shopItem('💎', 'حزمة الخبير', '10 من كل نوع', 800, 'window.buyHelper?.(800)') +
                   freeCoinsItem();
   } else if (tab === 'frames') {
