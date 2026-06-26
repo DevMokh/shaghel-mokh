@@ -348,6 +348,22 @@ window.buyHelper = (price) => {
   showToast(`✅ تم الشراء! +${amount} لكل وسيلة`);
 };
 
+window.buyHelperType = (type, amount, price) => {
+  if (window.gameData.coins < price) {
+    showToast('❌ رصيدك غير كافٍ');
+    return;
+  }
+  if (!['hint', 'skip', 'delete'].includes(type)) return;
+  window.gameData.coins -= price;
+  window.gameData.inventory[type] += amount;
+  playSound('snd-buy');
+  try { confetti({ particleCount: 30, spread: 40 }); } catch (e) {}
+  updateUI();
+  saveData();
+  const names = { hint: 'تلميح', skip: 'تخطي', delete: 'حذف' };
+  showToast(`✅ تم الشراء! +${amount} ${names[type]}`);
+};
+
 window.claimFreeCoins = () => {
   const today = new Date().toDateString();
   if (window.lastFreeCoinsDate === today) {
