@@ -34,6 +34,13 @@ export const AVATAR_FRAMES = [
   { id: 'legend',    name: 'أسطورة 👑',   price: 0,    rarity: 'legendary', style: 'border:3px solid transparent;background:linear-gradient(#0a0a0a,#0a0a0a) padding-box,conic-gradient(#ffd700,#ff6b35,#7928ca,#0070f3,#ffd700) border-box;box-shadow:0 0 25px rgba(255,215,0,.4)', unlockBy: 'level_30' },
   { id: 'platinum',  name: 'بلاتيني 🔮',  price: 5000, rarity: 'epic',      style: 'box-shadow:0 0 0 4px #e5e4e2,0 0 20px rgba(229,228,226,.4),0 0 40px rgba(229,228,226,.15)',           unlockBy: 'buy' },
   { id: 'galaxy',    name: 'مجرة 🌌',     price: 0,    rarity: 'legendary', style: 'border:3px solid transparent;background:linear-gradient(#0a0a0a,#0a0a0a) padding-box,linear-gradient(135deg,#667eea,#764ba2,#f093fb,#f5576c,#4facfe) border-box;box-shadow:0 0 30px rgba(102,126,234,.4)', unlockBy: 'season_diamond' },
+  // ── أطر جديدة ───────────────────────────────────────────────────
+  { id: 'emerald',   name: 'زمرّد 💚',    price: 700,  rarity: 'rare',      style: 'box-shadow:0 0 0 4px #10b981,0 0 25px rgba(16,185,129,.5)',                                            unlockBy: 'buy' },
+  { id: 'sapphire',  name: 'ياقوت أزرق 🔷', price: 1000, rarity: 'rare',    style: 'box-shadow:0 0 0 4px #2563eb,0 0 25px rgba(37,99,235,.55),0 0 45px rgba(37,99,235,.25)',               unlockBy: 'buy' },
+  { id: 'sunset',    name: 'غروب 🌇',     price: 1300, rarity: 'rare',      style: 'border:3px solid transparent;background:linear-gradient(#0a0a0a,#0a0a0a) padding-box,linear-gradient(135deg,#f97316,#ec4899,#7c3aed) border-box;box-shadow:0 0 20px rgba(249,115,22,.3)', unlockBy: 'buy' },
+  { id: 'thunder',   name: 'برق ⚡',      price: 1800, rarity: 'epic',      style: 'border:3px solid transparent;background:linear-gradient(#0a0a0a,#0a0a0a) padding-box,linear-gradient(135deg,#facc15,#fff,#facc15) border-box;box-shadow:0 0 25px rgba(250,204,21,.5)', unlockBy: 'buy' },
+  { id: 'royal',     name: 'ملكي 👑',     price: 2800, rarity: 'epic',      style: 'border:3px solid transparent;background:linear-gradient(#0a0a0a,#0a0a0a) padding-box,linear-gradient(135deg,#7c3aed,#fbbf24,#7c3aed) border-box;box-shadow:0 0 25px rgba(124,58,237,.4)', unlockBy: 'buy' },
+  { id: 'phoenix',   name: 'العنقاء 🔥',  price: 4500, rarity: 'epic',      style: 'border:3px solid transparent;background:linear-gradient(#0a0a0a,#0a0a0a) padding-box,conic-gradient(#fbbf24,#ef4444,#f97316,#fbbf24) border-box;box-shadow:0 0 35px rgba(239,68,68,.5)', unlockBy: 'buy' },
 ];
 
 // رارية الأطر
