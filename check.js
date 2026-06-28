@@ -151,4 +151,3 @@ if (errorCount > 0) {
   console.log('✅ كل الفحوصات نظيفة — الكود جاهز للرفع.');
   process.exit(0);
 }
-
