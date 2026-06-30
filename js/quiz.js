@@ -614,6 +614,39 @@ async function finishQuiz() {
   window._hadBadStreak       = false;
 
   if (window.isRoomGame) await window.finishRoomGame?.();
+
+  // ── تحدي صديق: حفظ نتيجتي ومقارنتها لو صاحبي لعب بالفعل ──
+  if (window.isFriendChallenge && window._friendChallengeId) {
+    try {
+      const _fcPath = `artifacts/${APP_ID}/public/data/friend_challenges/${window._friendChallengeId}`;
+      const _fcSnap = await window.db_get?.(_fcPath);
+      if (_fcSnap && _fcSnap.exists()) {
+        const _fcD = _fcSnap.data();
+        const _fcRole = window._friendChallengeRole;
+        const _fcUpdate = _fcRole === 'from'
+          ? { fromScore: window.quizCorrect, fromDone: true }
+          : { toScore: window.quizCorrect, toDone: true };
+        const _fcOtherDone = _fcRole === 'from' ? _fcD.toDone : _fcD.fromDone;
+        if (_fcOtherDone) _fcUpdate.status = 'completed';
+        await window.db_set?.(_fcPath, _fcUpdate, true);
+        const _fcOppName = _fcRole === 'from' ? _fcD.toName : _fcD.fromName;
+        if (_fcOtherDone) {
+          const _fcOppScore = _fcRole === 'from' ? _fcD.toScore : _fcD.fromScore;
+          const _fcMy = window.quizCorrect;
+          const _fcMsg = _fcMy > _fcOppScore ? `🏆 فزت على ${_fcOppName}!`
+                       : _fcMy === _fcOppScore ? `🤝 تعادلت مع ${_fcOppName}!`
+                       : `😅 ${_fcOppName} فاز عليك!`;
+          showToast(_fcMsg, 4000);
+        } else {
+          showToast(`✅ لعبت التحدي! في انتظار ${_fcOppName}`, 4000);
+        }
+      }
+    } catch (e) {}
+    window.isFriendChallenge   = false;
+    window._friendChallengeId  = null;
+    window._friendChallengeRole = null;
+  }
+
   if (typeof window.clearGameSession === 'function') window.clearGameSession?.();
 
   saveData();
