@@ -432,30 +432,9 @@ window.resetGame = () => {
   });
 };
 
-// دالة requestNotifPermission
-window.requestNotifPermission = async () => {
-  if (!("Notification" in window)) {
-    showToast("❌ المتصفح لا يدعم الإشعارات");
-    return;
-  }
-  const perm = await Notification.requestPermission();
-  if (perm === "granted") {
-    showToast("🔔 تم تفعيل الإشعارات!");
-    const nb = document.getElementById("notif-btn");
-    if (nb) {
-      nb.innerText = "✅ الإشعارات مفعلة";
-      nb.style.background = "rgba(34,197,94,.1)";
-      nb.style.color = "#22c55e";
-    }
-    initSmartNotifications();
-  } else {
-    showToast("❌ تم رفض الإشعارات");
-  }
-};
-
 // ══════════════════════════════════════════════════════════════════
-//  SMART NOTIFICATIONS SYSTEM
-//  نظام إشعارات ذكي — يراعي حالة اللاعب قبل ما يبعت أي إشعار
+//  NOTIFICATIONS — أدوات مشتركة
+//  (نظام الجدولة الفعلي والإعدادات أسفل الملف، قرب window.requestNotifPermission)
 // ══════════════════════════════════════════════════════════════════
 
 const NOTIF_ICON = "https://i.postimg.cc/qqTBP312/1000061201.png";
@@ -477,94 +456,6 @@ function sendNotification(title, body, tag = "general") {
     }
   } catch (e) { console.warn("[Notif]", e); }
 }
-
-function getNextTime(hour, minute) {
-  const d = new Date();
-  d.setHours(hour, minute, 0, 0);
-  if (d <= new Date()) d.setDate(d.getDate() + 1);
-  return d;
-}
-
-function getNextWeeklyTime(dayOfWeek, hour, minute) {
-  const d    = new Date();
-  const diff = (dayOfWeek - d.getDay() + 7) % 7 || 7;
-  d.setDate(d.getDate() + diff);
-  d.setHours(hour, minute, 0, 0);
-  return d;
-}
-
-function scheduleSmartNotifications() {
-  const now    = new Date();
-  const timers = window._notifTimers || [];
-
-  // 1. تحدي اليوم — 8 مساءً
-  timers.push(setTimeout(() => {
-    const d    = window.gameData;
-    const done = d?.dailyChallengeDate === new Date().toDateString();
-    if (!done) {
-      const streak = d?.loginStreak?.count || 0;
-      const body = streak >= 3
-        ? `🔥 سلسلتك ${streak} أيام! لا تكسرها — العب الآن!`
-        : "📅 تحدي اليوم ينتظرك! العب وخد مكافأتك 🎁";
-      sendNotification("شغل مخك 🧠", body, "daily-challenge");
-    }
-    timers.push(setTimeout(scheduleSmartNotifications, 24 * 60 * 60 * 1000));
-  }, getNextTime(20, 0) - now));
-
-  // 2. تحذير السلسلة — 10 مساءً
-  timers.push(setTimeout(() => {
-    const d      = window.gameData;
-    const streak = d?.loginStreak?.count || 0;
-    const done   = d?.dailyChallengeDate === new Date().toDateString();
-    if (streak >= 3 && !done) {
-      sendNotification(
-        `⚡ سلسلتك ${streak} أيام في خطر!`,
-        "عندك أقل من ساعتين — اللعب يستغرق دقيقتين فقط 🎮",
-        "streak-warning"
-      );
-    }
-  }, getNextTime(22, 0) - now));
-
-  // 3. التحدي الأسبوعي — الجمعة 7 مساءً
-  timers.push(setTimeout(() => {
-    const wc    = window.gameData?.weeklyChallenge || {};
-    const weekId = window.getWeekId?.() || "";
-    if (!wc.completed || wc.weekId !== weekId) {
-      sendNotification(
-        "🏆 التحدي الأسبوعي ينتهي قريباً!",
-        "تبقّى يومان فقط. العب وتنافس مع اللاعبين 💪",
-        "weekly-challenge"
-      );
-    }
-  }, getNextWeeklyTime(5, 19, 0) - now));
-
-  // 4. عودة اللاعب بعد 48 ساعة غياب
-  timers.push(setTimeout(() => {
-    const last = window.gameData?.lastLoginDate;
-    if (last) {
-      const days = (Date.now() - new Date(last).getTime()) / 86400000;
-      if (days >= 2) {
-        const coins = window.gameData?.coins || 0;
-        sendNotification(
-          "مشتاقين ليك! 😢",
-          `${coins} عملة بتنتظرك، وتحدي اليوم فاتك ${Math.floor(days)} أيام!`,
-          "comeback"
-        );
-      }
-    }
-  }, 48 * 60 * 60 * 1000));
-
-  window._notifTimers = timers;
-}
-
-function initSmartNotifications() {
-  if (Notification.permission !== "granted") return;
-  if (window._notifTimers) window._notifTimers.forEach(t => clearTimeout(t));
-  window._notifTimers = [];
-  scheduleSmartNotifications();
-}
-// backward compat
-function scheduleNotification() { initSmartNotifications(); }
 
 // ══════════════════════════════════════════════════════════════════
 //  SAVE GAME SESSION — حفظ واستكمال الجولة
@@ -762,18 +653,9 @@ async function checkFriendRivalry() {
   else console.log('[HealthCheck] ✅ All critical functions ready');
   navTo("home");
 
-  // بعد تحميل البيانات — تحقق من الإشعارات والمنافسة
+  // بعد تحميل البيانات — فحص المنافسة مع الأصدقاء
+  // (الإشعارات بقت بتتولى نفسها عن طريق listenToUserData المُغلّفة تحت)
   setTimeout(() => {
-    if (Notification.permission === "granted") {
-      initSmartNotifications();
-      const nb = document.getElementById("notif-btn");
-      if (nb) {
-        nb.innerText = "✅ الإشعارات مفعلة";
-        nb.style.background = "rgba(34,197,94,.1)";
-        nb.style.color = "#22c55e";
-      }
-    }
-    // فحص المنافسة مع الأصدقاء
     if (window.firebaseReady && window.gameData?.friends?.length) {
       checkFriendRivalry();
     }
@@ -956,9 +838,9 @@ window.requestNotifPermission = async () => {
 };
 
 function scheduleNotifications() {
-  if (!('serviceWorker' in navigator) || Notification.permission !== 'granted') return;
+  if (!('Notification' in window) || Notification.permission !== 'granted') return;
   const n = window.gameData?.notifications;
-  if (!n?.enabled) return;
+  if (!n?.enabled || n.dailyReminder === false) return;
 
   // حساب وقت التذكير اليومي
   const now   = new Date();
@@ -969,11 +851,15 @@ function scheduleNotifications() {
 
   clearTimeout(window._notifTimer);
   window._notifTimer = setTimeout(() => {
-    sendNotification(
-      '⏰ وقت شغّل مخك!',
-      'لا تنسى تحديك اليومي — سلسلتك بخطر! 🔥',
-      { icon: '/favicon.ico', badge: '/favicon.ico', tag: 'daily-reminder' }
-    );
+    const d    = window.gameData;
+    const done = d?.dailyChallengeDate === new Date().toDateString();
+    if (!done) {
+      const streak = d?.loginStreak?.count || 0;
+      const body = streak >= 3
+        ? `🔥 سلسلتك ${streak} أيام! لا تكسرها — العب الآن`
+        : 'لا تنسى تحديك اليومي — يستغرق دقيقتين فقط 🎮';
+      sendNotification('⏰ وقت شغّل مخك!', body, 'daily-reminder');
+    }
     // جدولة للغد
     scheduleNotifications();
   }, delay);
@@ -986,16 +872,19 @@ window.scheduleNotifications = scheduleNotifications;
 function checkStreakNotification() {
   const d  = window.gameData;
   if (!d?.notifications?.streakAlert) return;
-  if (Notification.permission !== 'granted') return;
-  const ls        = d.loginStreak || {};
-  const yesterday = new Date(Date.now() - 86400000).toDateString();
-  if (ls.lastDate === yesterday && ls.count >= 3) {
-    const delay = 2 * 60 * 60 * 1000; // بعد 2 ساعة من الدخول
+  if (!('Notification' in window) || Notification.permission !== 'granted') return;
+  const ls    = d.loginStreak || {};
+  const today = new Date().toDateString();
+  const doneToday = d.dailyChallengeDate === today;
+  if (!doneToday && ls.count >= 3) {
+    const delay = 2 * 60 * 60 * 1000; // بعد 2 ساعة من فتح التطبيق
     setTimeout(() => {
-      if (document.visibilityState !== 'visible') {
+      const stillNotDone = window.gameData?.dailyChallengeDate !== new Date().toDateString();
+      if (stillNotDone && document.visibilityState !== 'visible') {
         sendNotification(
           `⚠️ سلسلتك ${ls.count} يوم على وشك الانكسار!`,
-          'ادخل واعمل تحدي اليوم عشان تحافظ على سلسلتك 🔥'
+          'ادخل واعمل تحدي اليوم عشان تحافظ على سلسلتك 🔥',
+          'streak-warning'
         );
       }
     }, delay);
@@ -1007,7 +896,15 @@ const _origListenFn = window.listenToUserData;
 window.listenToUserData = function(...args) {
   const result = _origListenFn?.(...args);
   setTimeout(() => {
-    if (window.gameData?.notifications?.enabled && Notification.permission === 'granted') {
+    const enabled = window.gameData?.notifications?.enabled && Notification.permission === 'granted';
+    const btn = document.getElementById('notif-btn');
+    if (btn && enabled) {
+      btn.innerText = '✅ الإشعارات مفعّلة';
+      btn.style.background = 'rgba(34,197,94,.1)';
+      btn.style.color = '#22c55e';
+      btn.style.borderColor = 'rgba(34,197,94,.2)';
+    }
+    if (enabled) {
       scheduleNotifications();
       checkStreakNotification();
     }
