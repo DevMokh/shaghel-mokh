@@ -619,6 +619,15 @@
     <i class="fas fa-chevron-left sb-item-arrow"></i>
   </div>
 
+  <div class="sb-item-new" onclick="window.showMyChallengesModal?.()">
+    <div class="sb-item-icon" style="background:rgba(251,191,36,.14);border:1px solid rgba(251,191,36,.2);position:relative">
+      <i class="fas fa-bolt" style="color:var(--accent)"></i>
+      <div class="nav-dot" id="challenges-notif-dot"></div>
+    </div>
+    <span class="sb-item-text">تحدياتي</span>
+    <i class="fas fa-chevron-left sb-item-arrow"></i>
+  </div>
+
   <div class="sb-divider"></div>
 
   <div class="sb-section-label">التحديات</div>
@@ -718,6 +727,47 @@
     </div>
   </div>
 </div>
+
+<!-- مودال الأصدقاء (كان ناقص خالص من الـ HTML) -->
+<div id="modal-friends" class="m-overlay" onclick="window.closeModal('friends')">
+  <div class="m-sheet" onclick="event.stopPropagation()">
+    <div class="m-handle"></div><div class="m-head"><span class="m-title"><i class="fas fa-user-group"></i> الأصدقاء</span><button class="m-x" onclick="window.closeModal('friends')"><i class="fas fa-xmark"></i></button></div>
+    <div class="m-body">
+      <div style="background:var(--card);border:1px solid rgba(251,191,36,.15);border-radius:16px;padding:14px;margin-bottom:16px;text-align:center">
+        <div style="font-size:11px;font-weight:900;color:var(--text2);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px">كودك — شاركه مع أصحابك</div>
+        <div id="my-friend-code" style="font-size:22px;font-weight:900;color:var(--accent);letter-spacing:.1em;margin-bottom:10px">------</div>
+        <button onclick="window.copyFriendCode()" style="width:100%;padding:11px;background:rgba(251,191,36,.1);color:var(--accent);border:1px solid rgba(251,191,36,.2);border-radius:14px;font-weight:900;font-size:13px;cursor:pointer"><i class="fas fa-share-nodes"></i> مشاركة الكود</button>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:18px">
+        <input id="friend-code-input" placeholder="اكتب كود صاحبك هنا" maxlength="6" style="flex:1;background:#0f0f0f;border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:12px 14px;color:#fff;font-family:'Tajawal',sans-serif;font-size:14px;font-weight:900;text-align:center;letter-spacing:.1em;outline:none">
+        <button id="btn-add-friend" onclick="window.addFriendByCode()" style="background:var(--accent);color:#000;border:none;border-radius:14px;padding:0 18px;font-weight:900;font-size:13px;cursor:pointer">إضافة</button>
+      </div>
+      <div id="friends-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- مودال تأكيد تحدي صديق -->
+<div id="modal-challenge-friend" class="m-overlay" onclick="window.closeChallengeFriendModal()">
+  <div class="m-sheet" onclick="event.stopPropagation()">
+    <div class="m-handle"></div><div class="m-head"><span class="m-title"><i class="fas fa-bolt"></i> تحدي صديق</span><button class="m-x" onclick="window.closeChallengeFriendModal()"><i class="fas fa-xmark"></i></button></div>
+    <div class="m-body" style="text-align:center;padding-bottom:30px">
+      <div style="font-size:40px;margin-bottom:14px">⚔️</div>
+      <div style="font-size:15px;font-weight:700;margin-bottom:6px">عايز تتحدى <span id="cf-friend-name" style="color:var(--accent);font-weight:900">صديقك</span>؟</div>
+      <div style="font-size:12px;color:var(--text2);margin-bottom:22px">10 أسئلة عامة، كل واحد يلعبها لما يكون فاضي، وبعدين تتقارن النتائج</div>
+      <button onclick="window.sendFriendChallenge()" style="width:100%;padding:15px;background:var(--grad);color:#000;font-weight:900;border-radius:18px;font-size:15px;border:none;cursor:pointer"><i class="fas fa-bolt"></i> ابدأ التحدي الآن</button>
+    </div>
+  </div>
+</div>
+
+<!-- مودال "تحدياتي" -->
+<div id="modal-friend-challenges" class="m-overlay" onclick="window.closeModal('friend-challenges')">
+  <div class="m-sheet" onclick="event.stopPropagation()">
+    <div class="m-handle"></div><div class="m-head"><span class="m-title"><i class="fas fa-bolt"></i> تحدياتي</span><button class="m-x" onclick="window.closeModal('friend-challenges')"><i class="fas fa-xmark"></i></button></div>
+    <div class="m-body"><div id="friend-challenges-list" class="ql-list"></div></div>
+  </div>
+</div>
+
 <div id="modal-create-room" class="m-overlay" onclick="window.closeModal('create-room')">
   <div class="m-sheet" onclick="event.stopPropagation()">
     <div class="m-handle"></div><div class="m-head"><span class="m-title"><i class="fas fa-gamepad"></i> إنشاء غرفة</span><button class="m-x" onclick="window.closeModal('create-room')"><i class="fas fa-xmark"></i></button></div>
