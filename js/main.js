@@ -87,6 +87,7 @@ import {
   addFriendByCode,
   removeFriend
 } from './friends.js';
+import './friendChallenges.js'; // تحدي الأصدقاء — غير متزامن
 // modes.js — يتحمل dynamically عشان لو فيه مشكلة مش يوقف الـ app
 
 // ══════════════════════════════════════════════════════════════════
@@ -752,6 +753,7 @@ async function checkFriendRivalry() {
 
   await initAuth();
   listenToUserData();
+  setTimeout(() => window.checkPendingChallengesBadge?.(), 2000);
 
   // ═══ HEALTH CHECK ═══
   const REQUIRED = ['navTo','updateUI','showToast','saveData','startQuiz','openModal'];
