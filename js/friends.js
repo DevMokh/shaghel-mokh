@@ -38,8 +38,7 @@ export function showFriendsModal() {
   if (codeEl) codeEl.innerText = code;
 
   renderFriendsList();
-  document.getElementById('modal-friends')?.classList.add('active');
-  document.body.style.overflow = 'hidden';
+  window.openModal?.('friends');
 }
 window.showFriendsModal = showFriendsModal;
 
@@ -243,6 +242,14 @@ function _renderFriendsBasic(list, friends) {
           ${diffBadge}
         </div>
       </div>
+      <!-- زر التحدي -->
+      <button onclick="window.openChallengeFriendModal('${f.uid}')"
+        style="background:rgba(251,191,36,.1);color:var(--accent);
+        border:1px solid rgba(251,191,36,.2);border-radius:10px;
+        padding:6px 10px;font-size:11px;font-weight:900;cursor:pointer;
+        flex-shrink:0;display:flex;align-items:center;gap:4px">
+        <i class="fas fa-bolt"></i> تحدي
+      </button>
       <!-- زر الإزالة -->
       <button onclick="window.removeFriend('${f.uid}')"
         style="background:rgba(239,68,68,.07);color:#ef4444;
